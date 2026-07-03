@@ -6,7 +6,12 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["api", "express", "agriculture", "smart-farming"],
+  "keywords": [
+    "api",
+    "express",
+    "agriculture",
+    "smart-farming"
+  ],
   "author": "Raiyan Jiyon",
   "license": "ISC",
   "engines": {
@@ -22,5 +27,8 @@
   "type": "module",
   "dependencies": {
     "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3"
   }
 }
