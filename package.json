@@ -1,14 +1,17 @@
 {
   "name": "agri-smart-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "Backend API for Agri Smart platform",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["api", "express", "agriculture", "smart-farming"],
+  "author": "Raiyan Jiyon",
   "license": "ISC",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
