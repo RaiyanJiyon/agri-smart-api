@@ -1,13 +1,33 @@
-# Database Design
+03-Database-Design.md
 
-## Overview
+# 1. Purpose
 
-## Entities
+# 2. Database Principles
 
-## Relationships
+# 3. Entity Overview
 
-## Indexing Strategy
+# 4. Entity Design
 
-## Constraints
+    User
 
-## Migration Notes
+    Profile
+
+    Crop Recommendation
+
+    Disease Report
+
+    Conversation
+
+    Message
+
+# 5. Relationships
+
+# 6. Index Strategy
+
+# 7. Data Integrity Rules
+
+# 8. Audit Fields
+
+# 9. Soft Delete Strategy
+
+# 10. Future Database Evolution
