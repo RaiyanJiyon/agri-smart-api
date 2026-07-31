@@ -148,6 +148,8 @@ The following categories of endpoints are publicly accessible:
 
 The following categories of endpoints require authentication:
 
+- Session management (logout, token refresh)
+- Password changes (change-password)
 - User profile management
 - Dashboard
 - Crop recommendations

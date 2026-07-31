@@ -162,8 +162,7 @@ modules/
 The following business modules are planned for Version 1:
 
 - Authentication
-- User
-- Profile
+- User Profile
 - Dashboard
 - Crop Recommendation
 - Disease Detection

@@ -8,6 +8,8 @@ It describes the deployment environments, infrastructure requirements, release p
 
 The objective is to ensure reliable, repeatable, and secure deployments throughout the project lifecycle.
 
+> See also: `06-Development-Plan.md` — Phase 10 (Production Readiness & Deployment) defines the pre-deployment activities and acceptance criteria that must be satisfied before a release candidate proceeds to the deployment process described in this document.
+
 # 2. Deployment Strategy
 
 The AgriSmart backend shall be deployed using a containerized deployment model to ensure consistency across development, staging, and production environments.

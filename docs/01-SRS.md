@@ -55,9 +55,9 @@ The platform leverages artificial intelligence to recommend suitable crops, iden
 
 - **Farmer-first design**: Every feature must solve a real farming problem.
 - **Simplicity over complexity**: Prioritize ease of use over feature count.
-- AI should assist, not replace, human decision-making.
-- Security and user privacy are first-class requirements.
-- The platform should be modular and scalable to support future expansion.
+- **AI as an assistant**: AI should assist, not replace, human decision-making.
+- **Security and privacy**: Security and user privacy are first-class requirements.
+- **Modularity and scalability**: The platform should be modular and scalable to support future expansion.
 
 ---
 
@@ -1232,7 +1232,10 @@ The long-term vision of AgriSmart includes:
 | Business Goal | Functional Requirement | Module |
 |---|---|---|
 | BG-01 Improve Farming Decisions | FR-CROP-001 to FR-CROP-010 | Crop Recommendation |
+| BG-01 Improve Farming Decisions | FR-DASH-001 to FR-DASH-010 | Dashboard |
 | BG-02 Reduce Crop Loss | FR-DISEASE-001 to FR-DISEASE-010 | Disease Detection |
 | BG-03 Increase Accessibility | FR-AI-001 to FR-AI-010 | AI Assistant |
 | BG-04 Digitize Farming Records | FR-PROF-001 to FR-PROF-010 | User Profile |
+| BG-04 Digitize Farming Records | FR-AUTH-001 to FR-AUTH-010 | Authentication |
+| BG-05 Build a Scalable Foundation | FR-ADMIN-001 to FR-ADMIN-010 | Admin |
 | BG-05 Build a Scalable Foundation | All NFRs | Entire System |

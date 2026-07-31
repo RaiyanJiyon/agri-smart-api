@@ -728,32 +728,43 @@ flowchart TD
 
 # 11. Architecture Decisions
 
-| ADR ID | Architectural Decision |
-|---|---|
-| ADR-001 | Use a Modular Monolith architecture for Version 1. |
-| ADR-002 | Organize code by business modules. |
-| ADR-003 | Apply layered architecture within each module. |
-| ADR-004 | Use repositories to isolate data access. |
-| ADR-005 | Standardize request processing through a common lifecycle. |
-| ADR-006 | Isolate third-party integrations behind dedicated services. |
-| ADR-007 | Centralize cross-cutting concerns. |
-| ADR-008 | Standardize API responses and centralized error handling. |
-| ADR-009 | Maintain one-way module dependencies and prohibit circular dependencies. |
-| ADR-010 | Keep business logic independent of infrastructure implementations. |
+The following architectural decisions have been formally documented as Architecture Decision Records in `05-ADR.md`.
+
+| ADR ID | Title | Status |
+|---|---|---|
+| ADR-001 | Adopt Layered Architecture | Accepted |
+| ADR-002 | Use Express.js as the Backend Framework | Accepted |
+| ADR-003 | Use TypeScript | Accepted |
+| ADR-004 | Use MongoDB as the Primary Database | Accepted |
+| ADR-005 | Use JWT-Based Authentication | Planned |
+| ADR-006 | Use Cloudinary for Image Storage | Planned |
+| ADR-007 | AI Provider Strategy | Planned |
+| ADR-008 | Use RESTful API Design | Accepted |
+| ADR-009 | Centralized Logging Strategy | Planned |
+| ADR-010 | Containerized Deployment Strategy | Planned |
+
+Refer to `05-ADR.md` for the full context, alternatives considered, and review notes for each decision.
 
 ---
 
 # 12. Open Questions
 
-The following architectural topics remain open for implementation planning:
+The following architectural topics remain open for implementation planning.
 
-- Which database technology will be selected?
+Topics already decided are marked with their ADR reference.
+
+## Resolved
+
+- ~~Which database technology will be selected?~~ → **ADR-004**: MongoDB
+- ~~Which authentication mechanism will be implemented?~~ → **ADR-005**: JWT-Based Authentication
+- ~~Which file storage provider will be used?~~ → **ADR-006**: Cloudinary
+- ~~Which deployment platform will host the application?~~ → **ADR-010**: Containerized Deployment
+
+## Still Open
+
 - Which ORM or ODM will be used?
-- Which authentication mechanism will be implemented?
 - Which validation library will be adopted?
 - Which logging framework will be used?
 - Which caching technology will be selected?
-- Which file storage provider will be used?
 - Which AI provider(s) will be integrated?
 - Which weather provider will be integrated?
-- Which deployment platform will host the application?
