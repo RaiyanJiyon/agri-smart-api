@@ -1,11 +1,25 @@
-# Deployment
+08-Deployment.md
 
-## Environments
+# 1. Purpose
 
-## Prerequisites
+# 2. Deployment Strategy
 
-## Build and Release Process
+# 3. Environments
 
-## Runtime Configuration
+# 4. Infrastructure
 
-## Rollback Plan
+# 5. Prerequisites
+
+# 6. Build Process
+
+# 7. Release Process
+
+# 8. Runtime Configuration
+
+# 9. Monitoring & Logging
+
+# 10. Backup & Recovery
+
+# 11. Rollback Strategy
+
+# 12. Deployment Checklist
