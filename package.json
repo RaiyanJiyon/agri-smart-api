@@ -7,6 +7,10 @@
     "dev": "tsx watch --env-file=.env src/app.ts",
     "start": "node --env-file=.env dist/app.js",
     "build": "tsc -p tsconfig.json",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write \"src/**/*.{ts,js,json,md}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,js,json,md}\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
