@@ -1,2 +1,19 @@
-node_modules
+# Dependencies
+node_modules/
+
+# Production Build
+dist/
+build/
+
+# Environment Variables
 .env
+.env.local
+
+# Logs
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+
+# OS Files
+.DS_Store
+Thumbs.db
