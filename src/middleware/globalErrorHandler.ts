@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "../constants/statusCodes.js";
+import { envVars } from "../config/env.js";
 
 interface AppError {
     statusCode?: number;
@@ -34,6 +35,6 @@ export const globalErrorHandler = (
         status: statusCode,
         message: message,
         // Expose stack trace only in development mode for debugging
-        ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
+        ...(envVars.NODE_ENV === 'development' && { stack: err.stack }),
     })
 }
