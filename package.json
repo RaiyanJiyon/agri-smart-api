@@ -41,7 +41,8 @@
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "helmet": "^8.3.0",
-    "mongoose": "^9.9.0"
+    "mongoose": "^9.9.0",
+    "winston": "^3.19.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
