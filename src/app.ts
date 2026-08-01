@@ -20,12 +20,9 @@ app.use(cors({
 
 app.use(helmet());
 
-
 app.use(compression());
 
 app.use(cookieParser());
-
-const port = envVars.PORT ?? 5000;
 
 app.get('/', (_req, res) => {
     res.send('Hello, World!');
@@ -35,6 +32,4 @@ app.use(notFound);
 
 app.use(globalErrorHandler);
 
-app.listen(port, () => {
-    console.log(`Server is running at http://localhost:${port}`);
-});
+export default app;
