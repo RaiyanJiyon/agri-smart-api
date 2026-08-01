@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { envVars } from "./env.js";
+import { logger } from "../utils/logger.js";
 
 const MAX_RETRIES = 5;
 const RETRY_DELAY_MS = 3000;
@@ -11,15 +12,15 @@ export const connectDatabase = async (): Promise<void> => {
     while (retries > 0) {
         try {
             await mongoose.connect(mongoUri);
-            console.log("Database connected successfully with Mongoose.");
+            logger.info("Database connected successfully with Mongoose.");
             return;
         } catch (error) {
             retries -= 1;
-            console.warn(`MongoDB connection failed. Retries left: ${retries}. Trying again in ${RETRY_DELAY_MS / 1000}s...`);
-            console.error(error);
+            logger.warn(`MongoDB connection failed. Retries left: ${retries}. Trying again in ${RETRY_DELAY_MS / 1000}s...`);
+            logger.error(error as string);
 
             if (retries === 0) {
-                console.error("Max connection retries reached. Exiting application.");
+                logger.error("Max connection retries reached. Exiting application.");
                 process.exit(1);
             }
 

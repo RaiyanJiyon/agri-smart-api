@@ -1,6 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "../constants/statusCodes.js";
 import { envVars } from "../config/env.js";
+import { logger } from "../utils/logger.js";
 
 interface AppError {
     statusCode?: number;
@@ -27,7 +28,7 @@ export const globalErrorHandler = (
     // Operational vs Programming error logging distinction
     if (!err.isOperational) {
         // Log unexpected bugs to an external monitoring tool (e.g., Sentry, Datadog)
-        console.error('UNEXPECTED CRITICAL ERROR:', err);
+        logger.error('UNEXPECTED CRITICAL ERROR:', {message: err.message, stack: err.stack});
     }
 
     res.status(statusCode).json({
