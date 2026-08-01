@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { type Request, type Response } from 'express';
 import cors from "cors";
 import helmet from "helmet";
 import compression from "compression";
@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import { notFound } from './middleware/notFound.js';
 import { globalErrorHandler } from './middleware/globalErrorHandler.js';
 import { envVars } from './config/env.js';
+import { router } from './routes/index.js';
 
 const app = express();
 
@@ -24,8 +25,10 @@ app.use(compression());
 
 app.use(cookieParser());
 
-app.get('/', (_req, res) => {
-    res.send('Hello, World!');
+app.use("api/v1", router);
+
+app.get('/', (_req: Request, res: Response) => {
+    res.send('Agri Smart server is up and running!');
 });
 
 app.use(notFound);
