@@ -4,6 +4,7 @@ import helmet from "helmet";
 import compression from "compression";
 import cookieParser from 'cookie-parser';
 import { notFound } from './middleware/notFound.js';
+import { globalErrorHandler } from './middleware/globalErrorHandler.js';
 
 const app = express();
 
@@ -29,6 +30,8 @@ app.get('/', (req, res) => {
 });
 
 app.use(notFound);
+
+app.use(globalErrorHandler);
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
