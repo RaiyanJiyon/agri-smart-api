@@ -32,9 +32,12 @@
     "express": "^5.2.1"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/express": "~5.0.6",
     "@types/node": "^26.1.0",
+    "eslint": "^10.8.0",
     "tsx": "^4.22.5",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.65.0"
   }
 }
