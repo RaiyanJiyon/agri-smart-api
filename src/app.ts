@@ -3,6 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import compression from "compression";
 import cookieParser from 'cookie-parser';
+import { notFound } from './middleware/notFound.js';
 
 const app = express();
 
@@ -26,6 +27,8 @@ const port = process.env.PORT ?? 5000;
 app.get('/', (req, res) => {
     res.send('Hello, World!');
 });
+
+app.use(notFound);
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
