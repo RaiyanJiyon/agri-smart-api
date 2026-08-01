@@ -1,11 +1,12 @@
 import { Router } from "express";
+import healthRoutes from "../modules/health/health.route.js";
 
 export const router = Router();
 
 const moduleRoutes = [
     {
-        path: "/",
-        route: "",
+        path: "/health",
+        route: healthRoutes,
     }
 ];
 
