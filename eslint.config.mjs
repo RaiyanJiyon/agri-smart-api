@@ -1,6 +1,7 @@
 // @ts-check
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
+import eslintConfigPrettier from 'eslint-config-prettier'
 
 export default tseslint.config(
   // Ignore build output and dependencies
@@ -29,5 +30,6 @@ export default tseslint.config(
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
     },
-  }
+  },
+  eslintConfigPrettier
 );
