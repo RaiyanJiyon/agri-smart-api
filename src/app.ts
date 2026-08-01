@@ -1,10 +1,25 @@
 import express from 'express';
+import cors from "cors";
+import helmet from "helmet";
+import compression from "compression";
+import cookieParser from 'cookie-parser';
 
 const app = express();
 
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
+
+app.use(cors({
+    origin: process.env.CLIENT_URL ?? "http://localhost:3000",
+    credentials: true // Allow cookies/auth headers if needed
+}));
+
+app.use(helmet());
+
+app.use(compression());
+
+app.use(cookieParser());
 
 const port = process.env.PORT ?? 5000;
 
