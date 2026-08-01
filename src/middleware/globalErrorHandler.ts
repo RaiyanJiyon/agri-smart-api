@@ -9,6 +9,10 @@ interface AppError {
     code?: string;
     isOperational?: boolean;
     stack?: string;
+    name?: string;
+    path?: string;
+    value?: unknown;
+    [key: string]: unknown;
 };
 
 export const globalErrorHandler = (
@@ -20,7 +24,14 @@ export const globalErrorHandler = (
     let statusCode = err.statusCode ?? StatusCodes.INTERNAL_SERVER_ERROR;
     let message = err.message ?? "Internal Server Error";
 
-    if (err.code === "P2002") {
+    if (err.name === "ValidationError") {
+        statusCode = StatusCodes.BAD_REQUEST;
+        message = "Validation Error";
+    } else if (err.name === "CastError") {
+        statusCode = StatusCodes.BAD_REQUEST;
+        message = "Cast Error";
+        // message = `Invalid ${err.path ?? "value"}: ${String(err.value ?? "")}`;
+    } else if (err.code === "P2002") {
         statusCode = StatusCodes.CONFLICT;
         message = "A record with this field already exists.";
     }
@@ -37,5 +48,5 @@ export const globalErrorHandler = (
         message: message,
         // Expose stack trace only in development mode for debugging
         ...(envVars.NODE_ENV === 'development' && { stack: err.stack }),
-    })
-}
+    });
+};
