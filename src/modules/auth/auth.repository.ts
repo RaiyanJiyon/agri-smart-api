@@ -6,18 +6,18 @@ const findById = async (id: Types.ObjectId): Promise<HydratedDocument<IUser> | n
   return AuthModel.findById(id);
 };
 
-const findUserByEmail = async (email: string): Promise<IUser | null> => {
+const findUserByEmail = async (email: string): Promise<HydratedDocument<IUser> | null> => {
   return AuthModel.findOne({ email });
 };
 
-const createUser = async (payload: Partial<IUser>): Promise<IUser> => {
+const createUser = async (payload: Partial<IUser>): Promise<HydratedDocument<IUser>> => {
   return AuthModel.create(payload);
 };
 
 const updateVerificationStatus = async (
   userId: Types.ObjectId,
   isEmailVerified: boolean
-): Promise<IUser | null> => {
+): Promise<HydratedDocument<IUser> | null> => {
   return AuthModel.findByIdAndUpdate(userId, { isEmailVerified }, { new: true });
 };
 

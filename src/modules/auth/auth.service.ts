@@ -1,6 +1,7 @@
 import { HTTP_STATUS } from '../../constants/httpStatus.js';
 import { ApiError } from '../../errors/AppError.js';
 import { hashPassword } from '../../utils/argon.js';
+import { VerificationService } from '../verification/verification.service.js';
 import type { IUser } from './auth.interface.js';
 import { AuthRepository } from './auth.repository.js';
 
@@ -17,6 +18,8 @@ const register = async (payload: Pick<IUser, 'name' | 'email' | 'password'>): Pr
     ...payload,
     password: hashedPassword,
   });
+
+  await VerificationService.sendVerificationEmail(user._id);
 
   return user;
 };

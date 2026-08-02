@@ -7,4 +7,8 @@ const router = Router();
 
 router.post('/register', validateRequest(registerValidationSchema), AuthController.register);
 
+router.post('/verify-email', AuthController.verifyEmail);
+
+router.post('/resend-verification-email', AuthController.resendVerificationEmail);
+
 export const AuthRoutes = router;
