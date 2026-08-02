@@ -27,7 +27,7 @@ app.use(compression());
 
 app.use(cookieParser());
 
-app.use('api/v1', router);
+app.use('/api/v1', router);
 
 app.get('/', (_req: Request, res: Response) => {
   res.send('Agri Smart server is up and running!');
