@@ -5,7 +5,7 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import { notFound } from './middleware/notFound.js';
 import { globalErrorHandler } from './middleware/globalErrorHandler.js';
-import { envVars } from './config/env.js';
+import { config } from './config/env.js';
 import { router } from './routes/index.js';
 
 const app = express();
@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   cors({
-    origin: envVars.CLIENT_URL ?? 'http://localhost:3000',
+    origin: config.CLIENT_URL ?? 'http://localhost:3000',
     credentials: true, // Allow cookies/auth headers if needed
   })
 );

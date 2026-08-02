@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from 'express';
 import { HTTP_STATUS } from '../constants/index.js';
-import { envVars } from '../config/env.js';
+import { config } from '../config/env.js';
 import { logger } from '../utils/logger.js';
 
 interface AppError {
@@ -47,6 +47,6 @@ export const globalErrorHandler = (
     status: statusCode,
     message: message,
     // Expose stack trace only in development mode for debugging
-    ...(envVars.NODE_ENV === 'development' && { stack: err.stack }),
+    ...(config.NODE_ENV === 'development' && { stack: err.stack }),
   });
 };

@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { envVars } from './env.js';
+import { config } from './env.js';
 import { logger } from '../utils/logger.js';
 
 const MAX_RETRIES = 5;
@@ -7,7 +7,7 @@ const RETRY_DELAY_MS = 3000;
 
 export const connectDatabase = async (): Promise<void> => {
   let retries = MAX_RETRIES;
-  const mongoUri = envVars.DB_URL;
+  const mongoUri = config.DB_URL;
 
   while (retries > 0) {
     try {

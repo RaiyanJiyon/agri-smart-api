@@ -1,8 +1,8 @@
 import winston from 'winston';
-import { envVars } from '../config/env.js';
+import { config } from '../config/env.js';
 
 const winstonLogger = winston.createLogger({
-  level: envVars.NODE_ENV === 'production' ? 'info' : 'debug',
+  level: config.NODE_ENV === 'production' ? 'info' : 'debug',
   format: winston.format.combine(
     winston.format.timestamp(),
     winston.format.json() // Enterprise standard: structured JSON logs
