@@ -2,10 +2,10 @@
   "name": "agri-smart-api",
   "version": "1.0.0",
   "description": "Backend API for Agri Smart platform",
-  "main": "dist/app.js",
+  "main": "dist/server.js",
   "scripts": {
-    "dev": "tsx watch --env-file=.env src/app.ts",
-    "start": "node --env-file=.env dist/app.js",
+    "dev": "tsx watch --env-file=.env src/server.ts",
+    "start": "node --env-file=.env dist/server.js",
     "build": "tsc -p tsconfig.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
