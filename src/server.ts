@@ -8,7 +8,7 @@ const startServer = async (): Promise<void> => {
   await connectDatabase();
 
   const server = app.listen(PORT, () => {
-    logger.info(`Server is running on port ${PORT}`);
+    logger.info(`Server is running on port http://localhost:${PORT}`);
   });
 
   const handleShutdown = (signal: string): void => {

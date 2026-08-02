@@ -5,12 +5,18 @@ interface envConfig {
   NODE_ENV: string;
   ARGON2_MEMORY: number;
   ARGON2_TIME: number;
-  ARGON2_PARALLELISM: number
-
+  ARGON2_PARALLELISM: number;
 }
 
 const loadEnvVariables = (): envConfig => {
-  const requiredEnvVariables: string[] = ["PORT", "CLIENT_URL", "DB_URL", "NODE_ENV", "ARGON2_MEMORY", "ARGON2_TIME", "ARGON2_PARALLELISM"
+  const requiredEnvVariables: string[] = [
+    'PORT',
+    'CLIENT_URL',
+    'DB_URL',
+    'NODE_ENV',
+    'ARGON2_MEMORY',
+    'ARGON2_TIME',
+    'ARGON2_PARALLELISM',
   ];
 
   requiredEnvVariables.forEach((key) => {

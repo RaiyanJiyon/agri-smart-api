@@ -1,1 +1,1 @@
-export { default as validateRequest } from "./validateRequest.js";
+export { default as validateRequest } from './validateRequest.js';

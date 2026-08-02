@@ -1,12 +1,17 @@
 import { Router } from 'express';
-import healthRoutes from '../modules/health/health.route.js';
+import { HealthRoutes } from '../modules/health/health.route.js';
+import { AuthRoutes } from '../modules/auth/auth.route.js';
 
 export const router = Router();
 
 const moduleRoutes = [
   {
     path: '/health',
-    route: healthRoutes,
+    route: HealthRoutes,
+  },
+  {
+    path: '/auth',
+    route: AuthRoutes,
   },
 ];
 
