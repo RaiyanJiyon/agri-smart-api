@@ -19,7 +19,7 @@ const register = async (payload: Pick<IUser, 'name' | 'email' | 'password'>): Pr
     password: hashedPassword,
   });
 
-  await VerificationService.sendVerificationEmail(user._id);
+  await VerificationService.sendVerificationEmail(user.email);
 
   return user;
 };

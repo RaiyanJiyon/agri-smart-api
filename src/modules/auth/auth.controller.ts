@@ -5,7 +5,6 @@ import { sendResponse } from '../../utils/sendResponse.js';
 import { HTTP_STATUS } from '../../constants/httpStatus.js';
 import type { IUser } from './auth.interface.js';
 import { VerificationService } from '../verification/verification.service.js';
-import type { Types } from 'mongoose';
 
 // Define expected request body shapes
 interface VerifyEmailBody {
@@ -13,7 +12,7 @@ interface VerifyEmailBody {
 }
 
 interface ResendEmailBody {
-  userId: Types.ObjectId;
+  email: string;
 }
 
 const register = catchAsync(async (req: Request, res: Response) => {
@@ -45,14 +44,14 @@ const verifyEmail = catchAsync(
 
 const resendVerificationEmail = catchAsync(
   async (req: Request<unknown, unknown, ResendEmailBody>, res: Response) => {
-    const { userId } = req.body; // Now strongly typed as string
+    const { email } = req.body; // Now strongly typed as string
 
-    await VerificationService.sendVerificationEmail(userId);
+    await VerificationService.sendVerificationEmail(email);
 
     sendResponse(res, {
       statusCode: HTTP_STATUS.OK,
       success: true,
-      message: 'Verification email sent successfully.',
+      message: 'If an account exists and is not verified, a verification email has been sent.',
       data: null,
     });
   }
