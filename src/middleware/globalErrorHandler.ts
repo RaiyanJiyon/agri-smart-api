@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from 'express';
-import { StatusCodes } from '../constants/statusCodes.js';
+import { HTTP_STATUS } from '../constants/index.js';
 import { envVars } from '../config/env.js';
 import { logger } from '../utils/logger.js';
 
@@ -21,18 +21,18 @@ export const globalErrorHandler = (
   res: Response,
   _next: NextFunction
 ) => {
-  let statusCode = err.statusCode ?? StatusCodes.INTERNAL_SERVER_ERROR;
+  let statusCode = err.statusCode ?? HTTP_STATUS.INTERNAL_SERVER_ERROR;
   let message = err.message ?? 'Internal Server Error';
 
   if (err.name === 'ValidationError') {
-    statusCode = StatusCodes.BAD_REQUEST;
+    statusCode = HTTP_STATUS.BAD_REQUEST;
     message = 'Validation Error';
   } else if (err.name === 'CastError') {
-    statusCode = StatusCodes.BAD_REQUEST;
+    statusCode = HTTP_STATUS.BAD_REQUEST;
     message = 'Cast Error';
     // message = `Invalid ${err.path ?? "value"}: ${String(err.value ?? "")}`;
   } else if (err.code === 'P2002') {
-    statusCode = StatusCodes.CONFLICT;
+    statusCode = HTTP_STATUS.CONFLICT;
     message = 'A record with this field already exists.';
   }
 

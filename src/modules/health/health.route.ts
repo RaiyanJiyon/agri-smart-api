@@ -1,6 +1,6 @@
 import { Router, type Request, type Response } from 'express';
 import mongoose from 'mongoose';
-import { StatusCodes } from '../../constants/statusCodes.js';
+import { HTTP_STATUS } from '../../constants/index.js';
 
 const router = Router();
 
@@ -10,14 +10,14 @@ router.get('/', (_req: Request, res: Response) => {
   const isConnected = dbState === mongoose.ConnectionStates.connected;
 
   if (isConnected) {
-    return res.status(StatusCodes.OK).json({
+    return res.status(HTTP_STATUS.OK).json({
       status: 'UP',
       timeStamp: new Date().toISOString(),
       database: 'connected',
     });
   }
 
-  return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+  return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
     status: 'DOWN',
     timeStamp: new Date().toISOString(),
     database: 'disconnected',
