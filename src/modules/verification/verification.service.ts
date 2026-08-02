@@ -6,6 +6,10 @@ import { generateVerificationToken, hashToken } from '../../utils/crypto.js';
 import { VerificationRepository } from './verification.repository.js';
 import { VERIFICATION_TYPE } from './verification.constant.js';
 import { logger } from '../../utils/logger.js';
+import { config } from '../../config/env.js';
+import { EmailService } from '../../shared/email/email.service.js';
+import { EMAIL_SUBJECT } from '../../shared/email/email.constant.js';
+import { verificationEmailTemplate } from '../../shared/email/email.template.js';
 
 const sendVerificationEmail = async (userId: Types.ObjectId): Promise<void> => {
   const user = await AuthRepository.findById(userId);
@@ -34,13 +38,13 @@ const sendVerificationEmail = async (userId: Types.ObjectId): Promise<void> => {
     expiresAt,
   });
 
-  /**
-   * TODO
-   *  EmailService.sendVerificationEmail({
-   *  email: user.email,
-   *  token,
-   * });
-   */
+  const verificationUrl = `${config.CLIENT_URL}/verify-email?token=${token}`;
+
+  await EmailService.send({
+    to: user.email,
+    subject: EMAIL_SUBJECT.EMAIL_VERIFICATION,
+    html: verificationEmailTemplate(verificationUrl),
+  });
 };
 
 const verifyEmail = async (token: string): Promise<void> => {
