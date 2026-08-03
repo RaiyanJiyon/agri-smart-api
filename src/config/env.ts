@@ -8,6 +8,8 @@ interface envConfig {
   ARGON2_PARALLELISM: number;
   RESEND_API_KEY: string;
   EMAIL_FROM: string;
+  TOKEN_SIZE: number;
+  HASH_ALGORITHM: string;
 }
 
 const loadEnvVariables = (): envConfig => {
@@ -21,6 +23,8 @@ const loadEnvVariables = (): envConfig => {
     'ARGON2_PARALLELISM',
     'RESEND_API_KEY',
     'EMAIL_FROM',
+    'TOKEN_SIZE',
+    'HASH_ALGORITHM',
   ];
 
   requiredEnvVariables.forEach((key) => {
@@ -39,6 +43,8 @@ const loadEnvVariables = (): envConfig => {
     ARGON2_PARALLELISM: Number(process.env.ARGON2_PARALLELISM!),
     RESEND_API_KEY: process.env.RESEND_API_KEY!,
     EMAIL_FROM: process.env.EMAIL_FROM!,
+    TOKEN_SIZE: Number(process.env.TOKEN_SIZE!),
+    HASH_ALGORITHM: process.env.HASH_ALGORITHM!,
   };
 };
 
