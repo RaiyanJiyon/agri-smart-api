@@ -5,8 +5,8 @@ import { config } from '../config/env.js';
 const ARGON2_OPTIONS = {
   type: argon2.argon2id, // Hybrid variant safe against side-channel and GPU attacks
   memoryCost: config.ARGON2_MEMORY,
-  timeCost: 3,
-  parallelism: 4,
+  timeCost: config.ARGON2_TIME,
+  parallelism: config.ARGON2_PARALLELISM,
 } as const;
 
 export const hashPassword = async (password: string): Promise<string> => {
