@@ -6,8 +6,16 @@ const findById = async (id: Types.ObjectId): Promise<HydratedDocument<IUser> | n
   return AuthModel.findById(id);
 };
 
-const findUserByEmail = async (email: string): Promise<HydratedDocument<IUser> | null> => {
+const findUserByEmail = async (
+  email: string
+): Promise<HydratedDocument<IUser> | null> => {
   return AuthModel.findOne({ email });
+};
+
+const findUserByEmailWithPassword = async (
+  email: string
+): Promise<HydratedDocument<IUser> | null> => {
+  return AuthModel.findOne({ email }).select('+password');
 };
 
 const createUser = async (payload: Partial<IUser>): Promise<HydratedDocument<IUser>> => {
@@ -24,6 +32,7 @@ const updateVerificationStatus = async (
 export const AuthRepository = {
   findById,
   findUserByEmail,
+  findUserByEmailWithPassword,
   createUser,
   updateVerificationStatus,
 };

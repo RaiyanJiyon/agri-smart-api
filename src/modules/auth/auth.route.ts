@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import validateRequest from '../../shared/validation/validateRequest.js';
 import {
+  loginValidationSchema,
   registerValidationSchema,
   resendVerificationEmailValidationSchema,
   verifyEmailValidationSchema,
@@ -22,5 +23,7 @@ router.post(
   validateRequest(resendVerificationEmailValidationSchema),
   AuthController.resendVerificationEmail
 );
+
+router.post('/login', validateRequest(loginValidationSchema), AuthController.login);
 
 export const AuthRoutes = router;

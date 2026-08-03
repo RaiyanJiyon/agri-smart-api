@@ -10,6 +10,13 @@ interface envConfig {
   EMAIL_FROM: string;
   TOKEN_SIZE: number;
   HASH_ALGORITHM: string;
+
+  JWT: {
+    JWT_ACCESS_SECRET: string;
+    JWT_ACCESS_EXPIRES_IN: string;
+    JWT_REFRESH_SECRET: string;
+    JWT_REFRESH_EXPIRES_IN: string;
+  };
 }
 
 const loadEnvVariables = (): envConfig => {
@@ -25,6 +32,10 @@ const loadEnvVariables = (): envConfig => {
     'EMAIL_FROM',
     'TOKEN_SIZE',
     'HASH_ALGORITHM',
+    'JWT_ACCESS_SECRET',
+    'JWT_ACCESS_EXPIRES_IN',
+    'JWT_REFRESH_SECRET',
+    'JWT_REFRESH_EXPIRES_IN',
   ];
 
   requiredEnvVariables.forEach((key) => {
@@ -45,6 +56,12 @@ const loadEnvVariables = (): envConfig => {
     EMAIL_FROM: process.env.EMAIL_FROM!,
     TOKEN_SIZE: Number(process.env.TOKEN_SIZE!),
     HASH_ALGORITHM: process.env.HASH_ALGORITHM!,
+    JWT: {
+      JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET!,
+      JWT_ACCESS_EXPIRES_IN: process.env.JWT_ACCESS_EXPIRES_IN!,
+      JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET!,
+      JWT_REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN!,
+    },
   };
 };
 

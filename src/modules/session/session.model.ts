@@ -8,13 +8,11 @@ const sessionSchema = new Schema<ISession>(
       type: Schema.Types.ObjectId,
       ref: COLLECTION_NAME.USER,
       required: true,
-      index: true,
     },
 
     refreshTokenHash: {
       type: String,
       required: true,
-      unique: true,
     },
 
     ipAddress: {
@@ -32,7 +30,6 @@ const sessionSchema = new Schema<ISession>(
     expiresAt: {
       type: Date,
       required: true,
-      index: true,
     },
 
     revokedAt: {
@@ -73,6 +70,8 @@ sessionSchema.index({
  */
 sessionSchema.index({
   refreshTokenHash: 1,
+}, {
+  unique: true,
 });
 
 export const SessionModel = model<ISession>(COLLECTION_NAME.SESSION, sessionSchema);

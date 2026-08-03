@@ -1,5 +1,5 @@
 import type { Types } from 'mongoose';
-import type { ICreateSession, ISession } from './session.interface.js';
+import type { ISession } from './session.interface.js';
 import { SessionModel } from './session.model.js';
 import type { DeleteResult } from 'mongoose';
 
@@ -10,7 +10,7 @@ const getActiveSessionFilter = () => ({
   },
 });
 
-const create = async (payload: ICreateSession): Promise<ICreateSession> => {
+const create = async (payload: Omit<ISession, 'revokedAt'>): Promise<ISession> => {
   return SessionModel.create(payload);
 };
 

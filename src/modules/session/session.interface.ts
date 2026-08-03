@@ -15,8 +15,8 @@ export interface ISession {
 
 export interface ICreateSession {
   userId: Types.ObjectId;
-  refreshTokenHash: string;
-  ipAddress: string;
-  userAgent: string;
+  refreshToken: string;
+  ipAddress?: string | undefined;
+  userAgent?: string | undefined;
   expiresAt: Date;
 }

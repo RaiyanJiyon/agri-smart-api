@@ -15,3 +15,10 @@ export interface IUser {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface ILoginPayload {
+  email: string;
+  password: string;
+  ipAddress?: string;
+  userAgent?: string;
+}

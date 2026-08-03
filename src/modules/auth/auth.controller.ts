@@ -5,6 +5,8 @@ import { sendResponse } from '../../utils/sendResponse.js';
 import { HTTP_STATUS } from '../../constants/httpStatus.js';
 import type { IUser } from './auth.interface.js';
 import { VerificationService } from '../verification/verification.service.js';
+import { getRefreshTokenCookieOptions } from '../../utils/cookie.js';
+import { COOKIE_NAME } from '../../constants/cookie.js';
 
 // Define expected request body shapes
 interface VerifyEmailBody {
@@ -13,6 +15,11 @@ interface VerifyEmailBody {
 
 interface ResendEmailBody {
   email: string;
+}
+
+interface LoginBody {
+  email: string;
+  password: string;
 }
 
 const register = catchAsync(async (req: Request, res: Response) => {
@@ -57,8 +64,30 @@ const resendVerificationEmail = catchAsync(
   }
 );
 
+const login = catchAsync(async (req: Request<unknown, unknown, LoginBody>, res: Response) => {
+
+const result = await AuthService.login({
+    ...req.body,
+    ipAddress: req.ip ?? '',
+    userAgent: req.get('User-Agent') ?? 'unknown',
+  });
+
+  res.cookie(COOKIE_NAME.REFRESH_TOKEN, result.refreshToken, getRefreshTokenCookieOptions());
+
+  sendResponse(res, {
+    statusCode: HTTP_STATUS.OK,
+    success: true,
+    message: 'Login successful.',
+    data: {
+      accessToken: result.accessToken,
+      user: result.user,
+    },
+  });
+});
+
 export const AuthController = {
   register,
   verifyEmail,
   resendVerificationEmail,
+  login,
 };

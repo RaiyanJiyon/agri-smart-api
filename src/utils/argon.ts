@@ -17,6 +17,10 @@ export const comparePassword = async (
   plainPassword: string,
   hashedPassword: string
 ): Promise<boolean> => {
+  if (!hashedPassword) {
+    throw new Error('Hashed password must be a non-empty string.');
+  }
+
   // CRITICAL: Argon2 order is (hashedPassword, plainPassword)
   return argon2.verify(hashedPassword, plainPassword);
 };

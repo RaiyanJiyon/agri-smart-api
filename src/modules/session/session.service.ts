@@ -4,7 +4,17 @@ import type { ICreateSession, ISession } from './session.interface.js';
 import { SessionRepository } from './session.repository.js';
 
 const createSession = async (payload: ICreateSession): Promise<ISession> => {
-  return SessionRepository.create(payload);
+  return SessionRepository.create({
+    userId: payload.userId,
+
+    refreshTokenHash: hashToken(payload.refreshToken),
+
+    ipAddress: payload.ipAddress ?? '',
+
+    userAgent: payload.userAgent ?? 'unknown',
+
+    expiresAt: payload.expiresAt,
+  });
 };
 
 const findActiveSession = async (refreshToken: string): Promise<ISession | null> => {
