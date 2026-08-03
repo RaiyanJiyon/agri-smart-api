@@ -1,0 +1,78 @@
+import { model, Schema } from 'mongoose';
+import type { ISession } from './session.types.js';
+import { COLLECTION_NAME } from '../../constants/database.js';
+
+const sessionSchema = new Schema<ISession>(
+  {
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: COLLECTION_NAME.USER,
+      required: true,
+      index: true,
+    },
+
+    refreshTokenHash: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+
+    ipAddress: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    userAgent: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    expiresAt: {
+      type: Date,
+      required: true,
+      index: true,
+    },
+
+    revokedAt: {
+      type: Date,
+      default: null,
+    },
+  },
+  {
+    timestamps: true,
+    versionKey: false,
+  }
+);
+
+/**
+ * Automatically remove expired sessions.
+ *
+ * NOTE:
+ * MongoDB's TTL monitor runs approximately every 60 seconds,
+ * so deletion is not immediate.
+ */
+
+sessionSchema.index(
+  { expiresAt: 1 },
+  {
+    expireAfterSeconds: 0,
+  }
+);
+
+/**
+ * Quickly find all sessions for a user.
+ */
+sessionSchema.index({
+  userId: 1,
+});
+
+/**
+ * Quickly find a session by refresh token hash.
+ */
+sessionSchema.index({
+  refreshTokenHash: 1,
+});
+
+export const SessionModel = model<ISession>(COLLECTION_NAME.SESSION, sessionSchema);

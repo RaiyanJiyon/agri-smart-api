@@ -1,4 +1,4 @@
-import { config } from "../config/env.js";
+import { config } from '../config/env.js';
 
 export const CRYPTO = {
   TOKEN_SIZE: config.TOKEN_SIZE,

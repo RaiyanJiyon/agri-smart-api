@@ -1,0 +1,87 @@
+import type { Types } from 'mongoose';
+import type { ICreateSession, ISession } from './session.interface.js';
+import { SessionModel } from './session.model.js';
+import type { DeleteResult } from 'mongoose';
+
+const getActiveSessionFilter = () => ({
+  revokedAt: null,
+  expiresAt: {
+    $gt: new Date(),
+  },
+});
+
+const create = async (payload: ICreateSession): Promise<ICreateSession> => {
+  return SessionModel.create(payload);
+};
+
+const findByRefreshTokenHash = async (refreshTokenHash: string): Promise<ISession | null> => {
+  return SessionModel.findOne({ refreshTokenHash });
+};
+
+const findActiveByRefreshTokenHash = async (refreshTokenHash: string): Promise<ISession | null> => {
+  return SessionModel.findOne({
+    refreshTokenHash,
+    ...getActiveSessionFilter(),
+  });
+};
+
+const findAllByUserId = async (userId: Types.ObjectId): Promise<ISession[]> => {
+  return SessionModel.find({
+    userId,
+  }).sort({
+    createdAt: -1,
+  });
+};
+
+const findActiveByUserId = async (userId: Types.ObjectId): Promise<ISession[]> => {
+  return SessionModel.find({
+    userId,
+    ...getActiveSessionFilter(),
+  }).sort({
+    createdAt: -1,
+  });
+};
+
+const revoke = async (id: Types.ObjectId): Promise<ISession | null> => {
+  return SessionModel.findByIdAndUpdate(
+    {
+      _id: id,
+      revokedAt: null,
+    },
+    {
+      revokedAt: new Date(),
+    },
+    {
+      new: true,
+    }
+  );
+};
+
+const revokeAllByUserId = async (userId: Types.ObjectId): Promise<void> => {
+  await SessionModel.updateMany(
+    {
+      _id: userId,
+      revokedAt: null,
+    },
+    {
+      revokedAt: new Date(),
+    }
+  );
+};
+
+const deleteByUserId = async (userId: Types.ObjectId): Promise<DeleteResult> => {
+  return SessionModel.deleteMany({
+    _id: userId,
+  });
+};
+
+export const SessionRepository = {
+  create,
+  findByRefreshTokenHash,
+  findActiveByRefreshTokenHash,
+  findAllByUserId,
+  findActiveByUserId,
+  revoke,
+  revokeAllByUserId,
+  deleteByUserId,
+};
