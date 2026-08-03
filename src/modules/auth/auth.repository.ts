@@ -6,9 +6,7 @@ const findById = async (id: Types.ObjectId): Promise<HydratedDocument<IUser> | n
   return AuthModel.findById(id);
 };
 
-const findUserByEmail = async (
-  email: string
-): Promise<HydratedDocument<IUser> | null> => {
+const findUserByEmail = async (email: string): Promise<HydratedDocument<IUser> | null> => {
   return AuthModel.findOne({ email });
 };
 

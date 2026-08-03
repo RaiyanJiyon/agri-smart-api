@@ -65,8 +65,7 @@ const resendVerificationEmail = catchAsync(
 );
 
 const login = catchAsync(async (req: Request<unknown, unknown, LoginBody>, res: Response) => {
-
-const result = await AuthService.login({
+  const result = await AuthService.login({
     ...req.body,
     ipAddress: req.ip ?? '',
     userAgent: req.get('User-Agent') ?? 'unknown',

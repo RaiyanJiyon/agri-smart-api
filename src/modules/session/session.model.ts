@@ -68,10 +68,13 @@ sessionSchema.index({
 /**
  * Quickly find a session by refresh token hash.
  */
-sessionSchema.index({
-  refreshTokenHash: 1,
-}, {
-  unique: true,
-});
+sessionSchema.index(
+  {
+    refreshTokenHash: 1,
+  },
+  {
+    unique: true,
+  }
+);
 
 export const SessionModel = model<ISession>(COLLECTION_NAME.SESSION, sessionSchema);

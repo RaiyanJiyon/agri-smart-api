@@ -1,4 +1,4 @@
-import type { IUser } from "./auth.interface.js";
+import type { IUser } from './auth.interface.js';
 
 export interface IGenerateAuthTokensPayload {
   user: IUser;

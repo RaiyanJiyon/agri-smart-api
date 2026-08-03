@@ -1,3 +1,4 @@
+import { config } from '../../config/env.js';
 import { HTTP_STATUS } from '../../constants/httpStatus.js';
 import { ApiError } from '../../errors/AppError.js';
 import { comparePassword, hashPassword } from '../../utils/argon.js';
@@ -60,7 +61,7 @@ const login = async (payload: ILoginPayload) => {
     refreshToken: refreshToken,
     ipAddress: payload.ipAddress ?? '',
     userAgent: payload.userAgent ?? 'unknown',
-    expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    expiresAt: new Date(Date.now() + config.JWT.JWT_REFRESH_EXPIRES_IN),
   });
 
   return {
