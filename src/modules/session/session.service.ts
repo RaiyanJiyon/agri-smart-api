@@ -33,6 +33,13 @@ const revokeAllSessions = async (userId: Types.ObjectId): Promise<void> => {
   await SessionRepository.revokeAllByUserId(userId);
 };
 
+const revokeAllExcept = async (
+  userId: Types.ObjectId,
+  sessionIdToKeep: Types.ObjectId
+): Promise<void> => {
+  await SessionRepository.revokeAllExcept(userId, sessionIdToKeep);
+};
+
 const rotateRefreshToken = async (
   sessionId: Types.ObjectId,
   refreshToken: string,
@@ -46,5 +53,6 @@ export const SessionService = {
   findActiveSession,
   revokeSession,
   revokeAllSessions,
+  revokeAllExcept,
   rotateRefreshToken,
 };
