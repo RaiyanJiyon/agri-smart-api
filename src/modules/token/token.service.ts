@@ -52,6 +52,7 @@ const refreshTokens = async (refreshToken: string): Promise<IAuthTokens> => {
   const jwtPayload: IJwtPayload = {
     userId: user._id.toString(),
     email: user.email,
+    role: user.role,
   };
 
   const newAccessToken = JwtUtil.signAccessToken(jwtPayload);

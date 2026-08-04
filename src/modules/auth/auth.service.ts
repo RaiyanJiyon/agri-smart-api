@@ -51,6 +51,7 @@ const login = async (payload: ILoginPayload) => {
   const jwtPayload = {
     userId: user._id.toString(),
     email: user.email,
+    role: user.role,
   };
 
   const accessToken = JwtUtil.signAccessToken(jwtPayload);

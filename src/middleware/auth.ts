@@ -3,7 +3,7 @@ import { ApiError } from '../errors/AppError.js';
 import { HTTP_STATUS } from '../constants/httpStatus.js';
 import { JwtUtil } from '../utils/jwt.js';
 
-export const auth = () => {
+export const auth = (...requiredRoles: string[]) => {
   return (req: Request, _res: Response, next: NextFunction): void => {
     try {
       const authHeader = req.headers.authorization;
@@ -27,6 +27,13 @@ export const auth = () => {
       const decoded = JwtUtil.verifyAccessToken(token);
 
       req.user = decoded;
+
+      if (requiredRoles.length > 0 && !requiredRoles.includes(decoded.role)) {
+        throw new ApiError(
+          HTTP_STATUS.FORBIDDEN,
+          'You do not have permission to access this resource.'
+        );
+      }
 
       next();
     } catch (error) {
