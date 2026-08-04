@@ -1,16 +1,16 @@
-import jwt, { type Secret, type SignOptions } from 'jsonwebtoken';
+import jwt, { type SignOptions } from 'jsonwebtoken';
 import type { IJwtPayload } from '../types/jwt.js';
 import { config } from '../config/env.js';
 
 const signAccessToken = (payload: IJwtPayload): string => {
   return jwt.sign(payload, config.JWT.JWT_ACCESS_SECRET, {
-    expiresIn: config.JWT.JWT_ACCESS_EXPIRES_IN as Secret,
+    expiresIn: config.JWT.JWT_ACCESS_EXPIRES_IN,
   } as SignOptions);
 };
 
 const signRefreshToken = (payload: IJwtPayload): string => {
   return jwt.sign(payload, config.JWT.JWT_REFRESH_SECRET, {
-    expiresIn: Math.floor(config.JWT.JWT_REFRESH_EXPIRES_IN / 1000) as unknown as Secret,
+    expiresIn: Math.floor(config.JWT.JWT_REFRESH_EXPIRES_IN / 1000),
   } as SignOptions);
 };
 
