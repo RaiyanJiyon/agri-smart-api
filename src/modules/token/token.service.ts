@@ -6,24 +6,37 @@ import type { IAuthTokens } from '../auth/auth.interface.js';
 import { AuthRepository } from '../auth/auth.repository.js';
 import type { ISession } from '../session/session.interface.js';
 import { SessionService } from '../session/session.service.js';
+import type { IJwtPayload } from '../../types/jwt.js';
 
-const getActiveSessionFromRefreshToken = async (refreshToken: string): Promise<ISession | null> => {
-  JwtUtil.verifyRefreshToken(refreshToken);
-  return SessionService.findActiveSession(refreshToken);
-};
+interface IActiveRefreshSession {
+  payload: IJwtPayload;
+  session: ISession;
+}
 
-const refreshTokens = async (refreshToken: string): Promise<IAuthTokens> => {
+const getActiveSessionFromRefreshToken = async (
+  refreshToken: string
+): Promise<IActiveRefreshSession> => {
   const payload = JwtUtil.verifyRefreshToken(refreshToken);
 
   const session = await SessionService.findActiveSession(refreshToken);
 
   if (!session) {
-    throw new ApiError(HTTP_STATUS.UNAUTHORIZED, 'Invalid refresh token.');
+    throw new ApiError(HTTP_STATUS.UNAUTHORIZED, 'Invalid or expired refresh token.');
   }
 
   if (payload.userId !== session.userId.toString()) {
     throw new ApiError(HTTP_STATUS.UNAUTHORIZED, 'Invalid refresh token.');
   }
+
+  return {
+    payload,
+    session,
+  };
+};
+
+const refreshTokens = async (refreshToken: string): Promise<IAuthTokens> => {
+  // The helper already handles all validation (verify, existence, and userId match)
+  const { session } = await getActiveSessionFromRefreshToken(refreshToken);
 
   const user = await AuthRepository.findUserById(session.userId);
 
@@ -35,18 +48,16 @@ const refreshTokens = async (refreshToken: string): Promise<IAuthTokens> => {
     throw new ApiError(HTTP_STATUS.FORBIDDEN, 'Email is not verified.');
   }
 
-  const jwtPayload = {
+  const jwtPayload: IJwtPayload = {
     userId: user._id.toString(),
     email: user.email,
   };
 
   const newAccessToken = JwtUtil.signAccessToken(jwtPayload);
-
   const newRefreshToken = JwtUtil.signRefreshToken(jwtPayload);
-
   const expiresAt = new Date(Date.now() + config.JWT.JWT_REFRESH_EXPIRES_IN);
 
-  await SessionService.rotateRefreshToken(session._id, newRefreshToken, expiresAt);
+  await SessionService.rotateRefreshToken(session.userId, newRefreshToken, expiresAt);
 
   return {
     accessToken: newAccessToken,
@@ -56,18 +67,12 @@ const refreshTokens = async (refreshToken: string): Promise<IAuthTokens> => {
 
 const logout = async (refreshToken: string): Promise<void> => {
   try {
-    JwtUtil.verifyRefreshToken(refreshToken);
+    // Leverage the helper function cleanly in logout too
+    const { session } = await getActiveSessionFromRefreshToken(refreshToken);
+    await SessionService.revokeSession(session.userId);
   } catch {
-    // Ignore invalid/expired token
+    // Ignore invalid/expired tokens during logout
   }
-
-  const session = await SessionService.findActiveSession(refreshToken);
-
-  if (!session) {
-    return;
-  }
-
-  await SessionService.revokeSession(session.userId);
 };
 
 export const TokenService = {
