@@ -7,6 +7,7 @@ import { AuthRepository } from '../auth/auth.repository.js';
 import type { ISession } from '../session/session.interface.js';
 import { SessionService } from '../session/session.service.js';
 import type { IJwtPayload } from '../../types/jwt.js';
+import type { Types } from 'mongoose';
 
 interface IActiveRefreshSession {
   payload: IJwtPayload;
@@ -75,8 +76,12 @@ const logout = async (refreshToken: string): Promise<void> => {
   }
 };
 
+const logoutAllSessions = async (userId: Types.ObjectId): Promise<void> => {
+  await SessionService.revokeAllSessions(userId);
+}
+
 export const TokenService = {
   refreshTokens,
   logout,
-  getActiveSessionFromRefreshToken,
+  logoutAllSessions,
 };

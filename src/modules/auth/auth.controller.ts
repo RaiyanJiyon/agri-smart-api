@@ -9,6 +9,7 @@ import { getRefreshTokenCookieOptions } from '../../utils/cookie.js';
 import { COOKIE_NAME } from '../../constants/cookie.js';
 import { TokenService } from '../token/token.service.js';
 import { ApiError } from '../../errors/AppError.js';
+import { Types } from 'mongoose';
 
 // Define expected request body shapes
 interface VerifyEmailBody {
@@ -126,6 +127,22 @@ const logout = catchAsync(async (req, res) => {
   });
 });
 
+const logoutAllSessions = catchAsync(async (req, res: Response) => {
+  
+  await TokenService.logoutAllSessions(
+    new Types.ObjectId(req.user?.userId)
+  );
+
+  res.clearCookie(COOKIE_NAME.REFRESH_TOKEN, getRefreshTokenCookieOptions());
+
+  sendResponse(res, {
+    statusCode: HTTP_STATUS.OK,
+    success: true,
+    message: 'Logged out from all devices successfully.',
+    data: null,
+  });
+});
+
 export const AuthController = {
   register,
   verifyEmail,
@@ -133,4 +150,5 @@ export const AuthController = {
   login,
   refreshToken,
   logout,
+  logoutAllSessions,
 };

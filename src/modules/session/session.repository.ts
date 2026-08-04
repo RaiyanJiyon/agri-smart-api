@@ -67,6 +67,7 @@ const revokeAllByUserId = async (userId: Types.ObjectId): Promise<void> => {
     },
     {
       revokedAt: new Date(),
+      lastUsedAt: new Date(),
     }
   );
 };
