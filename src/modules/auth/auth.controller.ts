@@ -128,10 +128,7 @@ const logout = catchAsync(async (req, res) => {
 });
 
 const logoutAllSessions = catchAsync(async (req, res: Response) => {
-  
-  await TokenService.logoutAllSessions(
-    new Types.ObjectId(req.user?.userId)
-  );
+  await TokenService.logoutAllSessions(new Types.ObjectId(req.user?.userId));
 
   res.clearCookie(COOKIE_NAME.REFRESH_TOKEN, getRefreshTokenCookieOptions());
 

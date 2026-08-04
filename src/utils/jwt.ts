@@ -1,5 +1,5 @@
 import jwt, { type SignOptions } from 'jsonwebtoken';
-import type { IJwtPayload } from '../types/jwt.js';
+import type { IJwtPayload } from '../shared/types/jwt.js';
 import { config } from '../config/env.js';
 
 const signAccessToken = (payload: IJwtPayload): string => {
