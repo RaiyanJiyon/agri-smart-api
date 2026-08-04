@@ -25,6 +25,11 @@ interface LoginBody {
   password: string;
 }
 
+interface ChangePasswordBody {
+  currentPassword: string;
+  newPassword: string;
+}
+
 const register = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthService.register(req.body as Pick<IUser, 'name' | 'email' | 'password'>);
 
@@ -140,6 +145,28 @@ const logoutAllSessions = catchAsync(async (req, res: Response) => {
   });
 });
 
+const changePassword = catchAsync(
+  async (req: Request<unknown, unknown, ChangePasswordBody>, res: Response) => {
+    console.log('User:------------------------------------->>>>', req.user);
+    await AuthService.changePassword({
+      userId: new Types.ObjectId(req.user.userId),
+
+      currentPassword: req.body.currentPassword,
+
+      newPassword: req.body.newPassword,
+    });
+
+    res.clearCookie(COOKIE_NAME.REFRESH_TOKEN, getRefreshTokenCookieOptions());
+
+    sendResponse(res, {
+      statusCode: HTTP_STATUS.OK,
+      success: true,
+      message: 'Password changed successfully. Please log in again.',
+      data: null,
+    });
+  }
+);
+
 export const AuthController = {
   register,
   verifyEmail,
@@ -148,4 +175,5 @@ export const AuthController = {
   refreshToken,
   logout,
   logoutAllSessions,
+  changePassword,
 };

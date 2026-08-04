@@ -1,3 +1,4 @@
+import type { Types } from 'mongoose';
 import type { USER_ROLE, USER_STATUS } from './auth.constant.js';
 
 export type UserRole = (typeof USER_ROLE)[keyof typeof USER_ROLE];
@@ -12,6 +13,7 @@ export interface IUser {
   status: UserStatus;
   profileImage?: string;
   lastLoginAt?: Date;
+  passwordChangedAt: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -26,4 +28,12 @@ export interface ILoginPayload {
 export interface IAuthTokens {
   accessToken: string;
   refreshToken: string;
+}
+
+export interface IChangePasswordPayload {
+  userId: Types.ObjectId;
+
+  currentPassword: string;
+
+  newPassword: string;
 }

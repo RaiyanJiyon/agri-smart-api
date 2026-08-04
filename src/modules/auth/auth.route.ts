@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import validateRequest from '../../shared/validation/validateRequest.js';
 import {
+  changePasswordValidationSchema,
   loginValidationSchema,
   registerValidationSchema,
   resendVerificationEmailValidationSchema,
@@ -31,5 +32,11 @@ router.post('/refresh-token', AuthController.refreshToken);
 router.post('/logout', AuthController.logout);
 
 router.post('/logout-all', AuthController.logoutAllSessions);
+
+router.post(
+  '/change-password',
+  validateRequest(changePasswordValidationSchema),
+  AuthController.changePassword
+);
 
 export const AuthRoutes = router;

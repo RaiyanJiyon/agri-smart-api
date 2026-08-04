@@ -27,10 +27,28 @@ const updateVerificationStatus = async (
   return AuthModel.findByIdAndUpdate(userId, { isEmailVerified }, { new: true });
 };
 
+const updatePassword = async (
+  userId: Types.ObjectId,
+  newPassword: string
+): Promise<IUser | null> => {
+  return AuthModel.findByIdAndUpdate(
+    userId,
+    {
+      password: newPassword,
+      passwordChangedAt: new Date(),
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+};
+
 export const AuthRepository = {
   findUserById,
   findUserByEmail,
   findUserByEmailWithPassword,
   createUser,
   updateVerificationStatus,
+  updatePassword,
 };

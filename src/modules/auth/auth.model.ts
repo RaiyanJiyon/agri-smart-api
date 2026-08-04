@@ -38,6 +38,10 @@ const userSchema = new Schema<IUser>(
       type: Date,
       default: null,
     },
+    passwordChangedAt: {
+      type: Date,
+      default: null,
+    },
     status: {
       type: String,
       enum: Object.values(USER_STATUS),

@@ -72,7 +72,10 @@ const revokeAllByUserId = async (userId: Types.ObjectId): Promise<void> => {
   );
 };
 
-const revokeAllExcept = async (userId: Types.ObjectId, sessionIdToKeep: Types.ObjectId): Promise<void> => {
+const revokeAllExcept = async (
+  userId: Types.ObjectId,
+  sessionIdToKeep: Types.ObjectId
+): Promise<void> => {
   await SessionModel.updateMany(
     {
       userId,
@@ -84,7 +87,7 @@ const revokeAllExcept = async (userId: Types.ObjectId, sessionIdToKeep: Types.Ob
       lastUsedAt: new Date(),
     }
   );
-}
+};
 
 const deleteByUserId = async (userId: Types.ObjectId): Promise<DeleteResult> => {
   return SessionModel.deleteMany({

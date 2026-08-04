@@ -5,7 +5,7 @@ import { comparePassword, hashPassword } from '../../utils/argon.js';
 import { JwtUtil } from '../../utils/jwt.js';
 import { SessionService } from '../session/session.service.js';
 import { VerificationService } from '../verification/verification.service.js';
-import type { ILoginPayload, IUser } from './auth.interface.js';
+import type { IChangePasswordPayload, ILoginPayload, IUser } from './auth.interface.js';
 import { AuthRepository } from './auth.repository.js';
 
 const register = async (payload: Pick<IUser, 'name' | 'email' | 'password'>): Promise<IUser> => {
@@ -76,7 +76,40 @@ const login = async (payload: ILoginPayload) => {
   };
 };
 
+const changePassword = async (payload: IChangePasswordPayload) => {
+  const user = await AuthRepository.findUserById(payload.userId);
+
+  if (!user) {
+    throw new ApiError(HTTP_STATUS.NOT_FOUND, 'User not found.');
+  }
+
+  const matched = await comparePassword(payload.currentPassword, user.password);
+  if (!matched) {
+    throw new ApiError(HTTP_STATUS.BAD_REQUEST, 'Current password is incorrect.');
+  }
+
+  const samePassword = await comparePassword(payload.newPassword, user.password);
+
+  if (samePassword) {
+    throw new ApiError(
+      HTTP_STATUS.BAD_REQUEST,
+      'New password must be different from the current password.'
+    );
+  }
+
+  const hashedPassword = await hashPassword(payload.newPassword);
+
+  const updatedUser = await AuthRepository.updatePassword(payload.userId, hashedPassword);
+
+  if (!updatedUser) {
+    throw new ApiError(HTTP_STATUS.INTERNAL_SERVER_ERROR, 'Failed to update password.');
+  }
+
+  await SessionService.revokeAllSessions(payload.userId);
+};
+
 export const AuthService = {
   register,
   login,
+  changePassword,
 };
