@@ -8,6 +8,7 @@ import {
   verifyEmailValidationSchema,
 } from './auth.validation.js';
 import { AuthController } from './auth.controller.js';
+import { auth } from '../../middleware/auth.js';
 
 const router = Router();
 
@@ -31,10 +32,11 @@ router.post('/refresh-token', AuthController.refreshToken);
 
 router.post('/logout', AuthController.logout);
 
-router.post('/logout-all', AuthController.logoutAllSessions);
+router.post('/logout-all', auth(), AuthController.logoutAllSessions);
 
 router.post(
   '/change-password',
+  auth(),
   validateRequest(changePasswordValidationSchema),
   AuthController.changePassword
 );

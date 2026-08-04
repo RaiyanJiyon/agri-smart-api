@@ -147,12 +147,9 @@ const logoutAllSessions = catchAsync(async (req, res: Response) => {
 
 const changePassword = catchAsync(
   async (req: Request<unknown, unknown, ChangePasswordBody>, res: Response) => {
-    console.log('User:------------------------------------->>>>', req.user);
     await AuthService.changePassword({
       userId: new Types.ObjectId(req.user.userId),
-
       currentPassword: req.body.currentPassword,
-
       newPassword: req.body.newPassword,
     });
 

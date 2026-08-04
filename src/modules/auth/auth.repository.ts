@@ -6,6 +6,12 @@ const findUserById = async (id: Types.ObjectId): Promise<HydratedDocument<IUser>
   return AuthModel.findById(id);
 };
 
+const findUserByIdWithPassword = async (
+  id: Types.ObjectId
+): Promise<HydratedDocument<IUser> | null> => {
+  return AuthModel.findById(id).select('+password');
+};
+
 const findUserByEmail = async (email: string): Promise<HydratedDocument<IUser> | null> => {
   return AuthModel.findOne({ email });
 };
@@ -46,6 +52,7 @@ const updatePassword = async (
 
 export const AuthRepository = {
   findUserById,
+  findUserByIdWithPassword,
   findUserByEmail,
   findUserByEmailWithPassword,
   createUser,

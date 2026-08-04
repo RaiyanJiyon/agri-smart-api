@@ -77,7 +77,7 @@ const login = async (payload: ILoginPayload) => {
 };
 
 const changePassword = async (payload: IChangePasswordPayload) => {
-  const user = await AuthRepository.findUserById(payload.userId);
+  const user = await AuthRepository.findUserByIdWithPassword(payload.userId);
 
   if (!user) {
     throw new ApiError(HTTP_STATUS.NOT_FOUND, 'User not found.');
