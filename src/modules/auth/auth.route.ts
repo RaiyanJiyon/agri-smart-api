@@ -2,6 +2,7 @@ import { Router } from 'express';
 import validateRequest from '../../shared/validation/validateRequest.js';
 import {
   changePasswordValidationSchema,
+  forgotPasswordValidationSchema,
   loginValidationSchema,
   registerValidationSchema,
   resendVerificationEmailValidationSchema,
@@ -39,6 +40,12 @@ router.post(
   auth(),
   validateRequest(changePasswordValidationSchema),
   AuthController.changePassword
+);
+
+router.post(
+  '/forgot-password',
+  validateRequest(forgotPasswordValidationSchema),
+  AuthController.forgotPassword
 );
 
 export const AuthRoutes = router;

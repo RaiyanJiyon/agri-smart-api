@@ -30,6 +30,10 @@ interface ChangePasswordBody {
   newPassword: string;
 }
 
+interface ForgotPasswordBody {
+  email: string;
+}
+
 const register = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthService.register(req.body as Pick<IUser, 'name' | 'email' | 'password'>);
 
@@ -164,6 +168,21 @@ const changePassword = catchAsync(
   }
 );
 
+const forgotPassword = catchAsync(
+  async (req: Request<unknown, unknown, ForgotPasswordBody>, res: Response) => {
+    const { email } = req.body;
+
+    await VerificationService.sendPasswordResetEmail(email);
+
+    sendResponse(res, {
+      statusCode: HTTP_STATUS.OK,
+      success: true,
+      message: 'If an account exists, a password reset email has been sent.',
+      data: null,
+    });
+  }
+);
+
 export const AuthController = {
   register,
   verifyEmail,
@@ -173,4 +192,5 @@ export const AuthController = {
   logout,
   logoutAllSessions,
   changePassword,
+  forgotPassword,
 };
