@@ -4,7 +4,13 @@ import { ApiError } from '../../errors/AppError.js';
 import { JwtUtil } from '../../utils/jwt.js';
 import type { IAuthTokens } from '../auth/auth.interface.js';
 import { AuthRepository } from '../auth/auth.repository.js';
+import type { ISession } from '../session/session.interface.js';
 import { SessionService } from '../session/session.service.js';
+
+const getActiveSessionFromRefreshToken = async (refreshToken: string): Promise<ISession | null> => {
+  JwtUtil.verifyRefreshToken(refreshToken);
+  return SessionService.findActiveSession(refreshToken);
+};
 
 const refreshTokens = async (refreshToken: string): Promise<IAuthTokens> => {
   const payload = JwtUtil.verifyRefreshToken(refreshToken);
@@ -48,6 +54,24 @@ const refreshTokens = async (refreshToken: string): Promise<IAuthTokens> => {
   };
 };
 
+const logout = async (refreshToken: string): Promise<void> => {
+  try {
+    JwtUtil.verifyRefreshToken(refreshToken);
+  } catch {
+    // Ignore invalid/expired token
+  }
+
+  const session = await SessionService.findActiveSession(refreshToken);
+
+  if (!session) {
+    return;
+  }
+
+  await SessionService.revokeSession(session.userId);
+};
+
 export const TokenService = {
   refreshTokens,
+  logout,
+  getActiveSessionFromRefreshToken,
 };

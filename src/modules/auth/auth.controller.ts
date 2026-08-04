@@ -7,6 +7,7 @@ import type { IUser } from './auth.interface.js';
 import { VerificationService } from '../verification/verification.service.js';
 import { getRefreshTokenCookieOptions } from '../../utils/cookie.js';
 import { COOKIE_NAME } from '../../constants/cookie.js';
+import { TokenService } from '../token/token.service.js';
 
 // Define expected request body shapes
 interface VerifyEmailBody {
@@ -84,9 +85,28 @@ const login = catchAsync(async (req: Request<unknown, unknown, LoginBody>, res: 
   });
 });
 
+const logout = catchAsync(async (req, res) => {
+  const cookies = req.cookies as { refreshToken?: string };
+  const refreshToken = cookies.refreshToken;
+
+  if (refreshToken) {
+    await TokenService.logout(refreshToken);
+  }
+
+  res.clearCookie(COOKIE_NAME.REFRESH_TOKEN, getRefreshTokenCookieOptions());
+
+  sendResponse(res, {
+    statusCode: HTTP_STATUS.OK,
+    success: true,
+    message: 'Logout successful.',
+    data: null,
+  });
+});
+
 export const AuthController = {
   register,
   verifyEmail,
   resendVerificationEmail,
   login,
+  logout,
 };
