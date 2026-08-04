@@ -2,7 +2,7 @@ import type { HydratedDocument, Types } from 'mongoose';
 import type { IUser } from './auth.interface.js';
 import { AuthModel } from './auth.model.js';
 
-const findById = async (id: Types.ObjectId): Promise<HydratedDocument<IUser> | null> => {
+const findUserById = async (id: Types.ObjectId): Promise<HydratedDocument<IUser> | null> => {
   return AuthModel.findById(id);
 };
 
@@ -28,7 +28,7 @@ const updateVerificationStatus = async (
 };
 
 export const AuthRepository = {
-  findById,
+  findUserById,
   findUserByEmail,
   findUserByEmailWithPassword,
   createUser,

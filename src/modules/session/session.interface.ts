@@ -10,6 +10,7 @@ export interface ISession {
   userAgent: string;
   expiresAt: Date;
   revokedAt?: Date | null;
+  lastUsedAt?: Date | null;
   device?: string;
 }
 

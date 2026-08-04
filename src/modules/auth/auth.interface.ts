@@ -22,3 +22,8 @@ export interface ILoginPayload {
   ipAddress?: string;
   userAgent?: string;
 }
+
+export interface IAuthTokens {
+  accessToken: string;
+  refreshToken: string;
+}

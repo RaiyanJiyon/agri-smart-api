@@ -1,4 +1,4 @@
-import type { Types } from 'mongoose';
+import type { HydratedDocument, Types } from 'mongoose';
 import { hashToken } from '../../utils/crypto.js';
 import type { ICreateSession, ISession } from './session.interface.js';
 import { SessionRepository } from './session.repository.js';
@@ -17,7 +17,9 @@ const createSession = async (payload: ICreateSession): Promise<ISession> => {
   });
 };
 
-const findActiveSession = async (refreshToken: string): Promise<ISession | null> => {
+const findActiveSession = async (
+  refreshToken: string
+): Promise<HydratedDocument<ISession> | null> => {
   const refreshTokenHash = hashToken(refreshToken);
 
   return SessionRepository.findActiveByRefreshTokenHash(refreshTokenHash);
@@ -36,7 +38,7 @@ const rotateRefreshToken = async (
   refreshToken: string,
   expiresAt: Date
 ): Promise<ISession | null> => {
-  return SessionRepository.updateRefreshToken(sessionId, hashToken(refreshToken), expiresAt);
+  return SessionRepository.rotateRefreshToken(sessionId, hashToken(refreshToken), expiresAt);
 };
 
 export const SessionService = {

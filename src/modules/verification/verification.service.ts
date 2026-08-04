@@ -54,7 +54,7 @@ const verifyEmail = async (token: string): Promise<void> => {
     throw new ApiError(HTTP_STATUS.BAD_REQUEST, 'Invalid or expired verification token.');
   }
 
-  const user = await AuthRepository.findById(verification.userId);
+  const user = await AuthRepository.findUserById(verification.userId);
 
   if (!user) {
     throw new ApiError(HTTP_STATUS.NOT_FOUND, 'User not found.');

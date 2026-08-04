@@ -36,6 +36,16 @@ const sessionSchema = new Schema<ISession>(
       type: Date,
       default: null,
     },
+
+    lastUsedAt: {
+      type: Date,
+      default: null,
+    },
+
+    device: {
+      type: String,
+      default: null,
+    },
   },
   {
     timestamps: true,

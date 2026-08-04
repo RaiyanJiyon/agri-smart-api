@@ -1,4 +1,4 @@
-import type { Types } from 'mongoose';
+import type { HydratedDocument, Types } from 'mongoose';
 import type { ISession } from './session.interface.js';
 import { SessionModel } from './session.model.js';
 import type { DeleteResult } from 'mongoose';
@@ -18,7 +18,9 @@ const findByRefreshTokenHash = async (refreshTokenHash: string): Promise<ISessio
   return SessionModel.findOne({ refreshTokenHash });
 };
 
-const findActiveByRefreshTokenHash = async (refreshTokenHash: string): Promise<ISession | null> => {
+const findActiveByRefreshTokenHash = async (
+  refreshTokenHash: string
+): Promise<HydratedDocument<ISession> | null> => {
   return SessionModel.findOne({
     refreshTokenHash,
     ...getActiveSessionFilter(),
@@ -75,7 +77,7 @@ const deleteByUserId = async (userId: Types.ObjectId): Promise<DeleteResult> => 
   });
 };
 
-const updateRefreshToken = async (
+const rotateRefreshToken = async (
   sessionId: Types.ObjectId,
   refreshTokenHash: string,
   expiresAt: Date
@@ -88,6 +90,7 @@ const updateRefreshToken = async (
     {
       refreshTokenHash,
       expiresAt,
+      lastUsedAt: new Date(),
     },
     {
       new: true,
@@ -105,5 +108,5 @@ export const SessionRepository = {
   revoke,
   revokeAllByUserId,
   deleteByUserId,
-  updateRefreshToken,
+  rotateRefreshToken,
 };

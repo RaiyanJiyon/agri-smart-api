@@ -7,6 +7,7 @@ import {
   verifyEmailValidationSchema,
 } from './auth.validation.js';
 import { AuthController } from './auth.controller.js';
+import { TokenController } from '../token/token.controller.js';
 
 const router = Router();
 
@@ -26,6 +27,6 @@ router.post(
 
 router.post('/login', validateRequest(loginValidationSchema), AuthController.login);
 
-// router.post('/refresh-token', AuthController)
+router.post('/refresh-token', TokenController.refreshToken);
 
 export const AuthRoutes = router;
