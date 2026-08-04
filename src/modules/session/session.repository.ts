@@ -75,6 +75,27 @@ const deleteByUserId = async (userId: Types.ObjectId): Promise<DeleteResult> => 
   });
 };
 
+const updateRefreshToken = async (
+  sessionId: Types.ObjectId,
+  refreshTokenHash: string,
+  expiresAt: Date
+): Promise<ISession | null> => {
+  return SessionModel.findOneAndUpdate(
+    {
+      _id: sessionId,
+      revokedAt: null,
+    },
+    {
+      refreshTokenHash,
+      expiresAt,
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+};
+
 export const SessionRepository = {
   create,
   findByRefreshTokenHash,
@@ -84,4 +105,5 @@ export const SessionRepository = {
   revoke,
   revokeAllByUserId,
   deleteByUserId,
+  updateRefreshToken,
 };
