@@ -8,6 +8,7 @@ import { VerificationService } from '../verification/verification.service.js';
 import { getRefreshTokenCookieOptions } from '../../utils/cookie.js';
 import { COOKIE_NAME } from '../../constants/cookie.js';
 import { TokenService } from '../token/token.service.js';
+import { ApiError } from '../../errors/AppError.js';
 
 // Define expected request body shapes
 interface VerifyEmailBody {
@@ -85,6 +86,28 @@ const login = catchAsync(async (req: Request<unknown, unknown, LoginBody>, res: 
   });
 });
 
+const refreshToken = catchAsync(async (req, res) => {
+  const cookies = req.cookies as { refreshToken?: string };
+  const refreshToken = cookies.refreshToken;
+
+  if (!refreshToken) {
+    throw new ApiError(HTTP_STATUS.UNAUTHORIZED, 'Refresh token is missing.');
+  }
+
+  const tokens = await TokenService.refreshTokens(refreshToken);
+
+  res.cookie(COOKIE_NAME.REFRESH_TOKEN, tokens.refreshToken, getRefreshTokenCookieOptions());
+
+  sendResponse(res, {
+    statusCode: HTTP_STATUS.OK,
+    success: true,
+    message: 'Access token refreshed successfully.',
+    data: {
+      accessToken: tokens.accessToken,
+    },
+  });
+});
+
 const logout = catchAsync(async (req, res) => {
   const cookies = req.cookies as { refreshToken?: string };
   const refreshToken = cookies.refreshToken;
@@ -108,5 +131,6 @@ export const AuthController = {
   verifyEmail,
   resendVerificationEmail,
   login,
+  refreshToken,
   logout,
 };
