@@ -7,11 +7,11 @@ import { config } from '../../config/env.js';
 import { EMAIL_SUBJECT } from '../../shared/email/email.constant.js';
 import { verificationEmailTemplate } from '../../shared/email/email.template.js';
 import { forgotPasswordEmailTemplate } from '../../shared/email/forgot-password.template.js';
-import { sendVerificationEmailInternal } from './verification.utils.js';
+import { createVerificationAndSendEmail } from './verification.utils.js';
 import { hashToken } from '../../utils/crypto.js';
 
 const sendVerificationEmail = async (email: string): Promise<void> => {
-  await sendVerificationEmailInternal({
+  await createVerificationAndSendEmail({
     email,
     type: VERIFICATION_TYPE.EMAIL_VERIFICATION,
     expiresIn: config.EMAIL_VERIFICATION_EXPIRES_IN,
@@ -51,7 +51,7 @@ const verifyEmail = async (token: string): Promise<void> => {
 };
 
 const sendPasswordResetEmail = async (email: string): Promise<void> => {
-  await sendVerificationEmailInternal({
+  await createVerificationAndSendEmail({
     email,
     type: VERIFICATION_TYPE.PASSWORD_RESET,
     expiresIn: config.PASSWORD_RESET_EXPIRES_IN,

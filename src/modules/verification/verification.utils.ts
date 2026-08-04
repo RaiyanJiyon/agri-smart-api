@@ -7,7 +7,7 @@ import type { ISendVerificationEmailOptions } from "./verification.interface.js"
 import { VerificationRepository } from "./verification.repository.js";
 import { EmailService } from "../../shared/email/index.js";
 
-export const sendVerificationEmailInternal = async ({
+export const createVerificationAndSendEmail = async ({
   email,
   type,
   expiresIn,
