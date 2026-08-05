@@ -40,7 +40,7 @@ const verifyEmail = catchAsync(
 
 const resendVerificationEmail = catchAsync(
   async (req: Request<unknown, unknown, { email: string }>, res: Response) => {
-    const { email } = req.body; // Now strongly typed as string
+    const { email } = req.body;
 
     await VerificationService.sendVerificationEmail(email);
 
