@@ -1,4 +1,4 @@
 export const SESSION_STATUS = {
-  ACTIVE: 'ACTIVE',
-  REVOKED: 'REVOKED',
+  ACTIVE: 'active',
+  REVOKED: 'revoked',
 } as const;
