@@ -11,29 +11,6 @@ import { TokenService } from '../token/token.service.js';
 import { ApiError } from '../../errors/AppError.js';
 import { Types } from 'mongoose';
 
-// Define expected request body shapes
-interface VerifyEmailBody {
-  token: string;
-}
-
-interface ResendEmailBody {
-  email: string;
-}
-
-interface LoginBody {
-  email: string;
-  password: string;
-}
-
-interface ChangePasswordBody {
-  currentPassword: string;
-  newPassword: string;
-}
-
-interface ForgotPasswordBody {
-  email: string;
-}
-
 const register = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthService.register(req.body as Pick<IUser, 'name' | 'email' | 'password'>);
 
@@ -47,7 +24,7 @@ const register = catchAsync(async (req: Request, res: Response) => {
 
 // Explicitly type req with generic Request<Params, ResBody, ReqBody>
 const verifyEmail = catchAsync(
-  async (req: Request<unknown, unknown, VerifyEmailBody>, res: Response) => {
+  async (req: Request<unknown, unknown, { token: string }>, res: Response) => {
     const { token } = req.body; // Now strongly typed as string
 
     await VerificationService.verifyEmail(token);
@@ -62,7 +39,7 @@ const verifyEmail = catchAsync(
 );
 
 const resendVerificationEmail = catchAsync(
-  async (req: Request<unknown, unknown, ResendEmailBody>, res: Response) => {
+  async (req: Request<unknown, unknown, { email: string }>, res: Response) => {
     const { email } = req.body; // Now strongly typed as string
 
     await VerificationService.sendVerificationEmail(email);
@@ -76,25 +53,37 @@ const resendVerificationEmail = catchAsync(
   }
 );
 
-const login = catchAsync(async (req: Request<unknown, unknown, LoginBody>, res: Response) => {
-  const result = await AuthService.login({
-    ...req.body,
-    ipAddress: req.ip ?? '',
-    userAgent: req.get('User-Agent') ?? 'unknown',
-  });
+const login = catchAsync(
+  async (
+    req: Request<
+      unknown,
+      unknown,
+      {
+        email: string;
+        password: string;
+      }
+    >,
+    res: Response
+  ) => {
+    const result = await AuthService.login({
+      ...req.body,
+      ipAddress: req.ip ?? '',
+      userAgent: req.get('User-Agent') ?? 'unknown',
+    });
 
-  res.cookie(COOKIE_NAME.REFRESH_TOKEN, result.refreshToken, getRefreshTokenCookieOptions());
+    res.cookie(COOKIE_NAME.REFRESH_TOKEN, result.refreshToken, getRefreshTokenCookieOptions());
 
-  sendResponse(res, {
-    statusCode: HTTP_STATUS.OK,
-    success: true,
-    message: 'Login successful.',
-    data: {
-      accessToken: result.accessToken,
-      user: result.user,
-    },
-  });
-});
+    sendResponse(res, {
+      statusCode: HTTP_STATUS.OK,
+      success: true,
+      message: 'Login successful.',
+      data: {
+        accessToken: result.accessToken,
+        user: result.user,
+      },
+    });
+  }
+);
 
 const refreshToken = catchAsync(async (req, res) => {
   const cookies = req.cookies as { refreshToken?: string };
@@ -150,7 +139,17 @@ const logoutAllSessions = catchAsync(async (req, res: Response) => {
 });
 
 const changePassword = catchAsync(
-  async (req: Request<unknown, unknown, ChangePasswordBody>, res: Response) => {
+  async (
+    req: Request<
+      unknown,
+      unknown,
+      {
+        currentPassword: string;
+        newPassword: string;
+      }
+    >,
+    res: Response
+  ) => {
     await AuthService.changePassword({
       userId: new Types.ObjectId(req.user.userId),
       currentPassword: req.body.currentPassword,
@@ -169,7 +168,7 @@ const changePassword = catchAsync(
 );
 
 const forgotPassword = catchAsync(
-  async (req: Request<unknown, unknown, ForgotPasswordBody>, res: Response) => {
+  async (req: Request<unknown, unknown, { email: string }>, res: Response) => {
     const { email } = req.body;
 
     await VerificationService.sendPasswordResetEmail(email);
