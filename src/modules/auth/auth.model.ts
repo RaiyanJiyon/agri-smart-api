@@ -50,7 +50,16 @@ const userSchema = new Schema<IUser>(
   },
   {
     timestamps: true,
+    versionKey: false,
   }
 );
+
+userSchema.set('toJSON', {
+  transform: (doc, ret) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _password, ...rest } = ret;
+    return rest;
+  },
+});
 
 export const AuthModel = model<IUser>('User', userSchema);
