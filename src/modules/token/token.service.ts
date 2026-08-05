@@ -59,7 +59,7 @@ const refreshTokens = async (refreshToken: string): Promise<IAuthTokens> => {
   const newRefreshToken = JwtUtil.signRefreshToken(jwtPayload);
   const expiresAt = new Date(Date.now() + config.JWT.JWT_REFRESH_EXPIRES_IN);
 
-  await SessionService.rotateRefreshToken(session.userId, newRefreshToken, expiresAt);
+  await SessionService.rotateRefreshToken(session._id, newRefreshToken, expiresAt);
 
   return {
     accessToken: newAccessToken,
