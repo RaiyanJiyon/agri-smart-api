@@ -1,4 +1,3 @@
-export * from './session.constant.js';
 export * from './session.interface.js';
 export * from './session.model.js';
 export * from './session.repository.js';

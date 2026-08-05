@@ -7,11 +7,11 @@ import { AuthRepository } from '../auth/auth.repository.js';
 import type { ISession } from '../session/session.interface.js';
 import { SessionService } from '../session/session.service.js';
 import type { IJwtPayload } from '../../shared/types/jwt.js';
-import type { Types } from 'mongoose';
+import type { HydratedDocument, Types } from 'mongoose';
 
 interface IActiveRefreshSession {
   payload: IJwtPayload;
-  session: ISession;
+  session: HydratedDocument<ISession>;
 }
 
 const getActiveSessionFromRefreshToken = async (
@@ -71,7 +71,8 @@ const logout = async (refreshToken: string): Promise<void> => {
   try {
     // Leverage the helper function cleanly in logout too
     const { session } = await getActiveSessionFromRefreshToken(refreshToken);
-    await SessionService.revokeSession(session.userId);
+
+    await SessionService.revokeSession(session._id);
   } catch {
     // Ignore invalid/expired tokens during logout
   }

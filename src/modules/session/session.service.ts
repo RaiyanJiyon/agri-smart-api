@@ -25,8 +25,8 @@ const findActiveSession = async (
   return SessionRepository.findActiveByRefreshTokenHash(refreshTokenHash);
 };
 
-const revokeSession = async (userId: Types.ObjectId): Promise<ISession | null> => {
-  return SessionRepository.revoke(userId);
+const revokeSession = async (sessionId: Types.ObjectId): Promise<ISession | null> => {
+  return SessionRepository.revoke(sessionId);
 };
 
 const revokeAllSessions = async (userId: Types.ObjectId): Promise<void> => {

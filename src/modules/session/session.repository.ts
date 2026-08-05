@@ -44,10 +44,10 @@ const findActiveByUserId = async (userId: Types.ObjectId): Promise<ISession[]> =
   });
 };
 
-const revoke = async (id: Types.ObjectId): Promise<ISession | null> => {
+const revoke = async (sessionId: Types.ObjectId): Promise<ISession | null> => {
   return SessionModel.findByIdAndUpdate(
     {
-      _id: id,
+      _id: sessionId,
       revokedAt: null,
     },
     {
