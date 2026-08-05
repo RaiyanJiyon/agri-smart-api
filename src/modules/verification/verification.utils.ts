@@ -1,11 +1,11 @@
-import ms, { type StringValue } from "ms";
-import { HTTP_STATUS } from "../../constants/httpStatus.js";
-import { ApiError } from "../../errors/AppError.js";
-import { generateVerificationToken } from "../../utils/crypto.js";
-import { AuthRepository } from "../auth/auth.repository.js";
-import type { ISendVerificationEmailOptions } from "./verification.interface.js";
-import { VerificationRepository } from "./verification.repository.js";
-import { EmailService } from "../../shared/email/index.js";
+import ms, { type StringValue } from 'ms';
+import { HTTP_STATUS } from '../../constants/httpStatus.js';
+import { ApiError } from '../../errors/AppError.js';
+import { generateVerificationToken } from '../../utils/crypto.js';
+import { AuthRepository } from '../auth/auth.repository.js';
+import type { ISendVerificationEmailOptions } from './verification.interface.js';
+import { VerificationRepository } from './verification.repository.js';
+import { EmailService } from '../../shared/email/index.js';
 
 export const createVerificationAndSendEmail = async ({
   email,
@@ -24,17 +24,12 @@ export const createVerificationAndSendEmail = async ({
   }
 
   if (requireUnverifiedEmail && user.isEmailVerified) {
-    throw new ApiError(
-      HTTP_STATUS.BAD_REQUEST,
-      "Email is already verified."
-    );
+    throw new ApiError(HTTP_STATUS.BAD_REQUEST, 'Email is already verified.');
   }
 
   const { token, tokenHash } = generateVerificationToken();
 
-  const expiresAt = new Date(
-    Date.now() + ms(expiresIn as StringValue)
-  );
+  const expiresAt = new Date(Date.now() + ms(expiresIn as StringValue));
 
   await VerificationRepository.createOrReplace({
     userId: user._id,

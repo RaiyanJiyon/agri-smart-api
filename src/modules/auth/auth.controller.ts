@@ -183,6 +183,21 @@ const forgotPassword = catchAsync(
   }
 );
 
+const resetPassword = catchAsync(
+  async (req: Request<unknown, unknown, { token: string; newPassword: string }>, res: Response) => {
+    await VerificationService.resetPassword(req.body.token, req.body.newPassword);
+
+    res.clearCookie(COOKIE_NAME.REFRESH_TOKEN, getRefreshTokenCookieOptions());
+
+    sendResponse(res, {
+      statusCode: HTTP_STATUS.OK,
+      success: true,
+      message: 'Password reset successful. Please log in with your new password.',
+      data: null,
+    });
+  }
+);
+
 export const AuthController = {
   register,
   verifyEmail,
@@ -193,4 +208,5 @@ export const AuthController = {
   logoutAllSessions,
   changePassword,
   forgotPassword,
+  resetPassword,
 };

@@ -6,6 +6,7 @@ import {
   loginValidationSchema,
   registerValidationSchema,
   resendVerificationEmailValidationSchema,
+  resetPasswordValidationSchema,
   verifyEmailValidationSchema,
 } from './auth.validation.js';
 import { AuthController } from './auth.controller.js';
@@ -46,6 +47,12 @@ router.post(
   '/forgot-password',
   validateRequest(forgotPasswordValidationSchema),
   AuthController.forgotPassword
+);
+
+router.post(
+  '/reset-password',
+  validateRequest(resetPasswordValidationSchema),
+  AuthController.resetPassword
 );
 
 export const AuthRoutes = router;
