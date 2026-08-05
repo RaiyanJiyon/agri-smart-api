@@ -6,16 +6,13 @@ export interface IGeneratedVerificationToken {
   tokenHash: string;
 }
 
-/**
- * Generates a cryptographically secure random token.
- */
+
+//Generates a cryptographically secure random token.
 export const generateRandomToken = (): string => {
   return crypto.randomBytes(CRYPTO.TOKEN_SIZE).toString('hex');
 };
 
-/**
- * Hashes a token using SHA-256.
- */
+// Hashes a token using SHA-256.
 export const hashToken = (token: string): string => {
   return crypto.createHash(CRYPTO.HASH_ALGORITHM).update(token).digest('hex');
 };
