@@ -1,1 +1,1 @@
-export type { ISession, ICreateSession, SessionStatus } from './session.interface.js';
+export type { ISession, ICreateSession } from './session.interface.js';
