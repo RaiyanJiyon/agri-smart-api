@@ -30,7 +30,7 @@ const updateVerificationStatus = async (
   userId: Types.ObjectId,
   isEmailVerified: boolean
 ): Promise<HydratedDocument<IUser> | null> => {
-  return AuthModel.findByIdAndUpdate(userId, { isEmailVerified }, { new: true });
+  return AuthModel.findByIdAndUpdate({ _id: userId }, { isEmailVerified }, { new: true });
 };
 
 const updatePassword = async (
@@ -38,7 +38,7 @@ const updatePassword = async (
   newPassword: string
 ): Promise<IUser | null> => {
   return AuthModel.findByIdAndUpdate(
-    userId,
+    { _id: userId },
     {
       password: newPassword,
       passwordChangedAt: new Date(),
