@@ -1,9 +1,13 @@
 import ms, { type StringValue } from 'ms';
 import { HTTP_STATUS } from '../../constants/httpStatus.js';
 import { ApiError } from '../../errors/AppError.js';
-import { generateVerificationToken } from '../../utils/crypto.js';
+import { generateVerificationToken, hashToken } from '../../utils/crypto.js';
 import { AuthRepository } from '../auth/auth.repository.js';
-import type { ISendVerificationEmailOptions } from './verification.interface.js';
+import type {
+  ISendVerificationEmailOptions,
+  IVerification,
+  VerificationType,
+} from './verification.interface.js';
 import { VerificationRepository } from './verification.repository.js';
 import { EmailService } from '../../shared/email/index.js';
 
@@ -43,4 +47,19 @@ export const createVerificationAndSendEmail = async ({
     subject,
     html: buildTemplate(buildUrl(token), user),
   });
+};
+
+export const getActiveVerification = async (
+  token: string,
+  type: VerificationType
+): Promise<IVerification> => {
+  const tokenHash = hashToken(token);
+
+  const verification = await VerificationRepository.findByToken(tokenHash, type);
+
+  if (!verification) {
+    throw new ApiError(HTTP_STATUS.BAD_REQUEST, 'Invalid or expired verification token.');
+  }
+
+  return verification;
 };
