@@ -8,7 +8,7 @@ import { EMAIL_SUBJECT } from '../../shared/email/email.constant.js';
 import { verificationEmailTemplate } from '../../shared/email/email.template.js';
 import { forgotPasswordEmailTemplate } from '../../shared/email/forgot-password.template.js';
 import { createVerificationAndSendEmail } from './verification.utils.js';
-import { hashToken } from '../../utils/crypto.js';
+import { hashPassword, hashToken } from '../../utils/index.js';
 import { comparePassword } from '../../utils/index.js';
 import { SessionService } from '../session/index.js';
 
@@ -78,7 +78,7 @@ const resetPassword = async (token: string, newPassword: string): Promise<void> 
     throw new ApiError(HTTP_STATUS.BAD_REQUEST, 'Invalid or expired password reset token.');
   }
 
-  const user = await AuthRepository.findUserById(verification.userId);
+  const user = await AuthRepository.findUserByIdWithPassword(verification.userId);
 
   if (!user) {
     throw new ApiError(HTTP_STATUS.NOT_FOUND, 'User not found.');
@@ -93,7 +93,7 @@ const resetPassword = async (token: string, newPassword: string): Promise<void> 
     );
   }
 
-  const hashedNewPassword = hashToken(newPassword);
+  const hashedNewPassword = await hashPassword(newPassword);
 
   await AuthRepository.updatePassword(user._id, hashedNewPassword);
 

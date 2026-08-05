@@ -56,7 +56,7 @@ export const resetPasswordValidationSchema = z.object({
     .object({
       token: z.string().min(1, 'Reset token is required.'),
 
-      password: passwordSchema,
+      newPassword: passwordSchema,
     })
     .strict(),
 });
