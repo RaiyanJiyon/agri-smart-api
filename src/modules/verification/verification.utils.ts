@@ -10,6 +10,7 @@ import type {
 } from './verification.interface.js';
 import { VerificationRepository } from './verification.repository.js';
 import { EmailService } from '../../shared/email/index.js';
+import type { Types } from 'mongoose';
 
 export const createVerificationAndSendEmail = async ({
   email,
@@ -62,4 +63,8 @@ export const getActiveVerification = async (
   }
 
   return verification;
+};
+
+export const consumeVerification = async (verificationId: Types.ObjectId): Promise<void> => {
+  await VerificationRepository.markAsUsed(verificationId);
 };
