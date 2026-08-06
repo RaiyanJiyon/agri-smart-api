@@ -110,7 +110,7 @@ const refreshToken = catchAsync(async (req, res) => {
 const logout = catchAsync(async (req, res) => {
   const cookies = req.cookies as { refreshToken?: string };
   const refreshToken = cookies.refreshToken;
-  
+
   if (refreshToken) {
     await TokenService.logout(refreshToken);
   }

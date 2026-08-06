@@ -68,16 +68,12 @@ sessionSchema.index(
   }
 );
 
-/**
- * Quickly find all sessions for a user.
- */
+// Quickly find all sessions for a user.
 sessionSchema.index({
   userId: 1,
 });
 
-/**
- * Quickly find a session by refresh token hash.
- */
+// Quickly find a session by refresh token hash.
 sessionSchema.index(
   {
     refreshTokenHash: 1,

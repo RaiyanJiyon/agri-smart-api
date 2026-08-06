@@ -6,7 +6,6 @@ export interface IGeneratedVerificationToken {
   tokenHash: string;
 }
 
-
 //Generates a cryptographically secure random token.
 export const generateRandomToken = (): string => {
   return crypto.randomBytes(CRYPTO.TOKEN_SIZE).toString('hex');
