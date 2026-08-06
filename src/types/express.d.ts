@@ -1,9 +1,9 @@
-import type { IJwtPayload } from '../shared/types/jwt.ts';
+import type { JwtPayload } from '../shared/types/jwt.ts';
 
 declare global {
   namespace Express {
     interface Request {
-      user: IJwtPayload;
+      user: JwtPayload;
     }
   }
 }

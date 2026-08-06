@@ -1,6 +1,6 @@
 import { HTTP_STATUS } from '../../constants/httpStatus.js';
 import { ApiError } from '../../errors/AppError.js';
-import type { IJwtPayload } from '../../shared/types/jwt.js';
+import type { JwtPayload } from '../../shared/types/jwt.js';
 import { comparePassword, hashPassword } from '../../utils/argon.js';
 import { JwtUtil } from '../../utils/jwt.js';
 import { SessionService } from '../session/session.service.js';
@@ -49,7 +49,7 @@ const login = async (payload: LoginPayload) => {
     throw new ApiError(HTTP_STATUS.FORBIDDEN, 'Please verify your email first.');
   }
 
-  const jwtPayload: IJwtPayload = {
+  const jwtPayload: JwtPayload = {
     userId: existingUser._id.toString(),
     email: existingUser.email,
     role: existingUser.role,

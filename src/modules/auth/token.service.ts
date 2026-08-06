@@ -5,12 +5,12 @@ import type { AuthTokens } from './auth.interface.js';
 import { AuthRepository } from './auth.repository.js';
 import type { Session } from '../session/session.interface.js';
 import { SessionService } from '../session/session.service.js';
-import type { IJwtPayload } from '../../shared/types/jwt.js';
+import type { JwtPayload } from '../../shared/types/jwt.js';
 import type { HydratedDocument, Types } from 'mongoose';
 import { getRefreshTokenExpiry } from './auth.utils.js';
 
 interface IActiveRefreshSession {
-  payload: IJwtPayload;
+  payload: JwtPayload;
   session: HydratedDocument<Session>;
 }
 
@@ -54,7 +54,7 @@ const refreshTokens = async (refreshToken: string): Promise<AuthTokens> => {
     throw new ApiError(HTTP_STATUS.FORBIDDEN, 'Email is not verified.');
   }
 
-  const jwtPayload: IJwtPayload = {
+  const jwtPayload: JwtPayload = {
     userId: user._id.toString(),
     email: user.email,
     role: user.role,
