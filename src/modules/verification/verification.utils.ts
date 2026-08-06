@@ -4,8 +4,8 @@ import { ApiError } from '../../errors/AppError.js';
 import { generateVerificationToken, hashToken } from '../../utils/crypto.js';
 import { AuthRepository } from '../auth/auth.repository.js';
 import type {
-  ISendVerificationEmailOptions,
-  IVerification,
+  SendVerificationEmailOptions,
+  Verification,
   VerificationType,
 } from './verification.interface.js';
 import { VerificationRepository } from './verification.repository.js';
@@ -20,7 +20,7 @@ export const createVerificationAndSendEmail = async ({
   buildUrl,
   buildTemplate,
   requireUnverifiedEmail = false,
-}: ISendVerificationEmailOptions): Promise<void> => {
+}: SendVerificationEmailOptions): Promise<void> => {
   const user = await AuthRepository.findUserByEmail(email);
 
   // Prevent email enumeration
@@ -53,7 +53,7 @@ export const createVerificationAndSendEmail = async ({
 export const getActiveVerification = async (
   token: string,
   type: VerificationType
-): Promise<IVerification> => {
+): Promise<Verification> => {
   const tokenHash = hashToken(token);
 
   const verification = await VerificationRepository.findByToken(tokenHash, type);

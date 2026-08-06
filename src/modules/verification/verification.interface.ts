@@ -4,7 +4,7 @@ import type { IUser } from '../auth/auth.interface.js';
 
 export type VerificationType = (typeof VERIFICATION_TYPE)[keyof typeof VERIFICATION_TYPE];
 
-export interface IVerification {
+export interface Verification {
   userId: Types.ObjectId;
   type: VerificationType;
   tokenHash: string;
@@ -12,14 +12,14 @@ export interface IVerification {
   usedAt: Date;
 }
 
-export interface ICreateVerification {
+export interface CreateVerification {
   userId: Types.ObjectId;
   type: VerificationType;
   tokenHash: string;
   expiresAt: Date;
 }
 
-export interface ISendVerificationEmailOptions {
+export interface SendVerificationEmailOptions {
   email: string;
   type: VerificationType;
   expiresIn: string;

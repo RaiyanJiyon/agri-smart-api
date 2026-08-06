@@ -1,7 +1,7 @@
 import type { DeleteResult, HydratedDocument, Types } from 'mongoose';
 import type {
-  ICreateVerification,
-  IVerification,
+  CreateVerification,
+  Verification,
   VerificationType,
 } from './verification.interface.js';
 import { VerificationModel } from './verification.model.js';
@@ -14,8 +14,8 @@ const getActiveVerificationFilter = () => ({
 });
 
 const createOrReplace = async (
-  payload: ICreateVerification
-): Promise<HydratedDocument<IVerification>> => {
+  payload: CreateVerification
+): Promise<HydratedDocument<Verification>> => {
   return VerificationModel.findOneAndUpdate(
     {
       userId: payload.userId,
@@ -33,7 +33,7 @@ const createOrReplace = async (
 const findByToken = async (
   tokenHash: string,
   type: VerificationType
-): Promise<HydratedDocument<IVerification> | null> => {
+): Promise<HydratedDocument<Verification> | null> => {
   return VerificationModel.findOne({
     tokenHash,
     type,
@@ -44,7 +44,7 @@ const findByToken = async (
 const findActiveVerification = async (
   userId: Types.ObjectId,
   type: VerificationType
-): Promise<HydratedDocument<IVerification> | null> => {
+): Promise<HydratedDocument<Verification> | null> => {
   return VerificationModel.findOne({
     userId,
     type,
@@ -52,7 +52,7 @@ const findActiveVerification = async (
   });
 };
 
-const markAsUsed = async (id: Types.ObjectId): Promise<HydratedDocument<IVerification> | null> => {
+const markAsUsed = async (id: Types.ObjectId): Promise<HydratedDocument<Verification> | null> => {
   return VerificationModel.findOneAndUpdate(
     {
       _id: id,
