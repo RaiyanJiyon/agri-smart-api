@@ -1,7 +1,7 @@
 import { HTTP_STATUS } from '../../constants/httpStatus.js';
 import { ApiError } from '../../errors/AppError.js';
 import { JwtUtil } from '../../utils/jwt.js';
-import type { IAuthTokens } from './auth.interface.js';
+import type { AuthTokens } from './auth.interface.js';
 import { AuthRepository } from './auth.repository.js';
 import type { Session } from '../session/session.interface.js';
 import { SessionService } from '../session/session.service.js';
@@ -40,7 +40,7 @@ const getActiveSessionFromRefreshToken = async (
   };
 };
 
-const refreshTokens = async (refreshToken: string): Promise<IAuthTokens> => {
+const refreshTokens = async (refreshToken: string): Promise<AuthTokens> => {
   // The helper already handles all validation (verify, existence, and userId match)
   const { session } = await getActiveSessionFromRefreshToken(refreshToken);
 

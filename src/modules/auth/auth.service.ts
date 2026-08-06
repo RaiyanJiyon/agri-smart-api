@@ -5,11 +5,11 @@ import { comparePassword, hashPassword } from '../../utils/argon.js';
 import { JwtUtil } from '../../utils/jwt.js';
 import { SessionService } from '../session/session.service.js';
 import { VerificationService } from '../verification/verification.service.js';
-import type { IChangePasswordPayload, ILoginPayload, IUser } from './auth.interface.js';
+import type { ChangePasswordPayload, LoginPayload, User } from './auth.interface.js';
 import { AuthRepository } from './auth.repository.js';
 import { getRefreshTokenExpiry } from './auth.utils.js';
 
-const register = async (payload: Pick<IUser, 'name' | 'email' | 'password'>): Promise<IUser> => {
+const register = async (payload: Pick<User, 'name' | 'email' | 'password'>): Promise<User> => {
   const existingUser = await AuthRepository.findUserByEmail(payload.email);
 
   if (existingUser) {
@@ -28,7 +28,7 @@ const register = async (payload: Pick<IUser, 'name' | 'email' | 'password'>): Pr
   return user;
 };
 
-const login = async (payload: ILoginPayload) => {
+const login = async (payload: LoginPayload) => {
   const existingUser = await AuthRepository.findUserByEmailWithPassword(payload.email);
 
   if (!existingUser) {
@@ -78,7 +78,7 @@ const login = async (payload: ILoginPayload) => {
   };
 };
 
-const changePassword = async (payload: IChangePasswordPayload) => {
+const changePassword = async (payload: ChangePasswordPayload) => {
   const user = await AuthRepository.findUserByIdWithPassword(payload.userId);
 
   if (!user) {

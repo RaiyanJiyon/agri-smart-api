@@ -1,6 +1,6 @@
 import type { Types } from 'mongoose';
 import type { VERIFICATION_TYPE } from './verification.constant.js';
-import type { IUser } from '../auth/auth.interface.js';
+import type { User } from '../auth/auth.interface.js';
 
 export type VerificationType = (typeof VERIFICATION_TYPE)[keyof typeof VERIFICATION_TYPE];
 
@@ -25,6 +25,6 @@ export interface SendVerificationEmailOptions {
   expiresIn: string;
   subject: string;
   buildUrl: (token: string) => string;
-  buildTemplate: (url: string, user: IUser) => string;
+  buildTemplate: (url: string, user: User) => string;
   requireUnverifiedEmail?: boolean;
 }

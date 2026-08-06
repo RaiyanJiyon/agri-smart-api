@@ -1,8 +1,9 @@
 import { model, Schema } from 'mongoose';
 import { USER_ROLE, USER_STATUS } from './auth.constant.js';
-import type { IUser } from './auth.interface.js';
+import type { User } from './auth.interface.js';
+import { COLLECTION_NAME } from '../../constants/database.js';
 
-const userSchema = new Schema<IUser>(
+const userSchema = new Schema<User>(
   {
     name: {
       type: String,
@@ -62,4 +63,4 @@ userSchema.set('toJSON', {
   },
 });
 
-export const AuthModel = model<IUser>('User', userSchema);
+export const AuthModel = model<User>(COLLECTION_NAME.USER, userSchema);

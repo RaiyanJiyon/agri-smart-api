@@ -4,7 +4,7 @@ import type { USER_ROLE, USER_STATUS } from './auth.constant.js';
 export type UserRole = (typeof USER_ROLE)[keyof typeof USER_ROLE];
 export type UserStatus = (typeof USER_STATUS)[keyof typeof USER_STATUS];
 
-export interface IUser {
+export interface User {
   name: string;
   email: string;
   password: string;
@@ -18,19 +18,19 @@ export interface IUser {
   updatedAt: Date;
 }
 
-export interface ILoginPayload {
+export interface LoginPayload {
   email: string;
   password: string;
   ipAddress?: string;
   userAgent?: string;
 }
 
-export interface IAuthTokens {
+export interface AuthTokens {
   accessToken: string;
   refreshToken: string;
 }
 
-export interface IChangePasswordPayload {
+export interface ChangePasswordPayload {
   userId: Types.ObjectId;
 
   currentPassword: string;

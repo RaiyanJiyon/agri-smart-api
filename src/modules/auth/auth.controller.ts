@@ -3,7 +3,7 @@ import { catchAsync } from '../../utils/catchAsync.js';
 import { AuthService } from './auth.service.js';
 import { sendResponse } from '../../utils/sendResponse.js';
 import { HTTP_STATUS } from '../../constants/httpStatus.js';
-import type { IUser } from './auth.interface.js';
+import type { User } from './auth.interface.js';
 import { VerificationService } from '../verification/verification.service.js';
 import { getRefreshTokenCookieOptions } from '../../utils/cookie.js';
 import { COOKIE_NAME } from '../../constants/cookie.js';
@@ -12,7 +12,7 @@ import { ApiError } from '../../errors/AppError.js';
 import { Types } from 'mongoose';
 
 const register = catchAsync(async (req: Request, res: Response) => {
-  const result = await AuthService.register(req.body as Pick<IUser, 'name' | 'email' | 'password'>);
+  const result = await AuthService.register(req.body as Pick<User, 'name' | 'email' | 'password'>);
 
   sendResponse(res, {
     statusCode: HTTP_STATUS.CREATED,
