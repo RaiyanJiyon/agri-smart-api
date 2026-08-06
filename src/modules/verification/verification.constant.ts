@@ -1,5 +1,5 @@
 export const VERIFICATION_TYPE = {
-  EMAIL_VERIFICATION: 'EMAIL_VERIFICATION',
-  PASSWORD_RESET: 'PASSWORD_RESET',
-  EMAIL_CHANGE: 'EMAIL_CHANGE',
+  EMAIL_VERIFICATION: 'email_verification',
+  PASSWORD_RESET: 'password_reset',
+  EMAIL_CHANGE: 'email_change',
 } as const;
