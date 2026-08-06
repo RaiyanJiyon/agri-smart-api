@@ -9,7 +9,7 @@ export interface Verification {
   type: VerificationType;
   tokenHash: string;
   expiresAt: Date;
-  usedAt: Date;
+  usedAt: Date | null;
 }
 
 export interface CreateVerification {
