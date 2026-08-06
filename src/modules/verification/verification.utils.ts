@@ -12,6 +12,10 @@ import { VerificationRepository } from './verification.repository.js';
 import { EmailService } from '../../shared/email/index.js';
 import type { Types } from 'mongoose';
 
+/**
+ * * HELPER: Creates a verification token, saves its hash to the database,
+ * * and sends an email containing the verification link to the user.
+ */
 export const createVerificationAndSendEmail = async ({
   email,
   type,
@@ -50,6 +54,10 @@ export const createVerificationAndSendEmail = async ({
   });
 };
 
+/**
+ * * HELPER: Finds and returns an active, unexpired, and unused verification record
+ * * matching the provided token and verification type.
+ */
 export const getActiveVerification = async (
   token: string,
   type: VerificationType
@@ -65,6 +73,9 @@ export const getActiveVerification = async (
   return verification;
 };
 
+/**
+ * * HELPER: Marks a specific verification record as used to prevent token reuse.
+ */
 export const consumeVerification = async (verificationId: Types.ObjectId): Promise<void> => {
   await VerificationRepository.markAsUsed(verificationId);
 };
