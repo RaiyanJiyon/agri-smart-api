@@ -1,4 +1,3 @@
-import ms from 'ms';
 interface envConfig {
   PORT: number;
   CLIENT_URL: string;
@@ -18,19 +17,9 @@ interface envConfig {
     JWT_ACCESS_SECRET: string;
     JWT_ACCESS_EXPIRES_IN: string;
     JWT_REFRESH_SECRET: string;
-    JWT_REFRESH_EXPIRES_IN: number;
+    JWT_REFRESH_EXPIRES_IN: string;
   };
 }
-
-const parseExpiresIn = (value: string): number => {
-  const msFn = ms as unknown as (value: string) => number;
-  const result = msFn(value);
-
-  if (typeof result !== 'number' || Number.isNaN(result)) {
-    throw new Error('Invalid expiration environment value');
-  }
-  return result;
-};
 
 const loadEnvVariables = (): envConfig => {
   const requiredEnvVariables: string[] = [
@@ -77,7 +66,7 @@ const loadEnvVariables = (): envConfig => {
       JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET!,
       JWT_ACCESS_EXPIRES_IN: process.env.JWT_ACCESS_EXPIRES_IN!,
       JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET!,
-      JWT_REFRESH_EXPIRES_IN: parseExpiresIn(process.env.JWT_REFRESH_EXPIRES_IN!),
+      JWT_REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN!,
     },
   };
 };

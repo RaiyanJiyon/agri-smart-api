@@ -1,4 +1,3 @@
-import { config } from '../../config/env.js';
 import { HTTP_STATUS } from '../../constants/httpStatus.js';
 import { ApiError } from '../../errors/AppError.js';
 import type { IJwtPayload } from '../../shared/types/jwt.js';
@@ -8,6 +7,7 @@ import { SessionService } from '../session/session.service.js';
 import { VerificationService } from '../verification/verification.service.js';
 import type { IChangePasswordPayload, ILoginPayload, IUser } from './auth.interface.js';
 import { AuthRepository } from './auth.repository.js';
+import { getRefreshTokenExpiry } from './auth.utils.js';
 
 const register = async (payload: Pick<IUser, 'name' | 'email' | 'password'>): Promise<IUser> => {
   const existingUser = await AuthRepository.findUserByEmail(payload.email);
@@ -63,7 +63,7 @@ const login = async (payload: ILoginPayload) => {
     refreshToken: refreshToken,
     ipAddress: payload.ipAddress ?? '',
     userAgent: payload.userAgent ?? 'unknown',
-    expiresAt: new Date(Date.now() + config.JWT.JWT_REFRESH_EXPIRES_IN),
+    expiresAt: getRefreshTokenExpiry(),
   });
 
   return {

@@ -1,4 +1,3 @@
-import { config } from '../../config/env.js';
 import { HTTP_STATUS } from '../../constants/httpStatus.js';
 import { ApiError } from '../../errors/AppError.js';
 import { JwtUtil } from '../../utils/jwt.js';
@@ -8,6 +7,7 @@ import type { Session } from '../session/session.interface.js';
 import { SessionService } from '../session/session.service.js';
 import type { IJwtPayload } from '../../shared/types/jwt.js';
 import type { HydratedDocument, Types } from 'mongoose';
+import { getRefreshTokenExpiry } from './auth.utils.js';
 
 interface IActiveRefreshSession {
   payload: IJwtPayload;
@@ -15,8 +15,8 @@ interface IActiveRefreshSession {
 }
 
 /**
- * * HELPER: Validates a refresh token's cryptographic signature, 
- * * checks database session activity, and ensures identity consistency 
+ * * HELPER: Validates a refresh token's cryptographic signature,
+ * * checks database session activity, and ensures identity consistency
  * * before returning the payload and session data.
  */
 const getActiveSessionFromRefreshToken = async (
@@ -62,7 +62,7 @@ const refreshTokens = async (refreshToken: string): Promise<IAuthTokens> => {
 
   const newAccessToken = JwtUtil.signAccessToken(jwtPayload);
   const newRefreshToken = JwtUtil.signRefreshToken(jwtPayload);
-  const expiresAt = new Date(Date.now() + config.JWT.JWT_REFRESH_EXPIRES_IN);
+  const expiresAt = getRefreshTokenExpiry();
 
   await SessionService.rotateRefreshToken(session._id, newRefreshToken, expiresAt);
 

@@ -16,11 +16,13 @@ const create = async (payload: Omit<Session, 'revokedAt'>): Promise<Session> => 
 
 /**
  * * FUTURE / UTILITY: Find a single session document by its refresh token hash.
- * * Unlike active-only queries, this retrieves the session regardless of its 
- * * expiration or revocation status. Reserved for specialized security checks, 
+ * * Unlike active-only queries, this retrieves the session regardless of its
+ * * expiration or revocation status. Reserved for specialized security checks,
  * * auditing, or debugging flows.
  */
-const findByRefreshTokenHash = async (refreshTokenHash: string): Promise<HydratedDocument<Session> | null> => {
+const findByRefreshTokenHash = async (
+  refreshTokenHash: string
+): Promise<HydratedDocument<Session> | null> => {
   return SessionModel.findOne({
     refreshTokenHash,
   });
@@ -37,7 +39,7 @@ const findActiveByRefreshTokenHash = async (
 
 /**
  * * FUTURE: Retrieve only active, non-revoked sessions for a user.
- * * Will be used for the "Active Devices" dashboard where users 
+ * * Will be used for the "Active Devices" dashboard where users
  * * can view all currently logged-in browsers/devices.
  */
 const findAllByUserId = async (userId: Types.ObjectId): Promise<Session[]> => {
@@ -50,7 +52,7 @@ const findAllByUserId = async (userId: Types.ObjectId): Promise<Session[]> => {
 
 /**
  * * FUTURE: Retrieve only active, non-revoked sessions for a user.
- * * Will be used for the "Active Devices" dashboard where users 
+ * * Will be used for the "Active Devices" dashboard where users
  * * can view and manage all currently logged-in browsers or devices.
  */
 const findActiveByUserId = async (userId: Types.ObjectId): Promise<Session[]> => {
@@ -109,7 +111,7 @@ const revokeAllExcept = async (
 
 /**
  * * FUTURE: Delete all sessions associated with a specific user.
- * * Will be used during the account deletion flow (GDPR compliance / "Delete Account") 
+ * * Will be used during the account deletion flow (GDPR compliance / "Delete Account")
  * * to clean up and remove all orphaned session records from the database.
  */
 const deleteByUserId = async (userId: Types.ObjectId): Promise<DeleteResult> => {

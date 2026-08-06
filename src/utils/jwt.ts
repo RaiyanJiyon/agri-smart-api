@@ -10,7 +10,7 @@ const signAccessToken = (payload: IJwtPayload): string => {
 
 const signRefreshToken = (payload: IJwtPayload): string => {
   return jwt.sign(payload, config.JWT.JWT_REFRESH_SECRET, {
-    expiresIn: Math.floor(config.JWT.JWT_REFRESH_EXPIRES_IN / 1000),
+    expiresIn: config.JWT.JWT_REFRESH_EXPIRES_IN,
   } as SignOptions);
 };
 
