@@ -4,14 +4,14 @@ import { ApiError } from '../../errors/AppError.js';
 import { JwtUtil } from '../../utils/jwt.js';
 import type { IAuthTokens } from '../auth/auth.interface.js';
 import { AuthRepository } from '../auth/auth.repository.js';
-import type { ISession } from '../session/session.interface.js';
+import type { Session } from '../session/session.interface.js';
 import { SessionService } from '../session/session.service.js';
 import type { IJwtPayload } from '../../shared/types/jwt.js';
 import type { HydratedDocument, Types } from 'mongoose';
 
 interface IActiveRefreshSession {
   payload: IJwtPayload;
-  session: HydratedDocument<ISession>;
+  session: HydratedDocument<Session>;
 }
 
 const getActiveSessionFromRefreshToken = async (

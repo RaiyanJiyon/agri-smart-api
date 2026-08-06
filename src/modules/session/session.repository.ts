@@ -1,5 +1,5 @@
 import type { HydratedDocument, Types } from 'mongoose';
-import type { ISession } from './session.interface.js';
+import type { Session } from './session.interface.js';
 import { SessionModel } from './session.model.js';
 import type { DeleteResult } from 'mongoose';
 
@@ -10,24 +10,24 @@ const getActiveSessionFilter = () => ({
   },
 });
 
-const create = async (payload: Omit<ISession, 'revokedAt'>): Promise<ISession> => {
+const create = async (payload: Omit<Session, 'revokedAt'>): Promise<Session> => {
   return SessionModel.create(payload);
 };
 
-const findByRefreshTokenHash = async (refreshTokenHash: string): Promise<ISession | null> => {
+const findByRefreshTokenHash = async (refreshTokenHash: string): Promise<Session | null> => {
   return SessionModel.findOne({ refreshTokenHash });
 };
 
 const findActiveByRefreshTokenHash = async (
   refreshTokenHash: string
-): Promise<HydratedDocument<ISession> | null> => {
+): Promise<HydratedDocument<Session> | null> => {
   return SessionModel.findOne({
     refreshTokenHash,
     ...getActiveSessionFilter(),
   });
 };
 
-const findAllByUserId = async (userId: Types.ObjectId): Promise<ISession[]> => {
+const findAllByUserId = async (userId: Types.ObjectId): Promise<Session[]> => {
   return SessionModel.find({
     userId,
   }).sort({
@@ -35,7 +35,7 @@ const findAllByUserId = async (userId: Types.ObjectId): Promise<ISession[]> => {
   });
 };
 
-const findActiveByUserId = async (userId: Types.ObjectId): Promise<ISession[]> => {
+const findActiveByUserId = async (userId: Types.ObjectId): Promise<Session[]> => {
   return SessionModel.find({
     userId,
     ...getActiveSessionFilter(),
@@ -44,7 +44,7 @@ const findActiveByUserId = async (userId: Types.ObjectId): Promise<ISession[]> =
   });
 };
 
-const revoke = async (sessionId: Types.ObjectId): Promise<ISession | null> => {
+const revoke = async (sessionId: Types.ObjectId): Promise<Session | null> => {
   return SessionModel.findByIdAndUpdate(
     {
       _id: sessionId,
@@ -99,7 +99,7 @@ const rotateRefreshToken = async (
   sessionId: Types.ObjectId,
   refreshTokenHash: string,
   expiresAt: Date
-): Promise<ISession | null> => {
+): Promise<Session | null> => {
   return SessionModel.findOneAndUpdate(
     {
       _id: sessionId,

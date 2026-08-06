@@ -1,1 +1,1 @@
-export type { ISession, ICreateSession } from './session.interface.js';
+export type { Session as Session, CreateSession } from './session.interface.js';

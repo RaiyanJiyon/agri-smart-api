@@ -1,6 +1,6 @@
 import type { Types } from 'mongoose';
 
-export interface ISession {
+export interface Session {
   userId: Types.ObjectId;
   refreshTokenHash: string;
   ipAddress: string;
@@ -11,7 +11,7 @@ export interface ISession {
   device?: string;
 }
 
-export interface ICreateSession {
+export interface CreateSession {
   userId: Types.ObjectId;
   refreshToken: string;
   ipAddress?: string | undefined;

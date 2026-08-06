@@ -1,8 +1,8 @@
 import { model, Schema } from 'mongoose';
-import type { ISession } from './session.types.js';
+import type { Session } from './session.interface.js';
 import { COLLECTION_NAME } from '../../constants/database.js';
 
-const sessionSchema = new Schema<ISession>(
+const sessionSchema = new Schema<Session>(
   {
     userId: {
       type: Schema.Types.ObjectId,
@@ -87,4 +87,4 @@ sessionSchema.index(
   }
 );
 
-export const SessionModel = model<ISession>(COLLECTION_NAME.SESSION, sessionSchema);
+export const SessionModel = model<Session>(COLLECTION_NAME.SESSION, sessionSchema);
