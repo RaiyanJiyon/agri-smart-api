@@ -20,7 +20,7 @@ const create = async (payload: Omit<Session, 'revokedAt'>): Promise<Session> => 
  * * expiration or revocation status. Reserved for specialized security checks, 
  * * auditing, or debugging flows.
  */
-const findRefreshTokenHash = async (refreshTokenHash: string): Promise<HydratedDocument<Session> | null> => {
+const findByRefreshTokenHash = async (refreshTokenHash: string): Promise<HydratedDocument<Session> | null> => {
   return SessionModel.findOne({
     refreshTokenHash,
   });
@@ -142,7 +142,7 @@ const rotateRefreshToken = async (
 
 export const SessionRepository = {
   create,
-  findRefreshTokenHash,
+  findByRefreshTokenHash,
   findActiveByRefreshTokenHash,
   findAllByUserId,
   findActiveByUserId,
