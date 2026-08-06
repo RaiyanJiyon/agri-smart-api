@@ -3,10 +3,10 @@ import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
-import { notFound } from './middleware/notFound.js';
-import { globalErrorHandler } from './middleware/globalErrorHandler.js';
-import { config } from './config/env.js';
-import { router } from './routes/index.js';
+import { config } from './app/shared/config/env.js';
+import { router } from './app/routes/index.js';
+import { notFound } from './app/shared/middleware/notFound.js';
+import { globalErrorHandler } from './app/shared/middleware/globalErrorHandler.js';
 
 const app = express();
 

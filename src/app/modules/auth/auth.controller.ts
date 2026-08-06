@@ -1,14 +1,14 @@
 import type { Request, Response } from 'express';
-import { catchAsync } from '../../utils/catchAsync.js';
+import { catchAsync } from '../../shared/utils/catchAsync.js';
 import { AuthService } from './auth.service.js';
-import { sendResponse } from '../../utils/sendResponse.js';
-import { HTTP_STATUS } from '../../constants/httpStatus.js';
 import type { User } from './auth.interface.js';
+import { sendResponse } from '../../shared/utils/sendResponse.js';
+import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
 import { VerificationService } from '../verification/verification.service.js';
-import { getRefreshTokenCookieOptions } from '../../utils/cookie.js';
-import { COOKIE_NAME } from '../../constants/cookie.js';
+import { COOKIE_NAME } from '../../shared/constants/cookie.js';
+import { getRefreshTokenCookieOptions } from '../../shared/utils/cookie.js';
+import { ApiError } from '../../shared/errors/AppError.js';
 import { TokenService } from './token.service.js';
-import { ApiError } from '../../errors/AppError.js';
 import { Types } from 'mongoose';
 
 const register = catchAsync(async (req: Request, res: Response) => {

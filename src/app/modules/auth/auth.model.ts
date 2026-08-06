@@ -1,7 +1,7 @@
 import { model, Schema } from 'mongoose';
 import { USER_ROLE, USER_STATUS } from './auth.constant.js';
 import type { User } from './auth.interface.js';
-import { COLLECTION_NAME } from '../../constants/database.js';
+import { COLLECTION_NAME } from '../../shared/constants/database.js';
 
 const userSchema = new Schema<User>(
   {

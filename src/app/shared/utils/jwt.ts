@@ -1,6 +1,6 @@
 import jwt, { type SignOptions } from 'jsonwebtoken';
-import type { JwtPayload } from '../shared/types/jwt.js';
 import { config } from '../config/env.js';
+import type { JwtPayload } from '../types/jwt.js';
 
 const signAccessToken = (payload: JwtPayload): string => {
   return jwt.sign(payload, config.JWT.JWT_ACCESS_SECRET, {

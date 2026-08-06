@@ -10,7 +10,7 @@ import {
   verifyEmailValidationSchema,
 } from './auth.validation.js';
 import { AuthController } from './auth.controller.js';
-import { auth } from '../../middleware/auth.js';
+import { auth } from '../../shared/middleware/auth.js';
 
 const router = Router();
 

@@ -1,6 +1,6 @@
 import { Router, type Request, type Response } from 'express';
 import mongoose from 'mongoose';
-import { HTTP_STATUS } from '../../constants/index.js';
+import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
 
 const router = Router();
 

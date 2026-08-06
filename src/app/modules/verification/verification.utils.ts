@@ -1,7 +1,4 @@
 import ms, { type StringValue } from 'ms';
-import { HTTP_STATUS } from '../../constants/httpStatus.js';
-import { ApiError } from '../../errors/AppError.js';
-import { generateVerificationToken, hashToken } from '../../utils/crypto.js';
 import { AuthRepository } from '../auth/auth.repository.js';
 import type {
   SendVerificationEmailOptions,
@@ -11,6 +8,9 @@ import type {
 import { VerificationRepository } from './verification.repository.js';
 import { EmailService } from '../../shared/email/index.js';
 import type { Types } from 'mongoose';
+import { ApiError } from '../../shared/errors/AppError.js';
+import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
+import { generateVerificationToken, hashToken } from '../../shared/utils/crypto.js';
 
 /**
  * * HELPER: Creates a verification token, saves its hash to the database,

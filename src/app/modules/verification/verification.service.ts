@@ -1,16 +1,16 @@
 import { AuthRepository } from '../auth/auth.repository.js';
-import { ApiError } from '../../errors/AppError.js';
-import { HTTP_STATUS } from '../../constants/httpStatus.js';
 import { VerificationRepository } from './verification.repository.js';
 import { VERIFICATION_TYPE } from './verification.constant.js';
-import { config } from '../../config/env.js';
 import { EMAIL_SUBJECT } from '../../shared/email/email.constant.js';
 import { verificationEmailTemplate } from '../../shared/email/email.template.js';
 import { forgotPasswordEmailTemplate } from '../../shared/email/forgot-password.template.js';
 import { createVerificationAndSendEmail } from './verification.utils.js';
-import { hashPassword, hashToken } from '../../utils/index.js';
-import { comparePassword } from '../../utils/index.js';
 import { SessionService } from '../session/index.js';
+import { config } from '../../shared/config/env.js';
+import { hashToken } from '../../shared/utils/crypto.js';
+import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
+import { ApiError } from '../../shared/errors/AppError.js';
+import { comparePassword, hashPassword } from '../../shared/utils/argon.js';
 
 const sendVerificationEmail = async (email: string): Promise<void> => {
   await createVerificationAndSendEmail({

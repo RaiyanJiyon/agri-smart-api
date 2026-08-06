@@ -1,8 +1,8 @@
-import { HTTP_STATUS } from '../../constants/httpStatus.js';
-import { ApiError } from '../../errors/AppError.js';
+import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
+import { ApiError } from '../../shared/errors/AppError.js';
 import type { JwtPayload } from '../../shared/types/jwt.js';
-import { comparePassword, hashPassword } from '../../utils/argon.js';
-import { JwtUtil } from '../../utils/jwt.js';
+import { comparePassword, hashPassword } from '../../shared/utils/argon.js';
+import { JwtUtil } from '../../shared/utils/jwt.js';
 import { SessionService } from '../session/session.service.js';
 import { VerificationService } from '../verification/verification.service.js';
 import type { ChangePasswordPayload, LoginPayload, User } from './auth.interface.js';

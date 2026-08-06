@@ -1,6 +1,3 @@
-import { HTTP_STATUS } from '../../constants/httpStatus.js';
-import { ApiError } from '../../errors/AppError.js';
-import { JwtUtil } from '../../utils/jwt.js';
 import type { AuthTokens } from './auth.interface.js';
 import { AuthRepository } from './auth.repository.js';
 import type { Session } from '../session/session.interface.js';
@@ -8,6 +5,9 @@ import { SessionService } from '../session/session.service.js';
 import type { JwtPayload } from '../../shared/types/jwt.js';
 import type { HydratedDocument, Types } from 'mongoose';
 import { getRefreshTokenExpiry } from './auth.utils.js';
+import { JwtUtil } from '../../shared/utils/jwt.js';
+import { ApiError } from '../../shared/errors/AppError.js';
+import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
 
 interface IActiveRefreshSession {
   payload: JwtPayload;
