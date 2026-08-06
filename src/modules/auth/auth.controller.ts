@@ -7,7 +7,7 @@ import type { IUser } from './auth.interface.js';
 import { VerificationService } from '../verification/verification.service.js';
 import { getRefreshTokenCookieOptions } from '../../utils/cookie.js';
 import { COOKIE_NAME } from '../../constants/cookie.js';
-import { TokenService } from '../token/token.service.js';
+import { TokenService } from './token.service.js';
 import { ApiError } from '../../errors/AppError.js';
 import { Types } from 'mongoose';
 
