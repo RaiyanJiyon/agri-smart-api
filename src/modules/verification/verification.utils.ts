@@ -25,32 +25,35 @@ export const createVerificationAndSendEmail = async ({
   buildTemplate,
   requireUnverifiedEmail = false,
 }: SendVerificationEmailOptions): Promise<void> => {
-  const user = await AuthRepository.findUserByEmail(email);
+  const existingUser = await AuthRepository.findUserByEmail(email);
 
   // Prevent email enumeration
-  if (!user) {
+  if (!existingUser) {
     return;
   }
 
-  if (requireUnverifiedEmail && user.isEmailVerified) {
+  if (requireUnverifiedEmail && existingUser.isEmailVerified) {
     throw new ApiError(HTTP_STATUS.BAD_REQUEST, 'Email is already verified.');
   }
+
+  // Clear out any existing verification records of the same type for the user to ensure only one active token exists at a time.
+  await VerificationRepository.deleteByUserAndType(existingUser._id, type);
 
   const { token, tokenHash } = generateVerificationToken();
 
   const expiresAt = new Date(Date.now() + ms(expiresIn as StringValue));
 
   await VerificationRepository.createOrReplace({
-    userId: user._id,
+    userId: existingUser._id,
     type,
     tokenHash,
     expiresAt,
   });
 
   await EmailService.send({
-    to: user.email,
+    to: existingUser.email,
     subject,
-    html: buildTemplate(buildUrl(token), user),
+    html: buildTemplate(buildUrl(token), existingUser),
   });
 };
 

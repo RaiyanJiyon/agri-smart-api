@@ -41,12 +41,12 @@ const findByToken = async (
   });
 };
 
-const findActiveVerification = async (
-  userId: Types.ObjectId,
+const findActiveVerificationByHash = async (
+  tokenHash: string,
   type: VerificationType
 ): Promise<HydratedDocument<Verification> | null> => {
   return VerificationModel.findOne({
-    userId,
+    tokenHash,
     type,
     ...getActiveVerificationFilter(),
   });
@@ -80,7 +80,7 @@ const deleteByUserAndType = async (
 export const VerificationRepository = {
   createOrReplace,
   findByToken,
-  findActiveVerification,
+  findActiveVerificationByHash,
   markAsUsed,
   deleteByUserAndType,
 };

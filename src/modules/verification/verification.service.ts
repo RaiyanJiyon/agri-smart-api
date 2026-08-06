@@ -27,7 +27,7 @@ const sendVerificationEmail = async (email: string): Promise<void> => {
 const verifyEmail = async (token: string): Promise<void> => {
   const tokenHash = hashToken(token);
 
-  const verification = await VerificationRepository.findByToken(
+  const verification = await VerificationRepository.findActiveVerificationByHash(
     tokenHash,
     VERIFICATION_TYPE.EMAIL_VERIFICATION
   );
