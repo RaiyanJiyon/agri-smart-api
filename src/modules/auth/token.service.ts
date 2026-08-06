@@ -14,6 +14,11 @@ interface IActiveRefreshSession {
   session: HydratedDocument<Session>;
 }
 
+/**
+ * * HELPER: Validates a refresh token's cryptographic signature, 
+ * * checks database session activity, and ensures identity consistency 
+ * * before returning the payload and session data.
+ */
 const getActiveSessionFromRefreshToken = async (
   refreshToken: string
 ): Promise<IActiveRefreshSession> => {
