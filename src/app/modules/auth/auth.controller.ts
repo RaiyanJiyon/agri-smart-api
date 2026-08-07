@@ -6,7 +6,7 @@ import { sendResponse } from '../../shared/utils/sendResponse.js';
 import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
 import { VerificationService } from '../verification/verification.service.js';
 import { COOKIE_NAME } from '../../shared/constants/cookie.js';
-import { getRefreshTokenCookieOptions } from '../../shared/utils/cookie.js';
+import { getClearCookieOptions, getRefreshTokenCookieOptions } from '../../shared/utils/cookie.js';
 import { ApiError } from '../../shared/errors/AppError.js';
 import { TokenService } from './token.service.js';
 import { Types } from 'mongoose';
@@ -115,7 +115,7 @@ const logout = catchAsync(async (req, res) => {
     await TokenService.logout(refreshToken);
   }
 
-  res.clearCookie(COOKIE_NAME.REFRESH_TOKEN, getRefreshTokenCookieOptions());
+  res.clearCookie(COOKIE_NAME.REFRESH_TOKEN, getClearCookieOptions());
 
   sendResponse(res, {
     statusCode: HTTP_STATUS.OK,
@@ -128,7 +128,7 @@ const logout = catchAsync(async (req, res) => {
 const logoutAllSessions = catchAsync(async (req, res: Response) => {
   await TokenService.logoutAllSessions(new Types.ObjectId(req.user?.userId));
 
-  res.clearCookie(COOKIE_NAME.REFRESH_TOKEN, getRefreshTokenCookieOptions());
+  res.clearCookie(COOKIE_NAME.REFRESH_TOKEN, getClearCookieOptions());
 
   sendResponse(res, {
     statusCode: HTTP_STATUS.OK,
@@ -156,7 +156,7 @@ const changePassword = catchAsync(
       newPassword: req.body.newPassword,
     });
 
-    res.clearCookie(COOKIE_NAME.REFRESH_TOKEN, getRefreshTokenCookieOptions());
+    res.clearCookie(COOKIE_NAME.REFRESH_TOKEN, getClearCookieOptions());
 
     sendResponse(res, {
       statusCode: HTTP_STATUS.OK,
@@ -186,7 +186,7 @@ const resetPassword = catchAsync(
   async (req: Request<unknown, unknown, { token: string; newPassword: string }>, res: Response) => {
     await VerificationService.resetPassword(req.body.token, req.body.newPassword);
 
-    res.clearCookie(COOKIE_NAME.REFRESH_TOKEN, getRefreshTokenCookieOptions());
+    res.clearCookie(COOKIE_NAME.REFRESH_TOKEN, getClearCookieOptions());
 
     sendResponse(res, {
       statusCode: HTTP_STATUS.OK,
