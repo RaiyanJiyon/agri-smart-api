@@ -151,7 +151,7 @@ const changePassword = catchAsync(
     res: Response
   ) => {
     await AuthService.changePassword({
-      userId: new Types.ObjectId(req.user.userId),
+      userId: new Types.ObjectId(req.user?.userId),
       currentPassword: req.body.currentPassword,
       newPassword: req.body.newPassword,
     });
