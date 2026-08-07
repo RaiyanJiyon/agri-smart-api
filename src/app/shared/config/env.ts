@@ -1,6 +1,6 @@
 interface envConfig {
   PORT: number;
-  CLIENT_URL: string;
+  CLIENT_URL: string[];
   DB_URL: string;
   NODE_ENV: string;
   ARGON2_MEMORY: number;
@@ -48,9 +48,9 @@ const loadEnvVariables = (): envConfig => {
 
   return {
     PORT: Number(process.env.PORT!),
-    CLIENT_URL: process.env.CLIENT_URL!,
+    CLIENT_URL: process.env.CLIENT_URL!.split(',').map((url) => url.trim()), // Split by comma and trim whitespace
     NODE_ENV: process.env.NODE_ENV!,
-    DB_URL: process.env.DB_URL!, // Force TS to accept it because your loop validates it
+    DB_URL: process.env.DB_URL!,
     ARGON2_MEMORY: Number(process.env.ARGON2_MEMORY!),
     ARGON2_TIME: Number(process.env.ARGON2_TIME!),
     ARGON2_PARALLELISM: Number(process.env.ARGON2_PARALLELISM!),

@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   cors({
-    origin: config.CLIENT_URL ?? 'http://localhost:3000',
+    origin: config.CLIENT_URL.length > 0 ? config.CLIENT_URL : ['http://localhost:5173'], // Allow multiple origins from the .env file
     credentials: true, // Allow cookies/auth headers if needed
   })
 );
