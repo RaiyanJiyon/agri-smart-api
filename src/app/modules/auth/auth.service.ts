@@ -5,6 +5,7 @@ import { comparePassword, hashPassword } from '../../shared/utils/argon.js';
 import { JwtUtil } from '../../shared/utils/jwt.js';
 import { SessionService } from '../session/session.service.js';
 import { VerificationService } from '../verification/verification.service.js';
+import { USER_STATUS } from './auth.constant.js';
 import type { ChangePasswordPayload, LoginPayload, User } from './auth.interface.js';
 import { AuthRepository } from './auth.repository.js';
 import { getRefreshTokenExpiry } from './auth.utils.js';
@@ -47,6 +48,10 @@ const login = async (payload: LoginPayload) => {
 
   if (!existingUser.isEmailVerified) {
     throw new ApiError(HTTP_STATUS.FORBIDDEN, 'Please verify your email first.');
+  }
+
+  if (existingUser.status !== USER_STATUS.ACTIVE) {
+    throw new ApiError(HTTP_STATUS.FORBIDDEN, 'Your account has been suspended or is inactive.');
   }
 
   const jwtPayload: JwtPayload = {

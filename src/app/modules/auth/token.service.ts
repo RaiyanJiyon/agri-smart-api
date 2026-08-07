@@ -8,6 +8,7 @@ import { getRefreshTokenExpiry } from './auth.utils.js';
 import { JwtUtil } from '../../shared/utils/jwt.js';
 import { ApiError } from '../../shared/errors/AppError.js';
 import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
+import { USER_STATUS } from './auth.constant.js';
 
 interface IActiveRefreshSession {
   payload: JwtPayload;
@@ -52,6 +53,10 @@ const refreshTokens = async (refreshToken: string): Promise<AuthTokens> => {
 
   if (!user.isEmailVerified) {
     throw new ApiError(HTTP_STATUS.FORBIDDEN, 'Email is not verified.');
+  }
+
+  if (user.status !== USER_STATUS.ACTIVE) {
+    throw new ApiError(HTTP_STATUS.FORBIDDEN, 'Your account has been suspended or is inactive.');
   }
 
   const jwtPayload: JwtPayload = {
