@@ -33,7 +33,7 @@ export const createVerificationAndSendEmail = async ({
   }
 
   if (requireUnverifiedEmail && existingUser.isEmailVerified) {
-    throw new ApiError(HTTP_STATUS.BAD_REQUEST, 'Email is already verified.');
+    return;
   }
 
   // Clear out any existing verification records of the same type for the user to ensure only one active token exists at a time.
