@@ -1,6 +1,7 @@
 import { model, Schema } from 'mongoose';
 import type { Verification } from './verification.interface.js';
 import { VERIFICATION_TYPE } from './verification.constant.js';
+import { COLLECTION_NAME } from '../../shared/constants/database.js';
 
 const verificationSchema = new Schema<Verification>(
   {
@@ -47,4 +48,7 @@ verificationSchema.index(
 
 verificationSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
-export const VerificationModel = model<Verification>('Verification', verificationSchema);
+export const VerificationModel = model<Verification>(
+  COLLECTION_NAME.VERIFICATION,
+  verificationSchema
+);

@@ -1,4 +1,4 @@
-import type { User } from "../../modules/auth/auth.interface.js";
+import type { User } from '../../modules/auth/auth.interface.js';
 
 export const verificationEmailTemplate = (verificationUrl: string, user: User): string => `
 <!DOCTYPE html>
