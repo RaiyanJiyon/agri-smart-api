@@ -5,7 +5,7 @@ import { getRefreshTokenMaxAge } from '../../modules/auth/auth.utils.js';
 export const getRefreshTokenCookieOptions = (env = config.NODE_ENV): CookieOptions => ({
   httpOnly: true,
   secure: env === 'production',
-  sameSite: 'none',
+  sameSite: env === 'production' ? 'none' : 'lax',
   path: '/',
   maxAge: getRefreshTokenMaxAge(),
 });
