@@ -36,11 +36,27 @@ const startServer = async (): Promise<void> => {
     }, 10000).unref(); // Adding .unref() lets Node.js exit immediately if cleanup finishes early
   };
 
+  // Handle termination signals for graceful shutdown (e.g., from Docker or Kubernetes)
   process.on('SIGTERM', () => {
     void handleShutdown('SIGTERM');
   });
+
+  // Handle SIGINT (e.g., Ctrl+C) for graceful shutdown
   process.on('SIGINT', () => {
     void handleShutdown('SIGINT');
+  });
+
+  // Handle unhandled promise rejections (e.g., background async tasks without .catch)
+  process.on('unhandledRejection', (reason: Error) => {
+    logger.error('UNHANDLED REJECTION! Shutting down...', reason);
+    handleShutdown('unhandledRejection');
+  });
+
+  // Handle uncaught synchronous exceptions (e.g., programming errors)
+  process.on('uncaughtException', (err: Error) => {
+    logger.error('UNCAUGHT EXCEPTION! Shutting down...', err);
+    // Uncaught exceptions leave the app in an unclean state, so exit immediately
+    process.exit(1);
   });
 };
 
