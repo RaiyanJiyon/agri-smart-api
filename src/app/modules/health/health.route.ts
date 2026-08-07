@@ -6,8 +6,8 @@ const router = Router();
 
 router.get('/', (_req: Request, res: Response) => {
   // readystate 1 = connected
-  const dbState = mongoose.connection.readyState;
-  const isConnected = dbState === mongoose.ConnectionStates.connected;
+  // const dbState = mongoose.connection.readyState;
+  const isConnected = mongoose.connection.readyState === mongoose.ConnectionStates.connected;
 
   if (isConnected) {
     return res.status(HTTP_STATUS.OK).json({
@@ -21,7 +21,8 @@ router.get('/', (_req: Request, res: Response) => {
     status: 'DOWN',
     timeStamp: new Date().toISOString(),
     database: 'disconnected',
-    readyState: dbState,
+    // ! Removed 'readyState: dbState' to prevent leaking internal infrastructure details
+    // readyState: dbState,
   });
 });
 
