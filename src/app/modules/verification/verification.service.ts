@@ -69,7 +69,7 @@ const sendPasswordResetEmail = async (email: string): Promise<void> => {
 const resetPassword = async (token: string, newPassword: string): Promise<void> => {
   const tokenHash = hashToken(token);
 
-  const verification = await VerificationRepository.findByToken(
+  const verification = await VerificationRepository.consumeToken(
     tokenHash,
     VERIFICATION_TYPE.PASSWORD_RESET
   );
@@ -98,8 +98,6 @@ const resetPassword = async (token: string, newPassword: string): Promise<void> 
   await AuthRepository.updatePassword(user._id, hashedNewPassword);
 
   await SessionService.revokeAllSessions(user._id);
-
-  await VerificationRepository.markAsUsed(verification._id);
 };
 
 export const VerificationService = {

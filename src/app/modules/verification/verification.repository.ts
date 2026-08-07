@@ -52,6 +52,25 @@ const findActiveVerificationByHash = async (
   });
 };
 
+const consumeToken = async (
+  tokenHash: string,
+  type: VerificationType
+): Promise<HydratedDocument<Verification> | null> => {
+  return VerificationModel.findOneAndUpdate(
+    {
+      tokenHash,
+      type,
+      ...getActiveVerificationFilter(),
+    },
+    {
+      $set: { usedAt: new Date() }, // Ensures it's not already used and not expired
+    },
+    {
+      new: true,
+    }
+  );
+};
+
 const markAsUsed = async (id: Types.ObjectId): Promise<HydratedDocument<Verification> | null> => {
   return VerificationModel.findOneAndUpdate(
     {
@@ -81,6 +100,7 @@ export const VerificationRepository = {
   createOrReplace,
   findByToken,
   findActiveVerificationByHash,
+  consumeToken,
   markAsUsed,
   deleteByUserAndType,
 };
