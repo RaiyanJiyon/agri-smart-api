@@ -33,7 +33,7 @@ const startServer = async (): Promise<void> => {
     setTimeout(() => {
       logger.error('Could not close connections in time, forcefully shutting down');
       process.exit(1);
-    }, 10000);
+    }, 10000).unref(); // Adding .unref() lets Node.js exit immediately if cleanup finishes early
   };
 
   process.on('SIGTERM', () => {
