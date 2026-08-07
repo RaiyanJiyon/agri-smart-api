@@ -18,6 +18,6 @@ export const sendResponse = <T>(res: Response, data: TResponse<T>): void => {
     success: data.success,
     message: data.message ?? 'Success',
     data: data.data,
-    meta: data.meta ?? undefined,
+    ...(data.meta && { meta: data.meta }),
   });
 };
