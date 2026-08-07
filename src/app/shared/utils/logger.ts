@@ -3,10 +3,7 @@ import { config } from '../config/env.js';
 
 const transports: winston.transport[] = [
   new winston.transports.Console({
-    format: winston.format.combine(
-      winston.format.colorize(),
-      winston.format.simple()
-    ),
+    format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
   }),
 ];
 
@@ -19,10 +16,7 @@ if (config.NODE_ENV === 'production') {
 
 const winstonLogger = winston.createLogger({
   level: config.NODE_ENV === 'production' ? 'info' : 'debug',
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.json()
-  ),
+  format: winston.format.combine(winston.format.timestamp(), winston.format.json()),
   transports,
 });
 

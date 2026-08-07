@@ -7,7 +7,7 @@ const verificationSchema = new Schema<Verification>(
   {
     userId: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: COLLECTION_NAME.USER,
       required: true,
     },
 
