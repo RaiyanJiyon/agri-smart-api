@@ -1,4 +1,6 @@
-export const verificationEmailTemplate = (verificationUrl: string): string => `
+import type { User } from "../../modules/auth/auth.interface.js";
+
+export const verificationEmailTemplate = (verificationUrl: string, user: User): string => `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,7 +28,7 @@ export const verificationEmailTemplate = (verificationUrl: string): string => `
           <tr>
             <td style="padding: 0 40px 32px 40px; text-align: left;">
               <p style="margin: 0 0 16px 0; font-size: 16px; color: #374151; line-height: 1.5;">
-                Hello,
+                Hello ${user.name},
               </p>
               <p style="margin: 0 0 24px 0; font-size: 16px; color: #374151; line-height: 1.5;">
                 Thank you for signing up for AgriSmart! Please verify your email address by clicking the button below to get started.
