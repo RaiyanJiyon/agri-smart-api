@@ -11,7 +11,11 @@ export const connectDatabase = async (): Promise<void> => {
 
   while (retries > 0) {
     try {
-      await mongoose.connect(mongoUri);
+      // Added explicit timeout configurations to prevent indefinite connection hangs
+      await mongoose.connect(mongoUri, {
+        serverSelectionTimeoutMS: 5000, // Fail fast if MongoDB server can't be reached (5 seconds)
+        socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+      });
       logger.info('Database connected successfully with Mongoose.');
       return;
     } catch (error) {
