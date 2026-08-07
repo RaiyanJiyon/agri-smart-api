@@ -71,6 +71,8 @@ const login = async (payload: LoginPayload) => {
     expiresAt: getRefreshTokenExpiry(),
   });
 
+  await AuthRepository.updateLastLogin(existingUser._id);
+
   return {
     accessToken,
     refreshToken,

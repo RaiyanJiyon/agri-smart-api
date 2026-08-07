@@ -26,6 +26,10 @@ const createUser = async (payload: Partial<User>): Promise<HydratedDocument<User
   return AuthModel.create(payload);
 };
 
+const updateLastLogin = async (userId: Types.ObjectId): Promise<HydratedDocument<User> | null> => {
+  return AuthModel.findByIdAndUpdate({ _id: userId }, { lastLoginAt: new Date() }, { new: true });
+};
+
 const updateVerificationStatus = async (
   userId: Types.ObjectId,
   isEmailVerified: boolean
@@ -56,6 +60,7 @@ export const AuthRepository = {
   findUserByEmail,
   findUserByEmailWithPassword,
   createUser,
+  updateLastLogin,
   updateVerificationStatus,
   updatePassword,
 };
