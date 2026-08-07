@@ -92,6 +92,10 @@ const changePassword = async (payload: ChangePasswordPayload) => {
     throw new ApiError(HTTP_STATUS.NOT_FOUND, 'User not found.');
   }
 
+  if (!user.password) {
+    throw new ApiError(HTTP_STATUS.INTERNAL_SERVER_ERROR, 'User credential state is invalid.');
+  }
+
   const matched = await comparePassword(payload.currentPassword, user.password);
   if (!matched) {
     throw new ApiError(HTTP_STATUS.BAD_REQUEST, 'Current password is incorrect.');
