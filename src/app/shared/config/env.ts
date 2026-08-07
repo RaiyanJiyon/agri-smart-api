@@ -8,8 +8,6 @@ interface envConfig {
   ARGON2_PARALLELISM: number;
   RESEND_API_KEY: string;
   EMAIL_FROM: string;
-  TOKEN_SIZE: number;
-  HASH_ALGORITHM: string;
   EMAIL_VERIFICATION_EXPIRES_IN: string;
   PASSWORD_RESET_EXPIRES_IN: string;
 
@@ -58,8 +56,6 @@ const loadEnvVariables = (): envConfig => {
     ARGON2_PARALLELISM: Number(process.env.ARGON2_PARALLELISM!),
     RESEND_API_KEY: process.env.RESEND_API_KEY!,
     EMAIL_FROM: process.env.EMAIL_FROM!,
-    TOKEN_SIZE: Number(process.env.TOKEN_SIZE!),
-    HASH_ALGORITHM: process.env.HASH_ALGORITHM!,
     EMAIL_VERIFICATION_EXPIRES_IN: process.env.EMAIL_VERIFICATION_EXPIRES_IN!,
     PASSWORD_RESET_EXPIRES_IN: process.env.PASSWORD_RESET_EXPIRES_IN!,
     JWT: {

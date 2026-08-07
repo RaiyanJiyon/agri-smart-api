@@ -1,6 +1,4 @@
-import { config } from '../config/env.js';
-
 export const CRYPTO = {
-  TOKEN_SIZE: config.TOKEN_SIZE,
-  HASH_ALGORITHM: config.HASH_ALGORITHM,
+  TOKEN_SIZE: 32,
+  HASH_ALGORITHM: 'sha256',
 } as const;
