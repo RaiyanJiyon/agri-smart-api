@@ -30,8 +30,6 @@ const loadEnvVariables = (): envConfig => {
     'ARGON2_PARALLELISM',
     'RESEND_API_KEY',
     'EMAIL_FROM',
-    'TOKEN_SIZE',
-    'HASH_ALGORITHM',
     'JWT_ACCESS_SECRET',
     'JWT_ACCESS_EXPIRES_IN',
     'JWT_REFRESH_SECRET',
@@ -46,14 +44,30 @@ const loadEnvVariables = (): envConfig => {
     }
   });
 
+  // Parse and strictly validate Argon2 numeric values
+  const argonMemory = Number(process.env.ARGON2_MEMORY);
+  if (!Number.isInteger(argonMemory) || argonMemory < 65536) {
+    throw new Error('ARGON2_MEMORY must be a valid integer ≥ 65536 (64MB)');
+  }
+
+  const argonTime = Number(process.env.ARGON2_TIME);
+  if (!Number.isInteger(argonTime) || argonTime < 1) {
+    throw new Error('ARGON2_TIME must be a valid integer ≥ 1');
+  }
+
+  const argonParallelism = Number(process.env.ARGON2_PARALLELISM);
+  if (!Number.isInteger(argonParallelism) || argonParallelism < 1) {
+    throw new Error('ARGON2_PARALLELISM must be a valid integer ≥ 1');
+  }
+
   return {
     PORT: Number(process.env.PORT!),
     CLIENT_URL: process.env.CLIENT_URL!.split(',').map((url) => url.trim()), // Split by comma and trim whitespace
     NODE_ENV: process.env.NODE_ENV!,
     DB_URL: process.env.DB_URL!,
-    ARGON2_MEMORY: Number(process.env.ARGON2_MEMORY!),
-    ARGON2_TIME: Number(process.env.ARGON2_TIME!),
-    ARGON2_PARALLELISM: Number(process.env.ARGON2_PARALLELISM!),
+    ARGON2_MEMORY: argonMemory,
+    ARGON2_TIME: argonTime,
+    ARGON2_PARALLELISM: argonParallelism,
     RESEND_API_KEY: process.env.RESEND_API_KEY!,
     EMAIL_FROM: process.env.EMAIL_FROM!,
     EMAIL_VERIFICATION_EXPIRES_IN: process.env.EMAIL_VERIFICATION_EXPIRES_IN!,
