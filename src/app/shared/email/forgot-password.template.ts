@@ -1,3 +1,5 @@
+import { escapeHtml } from '../utils/escape.js';
+
 interface ForgotPasswordEmailTemplatePayload {
   name: string;
   resetUrl: string;
@@ -6,7 +8,11 @@ interface ForgotPasswordEmailTemplatePayload {
 export const forgotPasswordEmailTemplate = ({
   name,
   resetUrl,
-}: ForgotPasswordEmailTemplatePayload): string => `
+}: ForgotPasswordEmailTemplatePayload): string => {
+  // Safely escape user input to neutralize HTML injection vectors
+  const safeName = escapeHtml(name);
+
+  return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,7 +40,7 @@ export const forgotPasswordEmailTemplate = ({
           <tr>
             <td style="padding: 0 40px 32px 40px; text-align: left;">
               <p style="margin: 0 0 16px 0; font-size: 16px; color: #374151; line-height: 1.5;">
-                Hello ${name},
+                Hello ${safeName},
               </p>
               <p style="margin: 0 0 24px 0; font-size: 16px; color: #374151; line-height: 1.5;">
                 We received a request to reset your password. Click the button below to choose a new password.
@@ -79,3 +85,4 @@ export const forgotPasswordEmailTemplate = ({
 </body>
 </html>
 `;
+};
