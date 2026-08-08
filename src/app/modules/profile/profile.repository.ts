@@ -1,9 +1,12 @@
-import type { Types } from 'mongoose';
+import type { ClientSession, Types } from 'mongoose';
 import type { Profile } from './profile.interface.js';
 import { ProfileModel } from './profile.model.js';
 
-export const create = async (payload: Profile): Promise<Profile> => {
-  return ProfileModel.create(payload);
+const create = async (payload: Profile, session?: ClientSession): Promise<Profile> => {
+  const options = session ? { session } : undefined;
+  const [profile] = await ProfileModel.create([payload], options);
+
+  return profile as Profile;
 };
 
 export const findByUserId = async (userId: Types.ObjectId): Promise<Profile | null> => {
