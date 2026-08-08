@@ -1,8 +1,11 @@
 import type { ClientSession, Types } from 'mongoose';
-import type { Farm } from './farm.interface.js';
+import type { CreateFarmBody, Farm, UpdateFarmBody } from './farm.interface.js';
 import { FarmModel } from './farm.model.js';
 
-const create = async (payload: Farm, session: ClientSession): Promise<Farm> => {
+const create = async (
+  payload: CreateFarmBody & { userId: Types.ObjectId },
+  session: ClientSession
+): Promise<Farm> => {
   const [farm] = await FarmModel.create([payload], { session });
 
   return farm!;
@@ -27,7 +30,7 @@ const findByIdAndUserId = async (
 const updateByIdAndUserId = async (
   farmId: Types.ObjectId,
   userId: Types.ObjectId,
-  payload: Partial<Farm>
+  payload: UpdateFarmBody
 ): Promise<Farm | null> => {
   return FarmModel.findOneAndUpdate(
     {
