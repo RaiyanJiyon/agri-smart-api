@@ -6,10 +6,15 @@ export interface Profile {
   lastName?: string;
   phone: string;
   avatar?: string;
-
   address?: string;
-
   createdAt?: Date;
-
   updatedAt?: Date;
+}
+
+export interface UpdateProfileBody {
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  avatar?: string;
+  address?: string;
 }
