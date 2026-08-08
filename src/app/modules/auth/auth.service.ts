@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
 import { ApiError } from '../../shared/errors/AppError.js';
 import type { JwtPayload } from '../../shared/types/jwt.js';
@@ -9,6 +10,7 @@ import { USER_STATUS } from './auth.constant.js';
 import type { ChangePasswordPayload, LoginPayload, User } from './auth.interface.js';
 import { AuthRepository } from './auth.repository.js';
 import { getRefreshTokenExpiry } from './auth.utils.js';
+import { ProfileRepository } from '../profile/profile.repository.js';
 
 const register = async (payload: Pick<User, 'name' | 'email' | 'password'>): Promise<User> => {
   const existingUser = await AuthRepository.findUserByEmail(payload.email);
@@ -19,14 +21,38 @@ const register = async (payload: Pick<User, 'name' | 'email' | 'password'>): Pro
 
   const hashedPassword = await hashPassword(payload.password);
 
-  const user = await AuthRepository.createUser({
-    ...payload,
-    password: hashedPassword,
-  });
+  const session = await mongoose.startSession();
 
-  await VerificationService.sendVerificationEmail(user.email);
+  try {
+    const createdUser = await session.withTransaction(async () => {
+      const user = await AuthRepository.createUser(
+        {
+          ...payload,
+          password: hashedPassword,
+        },
+        session
+      );
 
-  return user;
+      await ProfileRepository.create(
+        {
+          userId: user._id,
+        },
+        session
+      );
+
+      return user;
+    });
+
+    if (!createdUser) {
+      throw new ApiError(HTTP_STATUS.INTERNAL_SERVER_ERROR, 'Failed to create user.');
+    }
+
+    await VerificationService.sendVerificationEmail(createdUser.email);
+
+    return createdUser;
+  } finally {
+    await session.endSession();
+  }
 };
 
 const login = async (payload: LoginPayload) => {

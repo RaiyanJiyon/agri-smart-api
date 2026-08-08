@@ -4,7 +4,7 @@ export interface Profile {
   userId: Types.ObjectId;
   firstName?: string;
   lastName?: string;
-  phone: string;
+  phone?: string;
   avatar?: string;
   address?: string;
   createdAt?: Date;

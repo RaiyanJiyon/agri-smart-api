@@ -6,7 +6,7 @@ const create = async (payload: Profile, session?: ClientSession): Promise<Profil
   const options = session ? { session } : undefined;
   const [profile] = await ProfileModel.create([payload], options);
 
-  return profile as Profile;
+  return profile!;
 };
 
 export const findByUserId = async (userId: Types.ObjectId): Promise<Profile | null> => {

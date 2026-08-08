@@ -39,6 +39,7 @@ const ProfileSchema = new Schema<Profile>(
   },
   {
     timestamps: true,
+    versionKey: false,
   }
 );
 

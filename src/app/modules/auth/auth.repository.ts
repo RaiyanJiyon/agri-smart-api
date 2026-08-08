@@ -1,4 +1,4 @@
-import type { HydratedDocument, Types } from 'mongoose';
+import type { ClientSession, HydratedDocument, Types } from 'mongoose';
 import type { User } from './auth.interface.js';
 import { AuthModel } from './auth.model.js';
 
@@ -22,8 +22,14 @@ const findUserByEmailWithPassword = async (
   return AuthModel.findOne({ email }).select('+password');
 };
 
-const createUser = async (payload: Partial<User>): Promise<HydratedDocument<User>> => {
-  return AuthModel.create(payload);
+const createUser = async (
+  payload: Partial<User>,
+  session?: ClientSession
+): Promise<HydratedDocument<User>> => {
+  const options = session ? { session } : undefined;
+  const [user] = await AuthModel.create([payload], options);
+
+  return user!;
 };
 
 const updateLastLogin = async (userId: Types.ObjectId): Promise<HydratedDocument<User> | null> => {
