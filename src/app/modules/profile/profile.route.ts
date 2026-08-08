@@ -7,7 +7,7 @@ import { auth } from '../../shared/middleware/auth.js';
 const router = Router();
 
 router.get('/me', auth(), ProfileController.getMyProfile);
-router.put(
+router.patch(
   '/me',
   auth(),
   validateRequest(UpdateProfileValidationSchema),
