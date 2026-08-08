@@ -1,12 +1,10 @@
 import type { ClientSession, Types } from 'mongoose';
-import type { CreateFarmBody, Farm, UpdateFarmBody } from './farm.interface.js';
+import type { Farm, UpdateFarmBody } from './farm.interface.js';
 import { FarmModel } from './farm.model.js';
 
-const create = async (
-  payload: CreateFarmBody & { userId: Types.ObjectId },
-  session: ClientSession
-): Promise<Farm> => {
-  const [farm] = await FarmModel.create([payload], { session });
+const create = async (payload: Farm, session?: ClientSession): Promise<Farm> => {
+  const options = session ? { session } : undefined;
+  const [farm] = await FarmModel.create([payload], options);
 
   return farm!;
 };
