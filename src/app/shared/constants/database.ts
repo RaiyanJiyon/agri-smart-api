@@ -3,4 +3,5 @@ export const COLLECTION_NAME = {
   PROFILE: 'Profile',
   SESSION: 'Session',
   VERIFICATION: 'Verification',
+  FARM: 'Farm',
 } as const;
