@@ -150,8 +150,16 @@ const changePassword = catchAsync(
     >,
     res: Response
   ) => {
+    const userId = req.user?.userId;
+
+    if (!userId || !Types.ObjectId.isValid(userId)) {
+      throw new ApiError(HTTP_STATUS.UNAUTHORIZED, 'Invalid user identity.');
+    }
+
+    const objectId = new Types.ObjectId(userId);
+
     await AuthService.changePassword({
-      userId: new Types.ObjectId(req.user?.userId),
+      userId: objectId,
       currentPassword: req.body.currentPassword,
       newPassword: req.body.newPassword,
     });
