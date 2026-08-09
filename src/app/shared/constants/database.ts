@@ -4,4 +4,5 @@ export const COLLECTION_NAME = {
   SESSION: 'Session',
   VERIFICATION: 'Verification',
   FARM: 'Farm',
+  CROP_RECOMMENDATION: 'CropRecommendation',
 } as const;
