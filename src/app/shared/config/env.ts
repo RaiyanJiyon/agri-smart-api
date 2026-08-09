@@ -17,6 +17,11 @@ interface envConfig {
     JWT_REFRESH_SECRET: string;
     JWT_REFRESH_EXPIRES_IN: string;
   };
+
+  GEMINI: {
+    GEMINI_API_KEY: string;
+    GEMINI_MODEL: string;
+  };
 }
 
 const loadEnvVariables = (): envConfig => {
@@ -36,6 +41,8 @@ const loadEnvVariables = (): envConfig => {
     'JWT_REFRESH_EXPIRES_IN',
     'EMAIL_VERIFICATION_EXPIRES_IN',
     'PASSWORD_RESET_EXPIRES_IN',
+    'GEMINI_API_KEY',
+    'GEMINI_MODEL',
   ];
 
   requiredEnvVariables.forEach((key) => {
@@ -77,6 +84,10 @@ const loadEnvVariables = (): envConfig => {
       JWT_ACCESS_EXPIRES_IN: process.env.JWT_ACCESS_EXPIRES_IN!,
       JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET!,
       JWT_REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN!,
+    },
+    GEMINI: {
+      GEMINI_API_KEY: process.env.GEMINI_API_KEY!,
+      GEMINI_MODEL: process.env.GEMINI_MODEL!,
     },
   };
 };
