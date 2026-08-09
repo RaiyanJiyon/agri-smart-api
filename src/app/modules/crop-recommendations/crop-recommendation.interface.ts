@@ -20,3 +20,13 @@ export interface CropRecommendation {
 
   updatedAt?: Date;
 }
+
+export interface CreateCropRecommendationPayload {
+  profileId: Types.ObjectId;
+
+  inputParameters: Record<string, unknown>;
+}
+
+export interface CropRecommendationAIResult {
+  recommendationResult: Record<string, unknown>;
+}
