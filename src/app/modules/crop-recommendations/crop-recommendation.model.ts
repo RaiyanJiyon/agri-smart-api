@@ -1,0 +1,3 @@
+/**
+ * Crop Recommendations Model
+ */
