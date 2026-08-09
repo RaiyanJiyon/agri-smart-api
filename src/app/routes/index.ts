@@ -27,7 +27,7 @@ const moduleRoutes = [
   {
     path: '/crop-recommendations',
     route: CropRecommendationRoutes,
-  }
+  },
 ];
 
 moduleRoutes.forEach((route) => {

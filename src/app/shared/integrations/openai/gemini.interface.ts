@@ -1,10 +1,10 @@
 export interface GeminiCropRecommendationInput {
-    profileId: string;
-    inputParameters: Record<string, unknown>;
+  profileId: string;
+  inputParameters: Record<string, unknown>;
 }
 
 export interface GeminiCropRecommendationOutput {
-    recommendedCrops: string[];
-    explanation: string;
-    confidence: number | null;
+  recommendedCrops: string[];
+  explanation: string;
+  confidence: number | null;
 }
