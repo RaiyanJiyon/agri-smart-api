@@ -1,3 +1,4 @@
+import { GeminiService } from '../integrations/gemini/gemini.service.js';
 import type {
   AIService,
   CropRecommendationAIInput,
@@ -5,10 +6,14 @@ import type {
 } from './ai.interface.js';
 
 class AIServiceImpl implements AIService {
-  generateCropRecommendation(
-    _input: CropRecommendationAIInput
+  async generateCropRecommendation(
+    input: CropRecommendationAIInput
   ): Promise<CropRecommendationAIOutput> {
-    throw new Error('Crop recommendation AI integration has not been implemented yet.');
+    const result = await GeminiService.generateCropRecommendation(input);
+
+    return {
+      recommendationResult: result,
+    };
   }
 }
 
