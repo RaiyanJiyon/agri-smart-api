@@ -34,6 +34,7 @@
   "type": "module",
   "dependencies": {
     "@google/genai": "^2.16.0",
+    "@mistralai/mistralai": "^2.6.1",
     "argon2": "^0.45.1",
     "compression": "^1.8.1",
     "cookie-parser": "^1.4.7",

@@ -22,6 +22,11 @@ interface envConfig {
     GEMINI_API_KEY: string;
     GEMINI_MODEL: string;
   };
+
+  MISTRAL: {
+    MISTRAL_API_KEY: string;
+    MISTRAL_MODEL: string;
+  }
 }
 
 const loadEnvVariables = (): envConfig => {
@@ -43,6 +48,8 @@ const loadEnvVariables = (): envConfig => {
     'PASSWORD_RESET_EXPIRES_IN',
     'GEMINI_API_KEY',
     'GEMINI_MODEL',
+    'MISTRAL_API_KEY',
+    'MISTRAL_MODEL',
   ];
 
   requiredEnvVariables.forEach((key) => {
@@ -88,6 +95,10 @@ const loadEnvVariables = (): envConfig => {
     GEMINI: {
       GEMINI_API_KEY: process.env.GEMINI_API_KEY!,
       GEMINI_MODEL: process.env.GEMINI_MODEL!,
+    },
+    MISTRAL: {
+      MISTRAL_API_KEY: process.env.MISTRAL_API_KEY!,
+      MISTRAL_MODEL: process.env.MISTRAL_MODEL!,
     },
   };
 };
