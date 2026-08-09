@@ -26,7 +26,7 @@ interface envConfig {
   MISTRAL: {
     MISTRAL_API_KEY: string;
     MISTRAL_MODEL: string;
-  }
+  };
 }
 
 const loadEnvVariables = (): envConfig => {

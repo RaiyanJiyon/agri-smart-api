@@ -1,4 +1,4 @@
-import { GeminiService } from '../integrations/gemini/gemini.service.js';
+import { MistralService } from '../integrations/mistral/mistral.service.js';
 import type {
   AIService,
   CropRecommendationAIInput,
@@ -9,10 +9,14 @@ class AIServiceImpl implements AIService {
   async generateCropRecommendation(
     input: CropRecommendationAIInput
   ): Promise<CropRecommendationAIOutput> {
-    const result = await GeminiService.generateCropRecommendation(input);
+    const result = await MistralService.generateCropRecommendation(input);
 
     return {
-      recommendationResult: result,
+      recommendationResult: {
+        recommendedCrops: result.recommendedCrops,
+        explanation: result.explanation,
+        confidence: result.confidence,
+      },
     };
   }
 }
