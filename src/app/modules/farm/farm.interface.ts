@@ -1,7 +1,8 @@
-import type { Types } from 'mongoose';
-import type { FARM_AREA_UNITS } from './farm.constant.js';
+import type { Types } from "mongoose";
+import type { FARM_AREA_UNITS } from "./farm.constant.js";
 
-export type FarmAreaUnit = (typeof FARM_AREA_UNITS)[keyof typeof FARM_AREA_UNITS];
+export type FarmAreaUnit =
+  (typeof FARM_AREA_UNITS)[keyof typeof FARM_AREA_UNITS];
 
 export interface Farm {
   userId: Types.ObjectId;
@@ -17,4 +18,24 @@ export interface Farm {
   createdAt?: Date;
 
   updatedAt?: Date;
+}
+
+export interface CreateFarmBody {
+  name: string;
+
+  location: string;
+
+  area: number;
+
+  areaUnit: FarmAreaUnit;
+}
+
+export interface UpdateFarmBody {
+  name?: string;
+
+  location?: string;
+
+  area?: number;
+
+  areaUnit?: FarmAreaUnit;
 }
