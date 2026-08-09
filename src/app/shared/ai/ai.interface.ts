@@ -1,12 +1,14 @@
-import type { GeminiCropRecommendationOutput } from '../integrations/gemini/gemini.interface.js';
-
 export interface CropRecommendationAIInput {
   profileId: string;
   inputParameters: Record<string, unknown>;
 }
 
 export interface CropRecommendationAIOutput {
-  recommendationResult: GeminiCropRecommendationOutput;
+  recommendationResult: {
+    recommendedCrops: string[];
+    explanation: string;
+    confidence: number | null;
+  };
 }
 
 export interface AIService {

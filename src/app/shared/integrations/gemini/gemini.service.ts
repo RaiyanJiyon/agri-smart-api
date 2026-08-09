@@ -4,6 +4,7 @@ import type {
   GeminiCropRecommendationInput,
   GeminiCropRecommendationOutput,
 } from './gemini.interface.js';
+import { geminiCropRecommendationResponseSchema } from './gemini.validation.js';
 
 const ai = new GoogleGenAI({
   apiKey: config.GEMINI.GEMINI_API_KEY,
@@ -64,7 +65,9 @@ Rules:
     throw new Error('Gemini returned an empty response.');
   }
 
-  const result = JSON.parse(response.text) as GeminiCropRecommendationOutput;
+  const parsedResponse: unknown = JSON.parse(response.text);
+
+  const result = geminiCropRecommendationResponseSchema.parse(parsedResponse);
 
   return result;
 };
