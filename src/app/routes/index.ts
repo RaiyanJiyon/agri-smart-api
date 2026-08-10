@@ -3,6 +3,7 @@ import { HealthRoutes } from '../modules/health/health.route.js';
 import { AuthRoutes } from '../modules/auth/auth.route.js';
 import { ProfileRoutes } from '../modules/profile/profile.route.js';
 import { FarmRoutes } from '../modules/farm/farm.route.js';
+import { DashboardRoutes } from '../modules/dashboard/dashboard.route.js';
 import { CropRecommendationRoutes } from '../modules/crop-recommendations/crop-recommendation.route.js';
 import { DiseaseDetectionRoutes } from '../modules/disease-detection/disease-detection.route.js';
 
@@ -24,6 +25,10 @@ const moduleRoutes = [
   {
     path: '/farms',
     route: FarmRoutes,
+  },
+  {
+    path: '/dashboard',
+    route: DashboardRoutes,
   },
   {
     path: '/crop-recommendations',
