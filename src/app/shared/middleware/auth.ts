@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from 'express';
-import { ApiError } from '../errors/AppError.js';
+import { ApiError } from '../errors/ApiError.js';
 import { HTTP_STATUS } from '../constants/httpStatus.js';
 import { JwtUtil } from '../utils/jwt.js';
 

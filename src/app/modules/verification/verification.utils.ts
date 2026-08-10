@@ -8,7 +8,7 @@ import type {
 import { VerificationRepository } from './verification.repository.js';
 import { EmailService } from '../../shared/email/index.js';
 import type { Types } from 'mongoose';
-import { ApiError } from '../../shared/errors/AppError.js';
+import { ApiError } from '../../shared/errors/ApiError.js';
 import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
 import { generateVerificationToken, hashToken } from '../../shared/utils/crypto.js';
 

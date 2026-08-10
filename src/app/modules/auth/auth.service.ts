@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
-import { ApiError } from '../../shared/errors/AppError.js';
+import { ApiError } from '../../shared/errors/ApiError.js';
 import type { JwtPayload } from '../../shared/types/jwt.js';
 import { comparePassword, hashPassword } from '../../shared/utils/argon.js';
 import { JwtUtil } from '../../shared/utils/jwt.js';

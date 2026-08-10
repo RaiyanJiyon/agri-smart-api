@@ -4,7 +4,7 @@ import type {
   CropRecommendation,
 } from './crop-recommendation.interface.js';
 import { ProfileRepository } from '../profile/profile.repository.js';
-import { ApiError } from '../../shared/errors/AppError.js';
+import { ApiError } from '../../shared/errors/ApiError.js';
 import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
 import { aiService } from '../../shared/ai/ai.service.js';
 import { CropRecommendationRepository } from './crop-recommendation.repository.js';

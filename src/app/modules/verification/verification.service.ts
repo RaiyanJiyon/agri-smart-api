@@ -9,7 +9,7 @@ import { SessionService } from '../session/index.js';
 import { config } from '../../shared/config/env.js';
 import { hashToken } from '../../shared/utils/crypto.js';
 import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
-import { ApiError } from '../../shared/errors/AppError.js';
+import { ApiError } from '../../shared/errors/ApiError.js';
 import { comparePassword, hashPassword } from '../../shared/utils/argon.js';
 
 const sendVerificationEmail = async (email: string): Promise<void> => {

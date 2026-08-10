@@ -1,5 +1,5 @@
 import { Types } from 'mongoose';
-import { ApiError } from '../../shared/errors/AppError.js';
+import { ApiError } from '../../shared/errors/ApiError.js';
 import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
 import type { Request } from 'express';
 

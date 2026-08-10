@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import { catchAsync } from '../../shared/utils/catchAsync.js';
-import { ApiError } from '../../shared/errors/AppError.js';
+import { ApiError } from '../../shared/errors/ApiError.js';
 import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
 import { ProfileService } from './profile.service.js';
 import { sendResponse } from '../../shared/utils/sendResponse.js';

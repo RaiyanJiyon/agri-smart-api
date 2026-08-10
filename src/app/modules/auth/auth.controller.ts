@@ -7,7 +7,7 @@ import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
 import { VerificationService } from '../verification/verification.service.js';
 import { COOKIE_NAME } from '../../shared/constants/cookie.js';
 import { getClearCookieOptions, getRefreshTokenCookieOptions } from '../../shared/utils/cookie.js';
-import { ApiError } from '../../shared/errors/AppError.js';
+import { ApiError } from '../../shared/errors/ApiError.js';
 import { TokenService } from './token.service.js';
 import { Types } from 'mongoose';
 

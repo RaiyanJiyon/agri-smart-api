@@ -6,7 +6,7 @@ import type { JwtPayload } from '../../shared/types/jwt.js';
 import type { HydratedDocument, Types } from 'mongoose';
 import { getRefreshTokenExpiry } from './auth.utils.js';
 import { JwtUtil } from '../../shared/utils/jwt.js';
-import { ApiError } from '../../shared/errors/AppError.js';
+import { ApiError } from '../../shared/errors/ApiError.js';
 import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
 import { USER_STATUS } from './auth.constant.js';
 
