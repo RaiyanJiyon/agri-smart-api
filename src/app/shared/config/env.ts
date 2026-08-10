@@ -31,6 +31,12 @@ interface envConfig {
     MISTRAL_API_KEY: string;
     MISTRAL_MODEL: string;
   };
+
+  STORAGE: {
+    CLOUDINARY_CLOUD_NAME: string;
+    CLOUDINARY_API_KEY: string;
+    CLOUDINARY_API_SECRET: string;
+  };
 }
 
 const loadEnvVariables = (): envConfig => {
@@ -54,6 +60,9 @@ const loadEnvVariables = (): envConfig => {
     'GEMINI_MODEL',
     'MISTRAL_API_KEY',
     'MISTRAL_MODEL',
+    'CLOUDINARY_CLOUD_NAME',
+    'CLOUDINARY_API_KEY',
+    'CLOUDINARY_API_SECRET',
   ];
 
   requiredEnvVariables.forEach((key) => {
@@ -109,6 +118,12 @@ const loadEnvVariables = (): envConfig => {
       GEMINI_MODEL: process.env.GEMINI_MODEL!,
       MISTRAL_API_KEY: process.env.MISTRAL_API_KEY!,
       MISTRAL_MODEL: process.env.MISTRAL_MODEL!,
+    },
+
+    STORAGE: {
+      CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME!,
+      CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY!,
+      CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET!,
     },
   };
 };
