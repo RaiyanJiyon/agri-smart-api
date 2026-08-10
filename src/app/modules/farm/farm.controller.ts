@@ -4,7 +4,8 @@ import { FarmService } from './farm.service.js';
 import { sendResponse } from '../../shared/utils/sendResponse.js';
 import type { CreateFarmBody, UpdateFarmBody } from './farm.interface.js';
 import type { Request, Response } from 'express';
-import { getFarmObjectId, getUserObjectId } from './farm.utils.js';
+import { getFarmObjectId } from './farm.utils.js';
+import { getUserObjectId } from '../../shared/utils/request.utils.js';
 
 const createFarm = catchAsync(async (req: Request, res: Response) => {
   const userId = getUserObjectId(req);

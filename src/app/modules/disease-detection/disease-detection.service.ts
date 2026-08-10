@@ -41,7 +41,7 @@ export const createDiseaseDetection = async (
       imageUrl: uploadedImage.url,
     });
 
-    const recommendation = await DiseaseDetectionRepository.create({
+    const report = await DiseaseDetectionRepository.create({
       userId,
       profileId: payload.profileId,
       image: {
@@ -54,7 +54,7 @@ export const createDiseaseDetection = async (
       completedAt: new Date(),
     });
 
-    return recommendation;
+    return report;
   } catch (error: unknown) {
     if (uploadedImage.publicId) {
       try {
