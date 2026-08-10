@@ -4,7 +4,6 @@ import { AuthRoutes } from '../modules/auth/auth.route.js';
 import { ProfileRoutes } from '../modules/profile/profile.route.js';
 import { FarmRoutes } from '../modules/farm/farm.route.js';
 import { CropRecommendationRoutes } from '../modules/crop-recommendations/crop-recommendation.route.js';
-import { DiseaseDetectionRoutes } from '../modules/disease-detection/disease-detection.route.js';
 
 export const router = Router();
 
@@ -29,10 +28,6 @@ const moduleRoutes = [
     path: '/crop-recommendations',
     route: CropRecommendationRoutes,
   },
-  {
-    path: '/disease-detection',
-    route: DiseaseDetectionRoutes,
-  }
 ];
 
 moduleRoutes.forEach((route) => {
