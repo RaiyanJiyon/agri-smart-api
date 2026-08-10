@@ -1,6 +1,8 @@
+import type { CropRecommendationInput } from '../../modules/crop-recommendations/index.js';
+
 export interface CropRecommendationAIInput {
   profileId: string;
-  inputParameters: Record<string, unknown>;
+  inputParameters: CropRecommendationInput;
 }
 
 export interface CropRecommendationAIOutput {

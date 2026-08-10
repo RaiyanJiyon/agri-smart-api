@@ -1,6 +1,8 @@
+import type { CropRecommendationInput } from '../../../modules/crop-recommendations/crop-recommendation.interface.js';
+
 export interface MistralCropRecommendationInput {
   profileId: string;
-  inputParameters: Record<string, unknown>;
+  inputParameters: CropRecommendationInput;
 }
 
 export interface MistralCropRecommendationOutput {

@@ -19,9 +19,6 @@ You are an agricultural crop recommendation assistant.
 Analyze the agricultural information provided below and recommend
 suitable crops.
 
-User profile ID:
-${input.profileId}
-
 Agricultural input parameters:
 ${JSON.stringify(input.inputParameters, null, 2)}
 
@@ -62,7 +59,10 @@ Rules:
     throw new Error('Mistral returned an empty response.');
   }
 
-  const parsedResponse: unknown = JSON.parse(content);
+  // Sanitize content in case the LLM wraps the JSON in markdown code blocks
+  const cleanedContent = content.replace(/^```json\s*([\s\S]*?)\s*```$/, '$1').trim();
+
+  const parsedResponse: unknown = JSON.parse(cleanedContent);
 
   return mistralCropRecommendationResponseSchema.parse(parsedResponse);
 };
