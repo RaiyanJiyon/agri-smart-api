@@ -4,6 +4,6 @@ import type { Profile } from '../profile/profile.interface.js';
 
 export interface DashboardSummary {
   profile: Profile | null;
-  farm: Farm[];
+  farms: Farm[];
   recentRecommendations: CropRecommendation[];
 }
