@@ -1,15 +1,21 @@
 interface envConfig {
   PORT: number;
-  CLIENT_URL: string[];
-  DB_URL: string;
   NODE_ENV: string;
-  ARGON2_MEMORY: number;
-  ARGON2_TIME: number;
-  ARGON2_PARALLELISM: number;
-  RESEND_API_KEY: string;
-  EMAIL_FROM: string;
-  EMAIL_VERIFICATION_EXPIRES_IN: string;
-  PASSWORD_RESET_EXPIRES_IN: string;
+  DB_URL: string;
+  CLIENT_URL: string[];
+
+  SECURITY: {
+    ARGON2_MEMORY: number;
+    ARGON2_TIME: number;
+    ARGON2_PARALLELISM: number;
+  };
+
+  MAIL: {
+    RESEND_API_KEY: string;
+    EMAIL_FROM: string;
+    EMAIL_VERIFICATION_EXPIRES_IN: string;
+    PASSWORD_RESET_EXPIRES_IN: string;
+  };
 
   JWT: {
     JWT_ACCESS_SECRET: string;
@@ -18,12 +24,10 @@ interface envConfig {
     JWT_REFRESH_EXPIRES_IN: string;
   };
 
-  GEMINI: {
+  AI: {
     GEMINI_API_KEY: string;
     GEMINI_MODEL: string;
-  };
 
-  MISTRAL: {
     MISTRAL_API_KEY: string;
     MISTRAL_MODEL: string;
   };
@@ -76,27 +80,33 @@ const loadEnvVariables = (): envConfig => {
 
   return {
     PORT: Number(process.env.PORT!),
-    CLIENT_URL: process.env.CLIENT_URL!.split(',').map((url) => url.trim()), // Split by comma and trim whitespace
     NODE_ENV: process.env.NODE_ENV!,
     DB_URL: process.env.DB_URL!,
-    ARGON2_MEMORY: argonMemory,
-    ARGON2_TIME: argonTime,
-    ARGON2_PARALLELISM: argonParallelism,
-    RESEND_API_KEY: process.env.RESEND_API_KEY!,
-    EMAIL_FROM: process.env.EMAIL_FROM!,
-    EMAIL_VERIFICATION_EXPIRES_IN: process.env.EMAIL_VERIFICATION_EXPIRES_IN!,
-    PASSWORD_RESET_EXPIRES_IN: process.env.PASSWORD_RESET_EXPIRES_IN!,
+    CLIENT_URL: process.env.CLIENT_URL!.split(',').map((url) => url.trim()), // Split by comma and trim whitespace
+
+    SECURITY: {
+      ARGON2_MEMORY: argonMemory,
+      ARGON2_TIME: argonTime,
+      ARGON2_PARALLELISM: argonParallelism,
+    },
+
+    MAIL: {
+      RESEND_API_KEY: process.env.RESEND_API_KEY!,
+      EMAIL_FROM: process.env.EMAIL_FROM!,
+      EMAIL_VERIFICATION_EXPIRES_IN: process.env.EMAIL_VERIFICATION_EXPIRES_IN!,
+      PASSWORD_RESET_EXPIRES_IN: process.env.PASSWORD_RESET_EXPIRES_IN!,
+    },
+
     JWT: {
       JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET!,
       JWT_ACCESS_EXPIRES_IN: process.env.JWT_ACCESS_EXPIRES_IN!,
       JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET!,
       JWT_REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN!,
     },
-    GEMINI: {
+
+    AI: {
       GEMINI_API_KEY: process.env.GEMINI_API_KEY!,
       GEMINI_MODEL: process.env.GEMINI_MODEL!,
-    },
-    MISTRAL: {
       MISTRAL_API_KEY: process.env.MISTRAL_API_KEY!,
       MISTRAL_MODEL: process.env.MISTRAL_MODEL!,
     },

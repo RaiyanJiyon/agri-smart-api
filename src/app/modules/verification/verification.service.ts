@@ -16,7 +16,7 @@ const sendVerificationEmail = async (email: string): Promise<void> => {
   await createVerificationAndSendEmail({
     email,
     type: VERIFICATION_TYPE.EMAIL_VERIFICATION,
-    expiresIn: config.EMAIL_VERIFICATION_EXPIRES_IN,
+    expiresIn: config.MAIL.EMAIL_VERIFICATION_EXPIRES_IN,
     subject: EMAIL_SUBJECT.EMAIL_VERIFICATION,
     buildUrl: (token) => `${config.CLIENT_URL[0]}/verify-email?token=${token}`,
     buildTemplate: verificationEmailTemplate,
@@ -55,7 +55,7 @@ const sendPasswordResetEmail = async (email: string): Promise<void> => {
   await createVerificationAndSendEmail({
     email,
     type: VERIFICATION_TYPE.PASSWORD_RESET,
-    expiresIn: config.PASSWORD_RESET_EXPIRES_IN,
+    expiresIn: config.MAIL.PASSWORD_RESET_EXPIRES_IN,
     subject: EMAIL_SUBJECT.PASSWORD_RESET,
     buildUrl: (token) => `${config.CLIENT_URL[0]}/reset-password?token=${token}`,
     buildTemplate: (url, user) =>

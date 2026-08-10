@@ -7,7 +7,7 @@ import type {
 import { mistralCropRecommendationResponseSchema } from './mistral.validation.js';
 
 const client = new Mistral({
-  apiKey: config.MISTRAL.MISTRAL_API_KEY,
+  apiKey: config.AI.MISTRAL_API_KEY,
 });
 
 const generateCropRecommendation = async (
@@ -41,7 +41,7 @@ Rules:
 `;
 
   const response = await client.chat.complete({
-    model: config.MISTRAL.MISTRAL_MODEL,
+    model: config.AI.MISTRAL_MODEL,
     messages: [
       {
         role: 'user',

@@ -7,7 +7,7 @@ import type {
 import { geminiCropRecommendationResponseSchema } from './gemini.validation.js';
 
 const ai = new GoogleGenAI({
-  apiKey: config.GEMINI.GEMINI_API_KEY,
+  apiKey: config.AI.GEMINI_API_KEY,
 });
 
 const generateCropRecommendation = async (
@@ -35,7 +35,7 @@ Rules:
 `;
 
   const response = await ai.models.generateContent({
-    model: config.GEMINI.GEMINI_MODEL,
+    model: config.AI.GEMINI_MODEL,
     contents: prompt,
     config: {
       responseMimeType: 'application/json',
