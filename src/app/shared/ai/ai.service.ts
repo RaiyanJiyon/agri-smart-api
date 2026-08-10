@@ -3,6 +3,8 @@ import type {
   AIService,
   CropRecommendationAIInput,
   CropRecommendationAIOutput,
+  DiseaseDetectionAIInput,
+  DiseaseDetectionAIOutput,
 } from './ai.interface.js';
 
 class AIServiceImpl implements AIService {
@@ -15,6 +17,21 @@ class AIServiceImpl implements AIService {
       recommendationResult: {
         recommendedCrops: result.recommendedCrops,
         explanation: result.explanation,
+        confidence: result.confidence,
+      },
+    };
+  }
+
+  async generateDiseaseDetection(
+    input: DiseaseDetectionAIInput
+  ): Promise<DiseaseDetectionAIOutput> {
+    const result = await MistralService.generateDiseaseDetection(input);
+
+    return {
+      diagnosisResult: {
+        disease: result.disease,
+        explanation: result.explanation,
+        recommendedActions: result.recommendedActions,
         confidence: result.confidence,
       },
     };

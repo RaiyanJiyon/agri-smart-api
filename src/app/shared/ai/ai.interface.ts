@@ -13,6 +13,21 @@ export interface CropRecommendationAIOutput {
   };
 }
 
+export interface DiseaseDetectionAIInput {
+  imageUrl: string;
+}
+
+export interface DiseaseDetectionAIOutput {
+  diagnosisResult: {
+    disease: string;
+    explanation: string;
+    recommendedActions: string[];
+    confidence: number | null;
+  };
+}
+
 export interface AIService {
   generateCropRecommendation(input: CropRecommendationAIInput): Promise<CropRecommendationAIOutput>;
+
+  generateDiseaseDetection(input: DiseaseDetectionAIInput): Promise<DiseaseDetectionAIOutput>;
 }
