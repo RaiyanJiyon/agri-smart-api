@@ -4,6 +4,7 @@ import { AuthRoutes } from '../modules/auth/auth.route.js';
 import { ProfileRoutes } from '../modules/profile/profile.route.js';
 import { FarmRoutes } from '../modules/farm/farm.route.js';
 import { CropRecommendationRoutes } from '../modules/crop-recommendations/crop-recommendation.route.js';
+import { DashboardRoutes } from '../modules/dashboard/dashboard.route.js';
 
 export const router = Router();
 
@@ -27,6 +28,10 @@ const moduleRoutes = [
   {
     path: '/crop-recommendations',
     route: CropRecommendationRoutes,
+  },
+    {
+    path: '/dashboard',
+    route: DashboardRoutes,
   },
 ];
 
