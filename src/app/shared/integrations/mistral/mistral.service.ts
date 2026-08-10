@@ -3,8 +3,13 @@ import { config } from '../../config/env.js';
 import type {
   MistralCropRecommendationInput,
   MistralCropRecommendationOutput,
+  MistralDiseaseDetectionInput,
+  MistralDiseaseDetectionOutput,
 } from './mistral.interface.js';
-import { mistralCropRecommendationResponseSchema } from './mistral.validation.js';
+import {
+  mistralCropRecommendationResponseSchema,
+  mistralDiseaseDetectionResponseSchema,
+} from './mistral.validation.js';
 
 const client = new Mistral({
   apiKey: config.AI.MISTRAL_API_KEY,
@@ -67,6 +72,75 @@ Rules:
   return mistralCropRecommendationResponseSchema.parse(parsedResponse);
 };
 
+const generateDiseaseDetection = async (
+  input: MistralDiseaseDetectionInput
+): Promise<MistralDiseaseDetectionOutput> => {
+  const prompt = `
+You are an agricultural plant disease detection assistant.
+
+Analyze the provided plant image and identify the most likely
+disease, condition, or health issue visible in the plant.
+
+Return a JSON object with exactly these fields:
+
+{
+  "disease": "disease name",
+  "explanation": "clear explanation of the visible symptoms and why they indicate this condition",
+  "recommendedActions": [
+    "action 1",
+    "action 2",
+    "action 3"
+  ],
+  "confidence": 0.0
+}
+
+Rules:
+
+- Analyze only what can reasonably be inferred from the provided image.
+- Do not invent symptoms that are not visible.
+- If the image is unclear or insufficient for reliable identification,
+  say so in the explanation.
+- If the plant appears healthy, clearly indicate that.
+- recommendedActions must contain practical general actions.
+- Do not claim certainty when the image does not support certainty.
+- confidence must be between 0 and 1.
+- Return JSON only.
+  `;
+
+  const response = await client.chat.complete({
+    model: config.AI.MISTRAL_MODEL,
+    messages: [
+      {
+        role: 'user',
+        content: [
+          {
+            type: 'text',
+            text: prompt,
+          },
+          {
+            type: 'image_url',
+            imageUrl: input.imageUrl,
+          },
+        ],
+      },
+    ],
+    responseFormat: {
+      type: 'json_object',
+    },
+  });
+
+  const content = response.choices?.[0]?.message?.content;
+
+  if (typeof content !== 'string' || !content.trim()) {
+    throw new Error('Mistral returned an empty response.');
+  }
+
+  const parsedResponse: unknown = JSON.parse(content);
+
+  return mistralDiseaseDetectionResponseSchema.parse(parsedResponse);
+};
+
 export const MistralService = {
   generateCropRecommendation,
+  generateDiseaseDetection,
 };

@@ -9,3 +9,12 @@ export const mistralCropRecommendationResponseSchema = z.object({
 export type MistralCropRecommendationResponse = z.infer<
   typeof mistralCropRecommendationResponseSchema
 >;
+
+export const mistralDiseaseDetectionResponseSchema = z.object({
+  disease: z.string().min(1),
+  explanation: z.string().min(1),
+  recommendedActions: z.array(z.string()),
+  confidence: z.number().min(0).max(1).nullable(),
+});
+
+export type MistralDiseaseDetectionResponse = z.infer<typeof mistralDiseaseDetectionResponseSchema>;

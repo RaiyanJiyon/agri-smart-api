@@ -10,3 +10,14 @@ export interface MistralCropRecommendationOutput {
   explanation: string;
   confidence: number | null;
 }
+
+export interface MistralDiseaseDetectionInput {
+  imageUrl: string;
+}
+
+export interface MistralDiseaseDetectionOutput {
+  disease: string;
+  explanation: string;
+  recommendedActions: string[];
+  confidence: number | null;
+}
