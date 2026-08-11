@@ -6,6 +6,7 @@ import { FarmRoutes } from '../modules/farm/farm.route.js';
 import { DashboardRoutes } from '../modules/dashboard/dashboard.route.js';
 import { CropRecommendationRoutes } from '../modules/crop-recommendations/crop-recommendation.route.js';
 import { DiseaseDetectionRoutes } from '../modules/disease-detection/disease-detection.route.js';
+import { AiAssistantRoutes } from '../modules/ai-assistant/ai-assistant.route.js';
 
 export const router = Router();
 
@@ -38,6 +39,10 @@ const moduleRoutes = [
     path: '/disease-detection',
     route: DiseaseDetectionRoutes,
   },
+  {
+    path: '/ai-assistant',
+    route: AiAssistantRoutes,
+  }
 ];
 
 moduleRoutes.forEach((route) => {
