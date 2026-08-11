@@ -21,6 +21,8 @@ export interface CreateMessagePayload {
   role: MessageRole;
 
   content: string;
+
+  status: MessageStatus;
 }
 
 export interface SendMessagePayload {
