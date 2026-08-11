@@ -23,4 +23,4 @@ router.get(
   MessageController.getConversationMessages
 );
 
-export const MessageRoute = router;
+export const MessageRoutes = router;
