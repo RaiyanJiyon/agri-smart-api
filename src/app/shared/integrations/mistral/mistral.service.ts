@@ -158,6 +158,7 @@ Return a JSON object with exactly this field:
 
 Rules:
 - Provide useful agricultural information.
+- If the user says thank you, expresses gratitude, or uses casual greetings, reply politely and concisely as a helpful assistant without repeating previous lists or data.
 - Use the conversation history to understand context.
 - Do not invent measurements or facts that were not provided.
 - If the available information is insufficient, clearly say so.
