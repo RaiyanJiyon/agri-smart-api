@@ -26,8 +26,25 @@ export interface DiseaseDetectionAIOutput {
   };
 }
 
+export interface AIChatInput {
+  conversationId: string;
+
+  message: string;
+
+  conversationHistory: {
+    role: 'user' | 'assistant';
+    content: string;
+  }[];
+}
+
+export interface AIChatOutput {
+  message: string;
+}
+
 export interface AIService {
   generateCropRecommendation(input: CropRecommendationAIInput): Promise<CropRecommendationAIOutput>;
 
   generateDiseaseDetection(input: DiseaseDetectionAIInput): Promise<DiseaseDetectionAIOutput>;
+
+  generateChatResponse(input: AIChatInput): Promise<AIChatOutput>;
 }
