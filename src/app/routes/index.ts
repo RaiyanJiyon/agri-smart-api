@@ -47,7 +47,7 @@ const moduleRoutes = [
   {
     path: '/ai-assistant',
     route: MessageRoutes,
-  }
+  },
 ];
 
 moduleRoutes.forEach((route) => {
