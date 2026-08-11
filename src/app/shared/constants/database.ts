@@ -6,4 +6,6 @@ export const COLLECTION_NAME = {
   FARM: 'Farm',
   CROP_RECOMMENDATION: 'CropRecommendation',
   DISEASE_REPORT: 'DiseaseReport',
+  CONVERSATION: 'Conversation',
+  MESSAGE: 'Message',
 } as const;

@@ -37,7 +37,7 @@ const moduleRoutes = [
   {
     path: '/disease-detection',
     route: DiseaseDetectionRoutes,
-  }
+  },
 ];
 
 moduleRoutes.forEach((route) => {

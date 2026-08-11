@@ -1,5 +1,5 @@
-import type { Types } from "mongoose";
-import type { ConversationStatus } from "./ai-assistant.constant.js";
+import type { Types } from 'mongoose';
+import type { ConversationStatus } from './ai-assistant.constant.js';
 
 export interface Conversation {
   userId: Types.ObjectId;
