@@ -18,3 +18,9 @@ export const mistralDiseaseDetectionResponseSchema = z.object({
 });
 
 export type MistralDiseaseDetectionResponse = z.infer<typeof mistralDiseaseDetectionResponseSchema>;
+
+export const mistralChatResponseSchema = z.object({
+  message: z.string().min(1),
+});
+
+export type MistralChatResponse = z.infer<typeof mistralChatResponseSchema>;

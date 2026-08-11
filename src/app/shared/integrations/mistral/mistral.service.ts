@@ -7,9 +7,11 @@ import type {
   MistralDiseaseDetectionOutput,
 } from './mistral.interface.js';
 import {
+  mistralChatResponseSchema,
   mistralCropRecommendationResponseSchema,
   mistralDiseaseDetectionResponseSchema,
 } from './mistral.validation.js';
+import type { AIChatInput, AIChatOutput } from '../../ai/ai.interface.js';
 
 const client = new Mistral({
   apiKey: config.AI.MISTRAL_API_KEY,
@@ -140,7 +142,64 @@ Rules:
   return mistralDiseaseDetectionResponseSchema.parse(parsedResponse);
 };
 
+const generateChatResponse = async (input: AIChatInput): Promise<AIChatOutput> => {
+  const messages = [
+    {
+      role: 'system' as const,
+      content: `
+You are an agricultural chat assistant.
+
+Respond to the user's message in a helpful and informative way.
+
+Return a JSON object with exactly this field:
+{
+  "message": "your response text here"
+}
+
+Rules:
+- Provide useful agricultural information.
+- Use the conversation history to understand context.
+- Do not invent measurements or facts that were not provided.
+- If the available information is insufficient, clearly say so.
+- Do not claim certainty when the available information does not support it.
+- Return JSON only.
+      `.trim(),
+    },
+
+    ...input.conversationHistory.map((message) => ({
+      role: message.role,
+      content: message.content,
+    })),
+
+    {
+      role: 'user' as const,
+      content: input.message,
+    },
+  ];
+
+  const response = await client.chat.complete({
+    model: config.AI.MISTRAL_MODEL,
+    messages,
+    responseFormat: {
+      type: 'json_object',
+    },
+  });
+
+  const content = response.choices?.[0]?.message?.content;
+
+  if (typeof content !== 'string' || !content.trim()) {
+    throw new Error('Mistral returned an empty response.');
+  }
+
+  const cleanedContent = content.replace(/^```json\s*([\s\S]*?)\s*```$/, '$1').trim();
+
+  const parsedResponse: unknown = JSON.parse(cleanedContent);
+
+  return mistralChatResponseSchema.parse(parsedResponse);
+};
+
 export const MistralService = {
   generateCropRecommendation,
   generateDiseaseDetection,
+  generateChatResponse,
 };

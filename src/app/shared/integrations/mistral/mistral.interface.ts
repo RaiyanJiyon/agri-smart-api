@@ -21,3 +21,18 @@ export interface MistralDiseaseDetectionOutput {
   recommendedActions: string[];
   confidence: number | null;
 }
+
+export interface MistralChatHistoryMessage {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
+export interface MistralChatInput {
+  message: string;
+
+  conversationHistory: MistralChatHistoryMessage[];
+}
+
+export interface MistralChatOutput {
+  message: string;
+}

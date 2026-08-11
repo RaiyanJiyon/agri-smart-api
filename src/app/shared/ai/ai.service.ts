@@ -1,5 +1,7 @@
 import { MistralService } from '../integrations/mistral/mistral.service.js';
 import type {
+  AIChatInput,
+  AIChatOutput,
   AIService,
   CropRecommendationAIInput,
   CropRecommendationAIOutput,
@@ -34,6 +36,14 @@ class AIServiceImpl implements AIService {
         recommendedActions: result.recommendedActions,
         confidence: result.confidence,
       },
+    };
+  }
+
+  async generateChatResponse(input: AIChatInput): Promise<AIChatOutput> {
+    const result = await MistralService.generateChatResponse(input);
+
+    return {
+      message: result.message,
     };
   }
 }
