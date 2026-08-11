@@ -1,16 +1,16 @@
 import type { Request, Response } from 'express';
-import { catchAsync } from '../../shared/utils/catchAsync.js';
+import { getUserObjectId } from '../../../shared/utils/request.utils.js';
 import type {
   CreateConversationPayload,
   UpdateConversationPayload,
 } from './ai-assistant.interface.js';
 import { ConversationService } from './ai-assistant.service.js';
-import { getUserObjectId } from '../../shared/utils/request.utils.js';
-import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
-import { sendResponse } from '../../shared/utils/sendResponse.js';
+import { sendResponse } from '../../../shared/utils/sendResponse.js';
+import { HTTP_STATUS } from '../../../shared/constants/httpStatus.js';
+import { catchAsync } from '../../../shared/utils/catchAsync.js';
 import { getConversationObjectId } from './ai-assistant.utils.js';
 
-const createConversation = async (req: Request, res: Response): Promise<void> => {
+const createConversation = catchAsync(async (req: Request, res: Response): Promise<void> => {
   const userId = getUserObjectId(req);
 
   const payload = req.body as CreateConversationPayload;
@@ -23,7 +23,7 @@ const createConversation = async (req: Request, res: Response): Promise<void> =>
     message: 'Conversation created successfully.',
     data: conversation,
   });
-};
+});
 
 const getMyConversations = catchAsync(async (req: Request, res: Response): Promise<void> => {
   const userId = getUserObjectId(req);

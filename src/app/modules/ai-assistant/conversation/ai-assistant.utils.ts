@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
-import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
-import { ApiError } from '../../shared/errors/ApiError.js';
+import { ApiError } from '../../../shared/errors/ApiError.js';
+import { HTTP_STATUS } from '../../../shared/constants/httpStatus.js';
 
 export const getConversationObjectId = (conversationId: string): Types.ObjectId => {
   if (!Types.ObjectId.isValid(conversationId)) {

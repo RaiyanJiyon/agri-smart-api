@@ -4,9 +4,9 @@ import type {
   CreateConversationPayload,
   UpdateConversationPayload,
 } from './ai-assistant.interface.js';
-import { ProfileRepository } from '../profile/profile.repository.js';
-import { ApiError } from '../../shared/errors/ApiError.js';
-import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
+import { ProfileRepository } from '../../profile/profile.repository.js';
+import { ApiError } from '../../../shared/errors/ApiError.js';
+import { HTTP_STATUS } from '../../../shared/constants/httpStatus.js';
 import { ConversationRepository } from './ai-assistant.repository.js';
 
 const createConversation = async (

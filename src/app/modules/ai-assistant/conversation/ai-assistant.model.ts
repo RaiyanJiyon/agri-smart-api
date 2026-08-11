@@ -1,6 +1,6 @@
 import { model, Schema } from 'mongoose';
 import type { Conversation } from './ai-assistant.interface.js';
-import { COLLECTION_NAME } from '../../shared/constants/database.js';
+import { COLLECTION_NAME } from '../../../shared/constants/database.js';
 import { CONVERSATION_STATUS } from './ai-assistant.constant.js';
 
 const conversationSchema = new Schema<Conversation>(
