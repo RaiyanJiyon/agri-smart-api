@@ -108,6 +108,20 @@ const getDashboardStatistics = async (): Promise<AdminDashboardStatistics> => {
       DiseaseReportModel.countDocuments(),
     ]);
 
+  /**
+   * !fake/approximate AI statistics for the chat assistant just to make the dashboard look more complete.
+   *
+   * * For the AI chat, we'll eventually need proper usage telemetry if we want metrics such as:
+   *
+   * * total chat requests
+   * * successful/failed requests
+   * * model used
+   * * token usage
+   * * latency
+   * * errors
+   * We will work on this later, but for now, we will just use the total of crop recommendations and disease analyses as a rough estimate of AI usage.
+   */
+
   const totalAiRequests = totalCropRecommendations + totalDiseaseAnalyses;
 
   return {
