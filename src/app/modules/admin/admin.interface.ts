@@ -48,3 +48,15 @@ export interface AdminUserListResult {
     totalPages: number;
   };
 }
+
+export interface AdminDashboardStatistics {
+  totalUsers: number;
+
+  activeUsers: number;
+
+  totalAiRequests: number;
+
+  totalDiseaseAnalyses: number;
+
+  totalCropRecommendations: number;
+}
