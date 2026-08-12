@@ -74,9 +74,21 @@ const getDashboardStatistics = catchAsync(async (req: Request, res: Response) =>
   });
 });
 
+const getAIUsageStatistics = catchAsync(async (_req: Request, res: Response) => {
+  const result = await AdminService.getAIUsageStatistics();
+
+  sendResponse(res, {
+    statusCode: HTTP_STATUS.OK,
+    success: true,
+    message: 'AI usage statistics retrieved successfully.',
+    data: result,
+  });
+});
+
 export const AdminController = {
   getUsers,
   getUser,
   updateUserStatus,
   getDashboardStatistics,
+  getAIUsageStatistics,
 };

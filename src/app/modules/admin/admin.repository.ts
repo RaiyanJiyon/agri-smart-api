@@ -10,6 +10,7 @@ import type { UserStatus } from '../auth/auth.interface.js';
 import { USER_STATUS } from '../auth/auth.constant.js';
 import { CropRecommendationModel } from '../crop-recommendations/crop-recommendation.model.js';
 import { DiseaseReportModel } from '../disease-detection/disease-detection.model.js';
+import { AIUsageModel } from '../../shared/ai/ai-usage.model.js';
 
 const findUsers = async (query: AdminUserQuery): Promise<AdminUserListResult> => {
   const { search, role, status, page = 1, limit = 20 } = query;
@@ -95,7 +96,7 @@ const updateUserStatus = async (
 };
 
 const getDashboardStatistics = async (): Promise<AdminDashboardStatistics> => {
-  const [totalUsers, activeUsers, totalCropRecommendations, totalDiseaseAnalyses] =
+  const [totalUsers, activeUsers, totalCropRecommendations, totalDiseaseAnalyses, totalAiRequests] =
     await Promise.all([
       AuthModel.countDocuments(),
 
@@ -106,30 +107,16 @@ const getDashboardStatistics = async (): Promise<AdminDashboardStatistics> => {
       CropRecommendationModel.countDocuments(),
 
       DiseaseReportModel.countDocuments(),
+
+      AIUsageModel.countDocuments(),
     ]);
-
-  /**
-   * !fake/approximate AI statistics for the chat assistant just to make the dashboard look more complete.
-   *
-   * * For the AI chat, we'll eventually need proper usage telemetry if we want metrics such as:
-   *
-   * * total chat requests
-   * * successful/failed requests
-   * * model used
-   * * token usage
-   * * latency
-   * * errors
-   * We will work on this later, but for now, we will just use the total of crop recommendations and disease analyses as a rough estimate of AI usage.
-   */
-
-  const totalAiRequests = totalCropRecommendations + totalDiseaseAnalyses;
 
   return {
     totalUsers,
     activeUsers,
-    totalAiRequests,
-    totalDiseaseAnalyses,
     totalCropRecommendations,
+    totalDiseaseAnalyses,
+    totalAiRequests,
   };
 };
 

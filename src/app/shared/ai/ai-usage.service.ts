@@ -1,5 +1,5 @@
 import type { Types } from 'mongoose';
-import type { AIUsage } from './ai-usage.interface.js';
+import type { AIUsage, AIUsageStatistics } from './ai-usage.interface.js';
 import { AIUsageRepository } from './ai-usage.repository.js';
 import type { AiOperation } from './ai-usage.constant.js';
 
@@ -23,10 +23,15 @@ const getCountByOperation = async (operation: AiOperation): Promise<number> => {
   return AIUsageRepository.countByOperation(operation);
 };
 
+const getStatistics = async (): Promise<AIUsageStatistics> => {
+  return AIUsageRepository.getStatistics();
+};
+
 export const AIUsageService = {
   record,
   getByUserId,
   getRecent,
   getTotalCount,
   getCountByOperation,
+  getStatistics,
 };

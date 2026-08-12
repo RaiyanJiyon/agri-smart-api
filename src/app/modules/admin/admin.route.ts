@@ -13,6 +13,8 @@ const router = Router();
 
 router.get('/dashboard/statistics', auth(USER_ROLE.ADMIN), AdminController.getDashboardStatistics);
 
+router.get('/ai-usage/statistics', auth(USER_ROLE.ADMIN), AdminController.getAIUsageStatistics);
+
 router.get(
   '/users',
   auth(USER_ROLE.ADMIN),

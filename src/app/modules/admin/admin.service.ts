@@ -10,6 +10,7 @@ import { ApiError } from '../../shared/errors/ApiError.js';
 import { HTTP_STATUS } from '../../shared/constants/index.js';
 import { AdminRepository } from './admin.repository.js';
 import { USER_ROLE } from '../auth/auth.constant.js';
+import { AIUsageService } from '../../shared/ai/ai-usage.service.js';
 
 const getUsers = async (query: AdminUserQuery): Promise<AdminUserListResult> => {
   return AdminRepository.findUsers(query);
@@ -56,9 +57,14 @@ const getDashboardStatistics = async (): Promise<AdminDashboardStatistics> => {
   return AdminRepository.getDashboardStatistics();
 };
 
+const getAIUsageStatistics = async () => {
+  return AIUsageService.getStatistics();
+};
+
 export const AdminService = {
   getUsers,
   getUser,
   updateUserStatus,
   getDashboardStatistics,
+  getAIUsageStatistics,
 };

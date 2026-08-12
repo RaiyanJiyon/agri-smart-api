@@ -24,3 +24,21 @@ export interface AIUsage {
 
   updatedAt?: Date;
 }
+
+export interface AIUsageStatistics {
+  totalRequests: number;
+
+  successfulRequests: number;
+
+  failedRequests: number;
+
+  totalTokens: number;
+
+  averageLatencyMs: number;
+
+  byOperation: {
+    chat: number;
+    cropRecommendation: number;
+    diseaseDetection: number;
+  };
+}
