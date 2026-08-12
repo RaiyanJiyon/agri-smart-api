@@ -9,4 +9,5 @@ export const COLLECTION_NAME = {
   CONVERSATION: 'Conversation',
   MESSAGE: 'Message',
   AI_USAGE: 'AIUsage',
+  ADMIN_ACTIVITY: 'AdminActivity',
 } as const;
