@@ -1,12 +1,11 @@
 import type { Request, Response } from 'express';
 import { catchAsync } from '../../shared/utils/catchAsync.js';
 import type { UserRole, UserStatus } from '../auth/auth.interface.js';
-
 import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
 import { AdminService } from './admin.service.js';
 import { sendResponse } from '../../shared/utils/sendResponse.js';
-import { Types } from 'mongoose';
 import type { AdminUserQuery } from './admin.interface.js';
+import { getAdminUserObjectId } from './admin.utils.js';
 
 const getUsers = catchAsync(async (req: Request, res: Response) => {
   const query: AdminUserQuery = {};
@@ -40,7 +39,7 @@ const getUsers = catchAsync(async (req: Request, res: Response) => {
 const getUser = catchAsync(async (req: Request, res: Response) => {
   const userId = req.params.userId as string;
 
-  const user = await AdminService.getUser(new Types.ObjectId(userId));
+  const user = await AdminService.getUser(getAdminUserObjectId(userId));
 
   sendResponse(res, {
     statusCode: HTTP_STATUS.OK,
@@ -54,7 +53,7 @@ const updateUserStatus = catchAsync(async (req: Request, res: Response): Promise
   const userId = req.params.userId as string;
   const { status } = req.body as { status: UserStatus };
 
-  const updatedUser = await AdminService.updateUserStatus(new Types.ObjectId(userId), status);
+  const updatedUser = await AdminService.updateUserStatus(getAdminUserObjectId(userId), status);
 
   sendResponse(res, {
     statusCode: HTTP_STATUS.OK,
