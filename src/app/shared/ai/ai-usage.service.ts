@@ -1,0 +1,32 @@
+import type { Types } from 'mongoose';
+import type { AIUsage } from './ai-usage.interface.js';
+import { AIUsageRepository } from './ai-usage.repository.js';
+import type { AiOperation } from './ai-usage.constant.js';
+
+const record = async (payload: AIUsage): Promise<AIUsage> => {
+  return AIUsageRepository.create(payload);
+};
+
+const getByUserId = async (userId: Types.ObjectId): Promise<AIUsage[]> => {
+  return AIUsageRepository.findByUserId(userId);
+};
+
+const getRecent = async (limit: number): Promise<AIUsage[]> => {
+  return AIUsageRepository.findRecent(limit);
+};
+
+const getTotalCount = async (): Promise<number> => {
+  return AIUsageRepository.count();
+};
+
+const getCountByOperation = async (operation: AiOperation): Promise<number> => {
+  return AIUsageRepository.countByOperation(operation);
+};
+
+export const AIUsageService = {
+  record,
+  getByUserId,
+  getRecent,
+  getTotalCount,
+  getCountByOperation,
+};
