@@ -11,6 +11,8 @@ import { AdminController } from './admin.controller.js';
 
 const router = Router();
 
+router.get('/dashboard/statistics', auth(USER_ROLE.ADMIN), AdminController.getDashboardStatistics);
+
 router.get(
   '/users',
   auth(USER_ROLE.ADMIN),

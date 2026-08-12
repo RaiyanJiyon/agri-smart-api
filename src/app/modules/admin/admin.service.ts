@@ -1,6 +1,11 @@
 import type { Types } from 'mongoose';
 import type { UserStatus } from '../auth/auth.interface.js';
-import type { AdminUser, AdminUserListResult, AdminUserQuery } from './admin.interface.js';
+import type {
+  AdminDashboardStatistics,
+  AdminUser,
+  AdminUserListResult,
+  AdminUserQuery,
+} from './admin.interface.js';
 import { ApiError } from '../../shared/errors/ApiError.js';
 import { HTTP_STATUS } from '../../shared/constants/index.js';
 import { AdminRepository } from './admin.repository.js';
@@ -47,8 +52,13 @@ const updateUserStatus = async (userId: Types.ObjectId, status: UserStatus): Pro
   return updatedUser;
 };
 
+const getDashboardStatistics = async (): Promise<AdminDashboardStatistics> => {
+  return AdminRepository.getDashboardStatistics();
+};
+
 export const AdminService = {
   getUsers,
   getUser,
   updateUserStatus,
+  getDashboardStatistics,
 };

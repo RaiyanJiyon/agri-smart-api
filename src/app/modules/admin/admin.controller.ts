@@ -63,8 +63,20 @@ const updateUserStatus = catchAsync(async (req: Request, res: Response): Promise
   });
 });
 
+const getDashboardStatistics = catchAsync(async (req: Request, res: Response) => {
+  const statistics = await AdminService.getDashboardStatistics();
+
+  sendResponse(res, {
+    statusCode: HTTP_STATUS.OK,
+    success: true,
+    message: 'Dashboard statistics retrieved successfully.',
+    data: statistics,
+  });
+});
+
 export const AdminController = {
   getUsers,
   getUser,
   updateUserStatus,
+  getDashboardStatistics,
 };
