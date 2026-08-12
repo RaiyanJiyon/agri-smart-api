@@ -1,5 +1,6 @@
 export const ADMIN_ACTIVITY_ACTION = {
   VIEW_USER: 'view_user',
+  VIEW_USERS: 'view_users',
   BLOCK_USER: 'block_user',
   UNBLOCK_USER: 'unblock_user',
   DEACTIVATE_USER: 'deactivate_user',

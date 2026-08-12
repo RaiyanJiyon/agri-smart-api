@@ -9,24 +9,62 @@ import type {
 import { ApiError } from '../../shared/errors/ApiError.js';
 import { HTTP_STATUS } from '../../shared/constants/index.js';
 import { AdminRepository } from './admin.repository.js';
-import { USER_ROLE } from '../auth/auth.constant.js';
+import { USER_ROLE, USER_STATUS } from '../auth/auth.constant.js';
 import { AIUsageService } from '../../shared/ai/ai-usage.service.js';
+import { AdminActivityService } from './admin-activity/admin-activity.service.js';
+import { ADMIN_ACTIVITY_ACTION } from './admin.constant.js';
+import type { AdminAuditContext } from './admin.utils.js';
 
-const getUsers = async (query: AdminUserQuery): Promise<AdminUserListResult> => {
-  return AdminRepository.findUsers(query);
+const getUsers = async (
+  query: AdminUserQuery,
+  auditContext: AdminAuditContext
+): Promise<AdminUserListResult> => {
+  const result = await AdminRepository.findUsers(query);
+
+  await AdminActivityService.record({
+    adminId: auditContext.adminId,
+    action: ADMIN_ACTIVITY_ACTION.VIEW_USERS,
+    metadata: {
+      search: query.search,
+      role: query.role,
+      status: query.status,
+      page: result.pagination.page,
+      limit: result.pagination.limit,
+      resultCount: result.users.length,
+    },
+    ipAddress: auditContext.ipAddress ?? '',
+    userAgent: auditContext.userAgent ?? '',
+  });
+
+  return result;
 };
 
-const getUser = async (userId: Types.ObjectId): Promise<AdminUser> => {
+const getUser = async (
+  userId: Types.ObjectId,
+  auditContext: AdminAuditContext
+): Promise<AdminUser> => {
   const user = await AdminRepository.findUserById(userId);
 
   if (!user) {
     throw new ApiError(HTTP_STATUS.NOT_FOUND, 'User not found.');
   }
 
+  await AdminActivityService.record({
+    adminId: auditContext.adminId,
+    action: ADMIN_ACTIVITY_ACTION.VIEW_USER,
+    targetUserId: userId,
+    ipAddress: auditContext.ipAddress ?? '',
+    userAgent: auditContext.userAgent ?? '',
+  });
+
   return user;
 };
 
-const updateUserStatus = async (userId: Types.ObjectId, status: UserStatus): Promise<AdminUser> => {
+const updateUserStatus = async (
+  userId: Types.ObjectId,
+  status: UserStatus,
+  auditContext: AdminAuditContext
+): Promise<AdminUser> => {
   const user = await AdminRepository.findUserById(userId);
 
   if (!user) {
@@ -49,6 +87,25 @@ const updateUserStatus = async (userId: Types.ObjectId, status: UserStatus): Pro
   if (!updatedUser) {
     throw new ApiError(HTTP_STATUS.NOT_FOUND, 'User not found.');
   }
+
+  const action =
+    status === USER_STATUS.ACTIVE
+      ? ADMIN_ACTIVITY_ACTION.ACTIVATE_USER
+      : status === USER_STATUS.INACTIVE
+        ? ADMIN_ACTIVITY_ACTION.DEACTIVATE_USER
+        : ADMIN_ACTIVITY_ACTION.BLOCK_USER;
+
+  await AdminActivityService.record({
+    adminId: auditContext.adminId,
+    action,
+    targetUserId: userId,
+    metadata: {
+      previousStatus: user.status,
+      newStatus: status,
+    },
+    ipAddress: auditContext.ipAddress ?? '',
+    userAgent: auditContext.userAgent ?? '',
+  });
 
   return updatedUser;
 };
