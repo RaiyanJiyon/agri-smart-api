@@ -1,7 +1,15 @@
 import type { Types } from 'mongoose';
-import type { AdminUser, AdminUserListResult, AdminUserQuery } from './admin.interface.js';
+import type {
+  AdminDashboardStatistics,
+  AdminUser,
+  AdminUserListResult,
+  AdminUserQuery,
+} from './admin.interface.js';
 import { AuthModel } from '../auth/auth.model.js';
 import type { UserStatus } from '../auth/auth.interface.js';
+import { USER_STATUS } from '../auth/auth.constant.js';
+import { CropRecommendationModel } from '../crop-recommendations/crop-recommendation.model.js';
+import { DiseaseReportModel } from '../disease-detection/disease-detection.model.js';
 
 const findUsers = async (query: AdminUserQuery): Promise<AdminUserListResult> => {
   const { search, role, status, page = 1, limit = 20 } = query;
@@ -86,8 +94,34 @@ const updateUserStatus = async (
     .lean<AdminUser | null>();
 };
 
+const getDashboardStatistics = async (): Promise<AdminDashboardStatistics> => {
+  const [totalUsers, activeUsers, totalCropRecommendations, totalDiseaseAnalyses] =
+    await Promise.all([
+      AuthModel.countDocuments(),
+
+      AuthModel.countDocuments({
+        status: USER_STATUS.ACTIVE,
+      }),
+
+      CropRecommendationModel.countDocuments(),
+
+      DiseaseReportModel.countDocuments(),
+    ]);
+
+  const totalAiRequests = totalCropRecommendations + totalDiseaseAnalyses;
+
+  return {
+    totalUsers,
+    activeUsers,
+    totalAiRequests,
+    totalDiseaseAnalyses,
+    totalCropRecommendations,
+  };
+};
+
 export const AdminRepository = {
   findUsers,
   findUserById,
   updateUserStatus,
+  getDashboardStatistics,
 };
