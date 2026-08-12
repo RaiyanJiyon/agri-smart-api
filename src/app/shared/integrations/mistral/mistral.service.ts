@@ -1,6 +1,8 @@
 import { Mistral } from '@mistralai/mistralai';
 import { config } from '../../config/env.js';
 import type {
+  MistralChatInput,
+  MistralChatOutput,
   MistralCropRecommendationInput,
   MistralCropRecommendationOutput,
   MistralDiseaseDetectionInput,
@@ -11,7 +13,6 @@ import {
   mistralCropRecommendationResponseSchema,
   mistralDiseaseDetectionResponseSchema,
 } from './mistral.validation.js';
-import type { AIChatInput, AIChatOutput } from '../../ai/ai.interface.js';
 
 const client = new Mistral({
   apiKey: config.AI.MISTRAL_API_KEY,
@@ -142,7 +143,7 @@ Rules:
   return mistralDiseaseDetectionResponseSchema.parse(parsedResponse);
 };
 
-const generateChatResponse = async (input: AIChatInput): Promise<AIChatOutput> => {
+const generateChatResponse = async (input: MistralChatInput): Promise<MistralChatOutput> => {
   const messages = [
     {
       role: 'system' as const,

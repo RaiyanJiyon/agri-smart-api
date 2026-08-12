@@ -1,6 +1,7 @@
 import type { CropRecommendationInput } from '../../modules/crop-recommendations/index.js';
 
 export interface CropRecommendationAIInput {
+  userId: string;
   profileId: string;
   inputParameters: CropRecommendationInput;
 }
@@ -14,6 +15,7 @@ export interface CropRecommendationAIOutput {
 }
 
 export interface DiseaseDetectionAIInput {
+  userId: string;
   imageUrl: string;
 }
 
@@ -27,6 +29,7 @@ export interface DiseaseDetectionAIOutput {
 }
 
 export interface AIChatInput {
+  userId: string;
   conversationId: string;
 
   message: string;
