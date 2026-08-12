@@ -8,4 +8,5 @@ export const COLLECTION_NAME = {
   DISEASE_REPORT: 'DiseaseReport',
   CONVERSATION: 'Conversation',
   MESSAGE: 'Message',
+  AI_USAGE: 'AIUsage',
 } as const;
