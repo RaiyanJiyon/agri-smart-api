@@ -32,6 +32,9 @@ class AIServiceImpl implements AIService {
         model: config.AI.MISTRAL_MODEL,
         status: AI_EXECUTION_STATUS.SUCCESS,
         latencyMs: Date.now() - startedAt,
+        promptTokens: result.usage.promptTokens,
+        completionTokens: result.usage.completionTokens,
+        totalTokens: result.usage.totalTokens,
       });
 
       return {
@@ -71,6 +74,9 @@ class AIServiceImpl implements AIService {
         model: config.AI.MISTRAL_MODEL,
         status: AI_EXECUTION_STATUS.SUCCESS,
         latencyMs: Date.now() - startedAt,
+        promptTokens: result.usage.promptTokens,
+        completionTokens: result.usage.completionTokens,
+        totalTokens: result.usage.totalTokens,
       });
 
       return {
@@ -110,6 +116,9 @@ class AIServiceImpl implements AIService {
         model: config.AI.MISTRAL_MODEL,
         status: AI_EXECUTION_STATUS.SUCCESS,
         latencyMs: Date.now() - startedAt,
+        promptTokens: result.usage.promptTokens,
+        completionTokens: result.usage.completionTokens,
+        totalTokens: result.usage.totalTokens,
       });
 
       return {

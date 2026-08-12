@@ -1,5 +1,10 @@
 import type { CropRecommendationInput } from '../../../modules/crop-recommendations/crop-recommendation.interface.js';
 
+export interface MistralUsage {
+  promptTokens: number;
+  completionTokens: number;
+  totalTokens: number;
+}
 export interface MistralCropRecommendationInput {
   profileId: string;
   inputParameters: CropRecommendationInput;
@@ -9,6 +14,7 @@ export interface MistralCropRecommendationOutput {
   recommendedCrops: string[];
   explanation: string;
   confidence: number | null;
+  usage: MistralUsage;
 }
 
 export interface MistralDiseaseDetectionInput {
@@ -20,6 +26,7 @@ export interface MistralDiseaseDetectionOutput {
   explanation: string;
   recommendedActions: string[];
   confidence: number | null;
+  usage: MistralUsage;
 }
 
 export interface MistralChatHistoryMessage {
@@ -35,4 +42,5 @@ export interface MistralChatInput {
 
 export interface MistralChatOutput {
   message: string;
+  usage: MistralUsage;
 }
