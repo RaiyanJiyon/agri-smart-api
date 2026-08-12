@@ -8,6 +8,7 @@ import { CropRecommendationRoutes } from '../modules/crop-recommendations/crop-r
 import { DiseaseDetectionRoutes } from '../modules/disease-detection/disease-detection.route.js';
 import { AiAssistantRoutes } from '../modules/ai-assistant/conversation/ai-assistant.route.js';
 import { MessageRoutes } from '../modules/ai-assistant/message/message.route.js';
+import { AdminRoutes } from '../modules/admin/admin.route.js';
 
 export const router = Router();
 
@@ -47,6 +48,10 @@ const moduleRoutes = [
   {
     path: '/ai-assistant',
     route: MessageRoutes,
+  },
+  {
+    path: '/admin',
+    route: AdminRoutes,
   },
 ];
 
