@@ -5,7 +5,8 @@ export const ADMIN_ACTIVITY_ACTION = {
   UNBLOCK_USER: 'unblock_user',
   DEACTIVATE_USER: 'deactivate_user',
   ACTIVATE_USER: 'activate_user',
-  VIEW_STATISTICS: 'view_statistics',
+  VIEW_DASHBOARD_STATISTICS: 'view_dashboard_statistics',
+  VIEW_AI_USAGE_STATISTICS: 'view_ai_usage_statistics',
 } as const;
 
 export type AdminActivityAction =

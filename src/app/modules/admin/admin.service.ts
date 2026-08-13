@@ -110,12 +110,32 @@ const updateUserStatus = async (
   return updatedUser;
 };
 
-const getDashboardStatistics = async (): Promise<AdminDashboardStatistics> => {
-  return AdminRepository.getDashboardStatistics();
+const getDashboardStatistics = async (
+  auditContext: AdminAuditContext
+): Promise<AdminDashboardStatistics> => {
+  const statistics = await AdminRepository.getDashboardStatistics();
+
+  await AdminActivityService.record({
+    adminId: auditContext.adminId,
+    action: ADMIN_ACTIVITY_ACTION.VIEW_DASHBOARD_STATISTICS,
+    ipAddress: auditContext.ipAddress ?? '',
+    userAgent: auditContext.userAgent ?? '',
+  });
+
+  return statistics;
 };
 
-const getAIUsageStatistics = async () => {
-  return AIUsageService.getStatistics();
+const getAIUsageStatistics = async (auditContext: AdminAuditContext) => {
+  const statistics = await AIUsageService.getStatistics();
+
+  await AdminActivityService.record({
+    adminId: auditContext.adminId,
+    action: ADMIN_ACTIVITY_ACTION.VIEW_AI_USAGE_STATISTICS,
+    ipAddress: auditContext.ipAddress ?? '',
+    userAgent: auditContext.userAgent ?? '',
+  });
+
+  return statistics;
 };
 
 export const AdminService = {

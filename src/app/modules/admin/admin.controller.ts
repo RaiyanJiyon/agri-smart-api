@@ -68,7 +68,7 @@ const updateUserStatus = catchAsync(async (req: Request, res: Response): Promise
 });
 
 const getDashboardStatistics = catchAsync(async (req: Request, res: Response) => {
-  const statistics = await AdminService.getDashboardStatistics();
+  const statistics = await AdminService.getDashboardStatistics(getAuditContext(req));
 
   sendResponse(res, {
     statusCode: HTTP_STATUS.OK,
@@ -78,8 +78,8 @@ const getDashboardStatistics = catchAsync(async (req: Request, res: Response) =>
   });
 });
 
-const getAIUsageStatistics = catchAsync(async (_req: Request, res: Response) => {
-  const result = await AdminService.getAIUsageStatistics();
+const getAIUsageStatistics = catchAsync(async (req: Request, res: Response) => {
+  const result = await AdminService.getAIUsageStatistics(getAuditContext(req));
 
   sendResponse(res, {
     statusCode: HTTP_STATUS.OK,
