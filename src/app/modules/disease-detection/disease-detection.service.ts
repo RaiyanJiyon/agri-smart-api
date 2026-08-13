@@ -10,7 +10,7 @@ import { HTTP_STATUS } from '../../shared/constants/index.js';
 import { CloudinaryService } from '../../shared/integrations/storage/cloudinary.service.js';
 import { aiService } from '../../shared/ai/ai.service.js';
 import { DISEASE_DETECTION_STATUS } from './disease-detection.constant.js';
-import { safeSendDiseaseNotification } from './disease-detection.helper.js';
+import { safeSendDiseaseDetectionNotification } from './disease-detection.helper.js';
 
 export const createDiseaseDetection = async (
   userId: Types.ObjectId,
@@ -56,7 +56,7 @@ export const createDiseaseDetection = async (
       completedAt: new Date(),
     });
 
-    await safeSendDiseaseNotification(userId, report);
+    await safeSendDiseaseDetectionNotification(userId, report);
 
     return report;
   } catch (error: unknown) {

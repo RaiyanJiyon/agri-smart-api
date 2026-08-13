@@ -9,6 +9,7 @@ import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
 import { aiService } from '../../shared/ai/ai.service.js';
 import { CropRecommendationRepository } from './crop-recommendation.repository.js';
 import { CROP_RECOMMENDATION_STATUS } from './crop-recommendation.constant.js';
+import { safeSendCropRecommendationNotification } from './crop-recommendation.helper.js';
 
 const createCropRecommendation = async (
   userId: Types.ObjectId,
@@ -49,6 +50,8 @@ const createCropRecommendation = async (
     requestedAt: new Date(),
     completedAt: new Date(),
   });
+
+  await safeSendCropRecommendationNotification(userId, recommendation);
 
   return recommendation;
 };

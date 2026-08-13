@@ -3,7 +3,7 @@ import { NotificationService } from '../notification/notification.service.js';
 import { NOTIFICATION_STATUS, NOTIFICATION_TYPE } from '../notification/notification.constant.js';
 import type { DiseaseReport } from './disease-detection.interface.js';
 
-export const safeSendDiseaseNotification = async (
+export const safeSendDiseaseDetectionNotification = async (
   userId: Types.ObjectId,
   report: DiseaseReport
 ) => {
