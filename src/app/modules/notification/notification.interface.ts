@@ -18,3 +18,17 @@ export interface Notification {
 
   updatedAt?: Date;
 }
+
+export interface NotificationListResult {
+  notifications: Notification[];
+
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+
+  unreadCount: number;
+}
+
