@@ -31,4 +31,3 @@ export interface NotificationListResult {
 
   unreadCount: number;
 }
-
