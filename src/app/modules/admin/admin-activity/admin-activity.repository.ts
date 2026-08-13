@@ -2,6 +2,7 @@ import type { Types } from 'mongoose';
 import type {
   AdminActivity,
   AdminActivityListResult,
+  AdminActivityPopulated,
   AdminActivityQuery,
 } from './admin-activity.interface.js';
 import { AdminActivityModel } from './admin-activity.model.js';
@@ -64,7 +65,7 @@ const find = async (query: AdminActivityQuery): Promise<AdminActivityListResult>
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
-      .lean<AdminActivity[]>(),
+      .lean<AdminActivityPopulated[]>(),
 
     AdminActivityModel.countDocuments(filter),
   ]);
@@ -80,7 +81,7 @@ const find = async (query: AdminActivityQuery): Promise<AdminActivityListResult>
   };
 };
 
-const findById = async (activityId: Types.ObjectId): Promise<AdminActivity | null> => {
+const findById = async (activityId: Types.ObjectId): Promise<AdminActivityPopulated | null> => {
   return AdminActivityModel.findById(activityId)
     .populate({
       path: 'adminId',
@@ -90,7 +91,7 @@ const findById = async (activityId: Types.ObjectId): Promise<AdminActivity | nul
       path: 'targetUserId',
       select: '_id name email role status',
     })
-    .lean<AdminActivity | null>();
+    .lean<AdminActivityPopulated | null>();
 };
 
 export const AdminActivityRepository = {

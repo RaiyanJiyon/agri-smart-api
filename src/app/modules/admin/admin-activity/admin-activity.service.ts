@@ -2,6 +2,7 @@ import type { Types } from 'mongoose';
 import type {
   AdminActivity,
   AdminActivityListResult,
+  AdminActivityPopulated,
   AdminActivityQuery,
 } from './admin-activity.interface.js';
 import { AdminActivityRepository } from './admin-activity.repository.js';
@@ -31,7 +32,7 @@ const get = async (query: AdminActivityQuery): Promise<AdminActivityListResult> 
   return AdminActivityRepository.find(query);
 };
 
-const getById = async (activityId: Types.ObjectId): Promise<AdminActivity> => {
+const getById = async (activityId: Types.ObjectId): Promise<AdminActivityPopulated> => {
   const activity = await AdminActivityRepository.findById(activityId);
 
   if (!activity) {
