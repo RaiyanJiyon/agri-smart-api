@@ -68,6 +68,7 @@ const sendMessage = async (
 
   try {
     aiResult = await aiService.generateChatResponse({
+      userId: userId.toString(),
       conversationId: conversationId.toString(),
       message: payload.content,
       conversationHistory,
