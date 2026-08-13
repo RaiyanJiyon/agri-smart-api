@@ -28,6 +28,7 @@ const createCropRecommendation = async (
   }
 
   const aiResult = await aiService.generateCropRecommendation({
+    userId: userId.toString(),
     profileId: payload.profileId.toString(),
     inputParameters: payload.inputParameters,
   });
