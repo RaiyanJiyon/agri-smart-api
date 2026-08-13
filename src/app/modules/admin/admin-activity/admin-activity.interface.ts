@@ -16,3 +16,10 @@ export interface AdminActivity {
 
   createdAt?: Date;
 }
+
+export interface AdminActivityQuery {
+  adminId?: Types.ObjectId;
+  targetUserId?: Types.ObjectId;
+  action?: AdminActivityAction;
+  limit?: number;
+}
