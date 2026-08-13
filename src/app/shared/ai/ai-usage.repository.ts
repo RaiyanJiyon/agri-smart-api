@@ -64,7 +64,7 @@ const getStatistics = async (): Promise<AIUsageStatistics> => {
       operation: AI_OPERATION.DISEASE_DETECTION,
     }),
 
-    AIUsageModel.aggregate([
+    AIUsageModel.aggregate<{ totalTokens: number }>([
       {
         $group: {
           _id: null,
@@ -77,7 +77,7 @@ const getStatistics = async (): Promise<AIUsageStatistics> => {
       },
     ]),
 
-    AIUsageModel.aggregate([
+    AIUsageModel.aggregate<{ averageLatencyMs: number }>([
       {
         $group: {
           _id: null,
@@ -91,7 +91,9 @@ const getStatistics = async (): Promise<AIUsageStatistics> => {
 
   return {
     totalRequests,
+
     successfulRequests,
+
     failedRequests,
 
     totalTokens: tokenStats[0]?.totalTokens ?? 0,
