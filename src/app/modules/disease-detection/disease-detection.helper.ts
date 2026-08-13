@@ -6,7 +6,7 @@ import type { DiseaseReport } from './disease-detection.interface.js';
 export const safeSendDiseaseDetectionNotification = async (
   userId: Types.ObjectId,
   report: DiseaseReport
-) => {
+): Promise<void> => {
   try {
     await NotificationService.create({
       userId,

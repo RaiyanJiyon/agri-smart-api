@@ -6,7 +6,7 @@ import { NOTIFICATION_STATUS, NOTIFICATION_TYPE } from '../notification/notifica
 export const safeSendCropRecommendationNotification = async (
   userId: Types.ObjectId,
   report: CropRecommendation
-) => {
+): Promise<void> => {
   try {
     const reportId = (report as unknown as { _id: Types.ObjectId })._id;
     const recommendedCrops = report.recommendationResult?.recommendedCrops ?? [];
