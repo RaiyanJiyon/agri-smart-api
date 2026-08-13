@@ -9,6 +9,7 @@ import { DiseaseDetectionRoutes } from '../modules/disease-detection/disease-det
 import { AiAssistantRoutes } from '../modules/ai-assistant/conversation/ai-assistant.route.js';
 import { MessageRoutes } from '../modules/ai-assistant/message/message.route.js';
 import { AdminRoutes } from '../modules/admin/admin.route.js';
+import { NotificationRoutes } from '../modules/notification/notification.route.js';
 
 export const router = Router();
 
@@ -52,6 +53,10 @@ const moduleRoutes = [
   {
     path: '/admin',
     route: AdminRoutes,
+  },
+  {
+    path: '/notification',
+    route: NotificationRoutes,
   },
 ];
 
