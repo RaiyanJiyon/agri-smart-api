@@ -97,11 +97,11 @@ const updateUserStatus = async (
     action,
     targetUserId: userId,
     metadata: {
-      previousStatus: user.status,
+      previousStatus,
       newStatus: status,
     },
-    ipAddress: auditContext.ipAddress ?? '',
-    userAgent: auditContext.userAgent ?? '',
+    ipAddress: auditContext.ipAddress,
+    userAgent: auditContext.userAgent,
   });
 
   return updatedUser;

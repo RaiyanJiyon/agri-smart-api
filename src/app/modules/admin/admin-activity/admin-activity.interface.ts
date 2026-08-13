@@ -10,9 +10,9 @@ export interface AdminActivity {
 
   metadata?: Record<string, unknown>;
 
-  ipAddress?: string;
+  ipAddress?: string | undefined;
 
-  userAgent?: string;
+  userAgent?: string | undefined;
 
   createdAt?: Date;
 }
