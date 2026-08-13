@@ -12,7 +12,7 @@ export interface Notification {
 
   message: string;
 
-  metaData: Record<string, unknown>;
+  metadata: Record<string, unknown>;
 
   createdAt?: Date;
 

@@ -10,4 +10,5 @@ export const COLLECTION_NAME = {
   MESSAGE: 'Message',
   AI_USAGE: 'AIUsage',
   ADMIN_ACTIVITY: 'AdminActivity',
+  NOTIFICATION: 'Notification',
 } as const;
