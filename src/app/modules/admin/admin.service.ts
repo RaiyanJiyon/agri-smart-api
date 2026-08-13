@@ -9,7 +9,7 @@ import type {
 import { ApiError } from '../../shared/errors/ApiError.js';
 import { HTTP_STATUS } from '../../shared/constants/index.js';
 import { AdminRepository } from './admin.repository.js';
-import { USER_ROLE, USER_STATUS } from '../auth/auth.constant.js';
+import { USER_ROLE } from '../auth/auth.constant.js';
 import { AIUsageService } from '../../shared/ai/ai-usage.service.js';
 import { AdminActivityService } from './admin-activity/admin-activity.service.js';
 import { ADMIN_ACTIVITY_ACTION } from './admin.constant.js';
@@ -82,18 +82,15 @@ const updateUserStatus = async (
     throw new ApiError(HTTP_STATUS.BAD_REQUEST, `User is already ${status}.`);
   }
 
+  const previousStatus = user.status;
+
   const updatedUser = await AdminRepository.updateUserStatus(userId, status);
 
   if (!updatedUser) {
     throw new ApiError(HTTP_STATUS.NOT_FOUND, 'User not found.');
   }
 
-  const action =
-    status === USER_STATUS.ACTIVE
-      ? ADMIN_ACTIVITY_ACTION.ACTIVATE_USER
-      : status === USER_STATUS.INACTIVE
-        ? ADMIN_ACTIVITY_ACTION.DEACTIVATE_USER
-        : ADMIN_ACTIVITY_ACTION.BLOCK_USER;
+  const action = AdminActivityService.getStatusChangeAction(previousStatus, status);
 
   await AdminActivityService.record({
     adminId: auditContext.adminId,

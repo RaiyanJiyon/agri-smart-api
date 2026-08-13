@@ -7,6 +7,9 @@ import type {
 import { AdminActivityRepository } from './admin-activity.repository.js';
 import { ApiError } from '../../../shared/errors/ApiError.js';
 import { HTTP_STATUS } from '../../../shared/constants/httpStatus.js';
+import type { UserStatus } from '../../auth/auth.interface.js';
+import { ADMIN_ACTIVITY_ACTION, type AdminActivityAction } from '../admin.constant.js';
+import { USER_STATUS } from '../../auth/auth.constant.js';
 
 const record = async (payload: AdminActivity): Promise<AdminActivity> => {
   return AdminActivityRepository.create(payload);
@@ -38,6 +41,29 @@ const getById = async (activityId: Types.ObjectId): Promise<AdminActivity> => {
   return activity;
 };
 
+const getStatusChangeAction = (
+  previousStatus: UserStatus,
+  newStatus: UserStatus
+): AdminActivityAction => {
+  if (previousStatus === USER_STATUS.INACTIVE && newStatus === USER_STATUS.ACTIVE) {
+    return ADMIN_ACTIVITY_ACTION.ACTIVATE_USER;
+  }
+
+  if (previousStatus === USER_STATUS.BLOCKED && newStatus === USER_STATUS.ACTIVE) {
+    return ADMIN_ACTIVITY_ACTION.UNBLOCK_USER;
+  }
+
+  if (newStatus === USER_STATUS.INACTIVE) {
+    return ADMIN_ACTIVITY_ACTION.DEACTIVATE_USER;
+  }
+
+  if (newStatus === USER_STATUS.BLOCKED) {
+    return ADMIN_ACTIVITY_ACTION.BLOCK_USER;
+  }
+
+  return ADMIN_ACTIVITY_ACTION.UPDATE_USER_STATUS;
+};
+
 export const AdminActivityService = {
   record,
   getRecent,
@@ -45,4 +71,5 @@ export const AdminActivityService = {
   getByTargetUserId,
   get,
   getById,
+  getStatusChangeAction,
 };
