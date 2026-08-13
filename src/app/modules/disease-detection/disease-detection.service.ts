@@ -38,6 +38,7 @@ export const createDiseaseDetection = async (
 
   try {
     const aiResult = await aiService.generateDiseaseDetection({
+      userId: userId.toString(),
       imageUrl: uploadedImage.url,
     });
 
