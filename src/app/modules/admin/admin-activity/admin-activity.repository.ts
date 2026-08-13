@@ -1,5 +1,9 @@
 import type { Types } from 'mongoose';
-import type { AdminActivity, AdminActivityQuery } from './admin-activity.interface.js';
+import type {
+  AdminActivity,
+  AdminActivityListResult,
+  AdminActivityQuery,
+} from './admin-activity.interface.js';
 import { AdminActivityModel } from './admin-activity.model.js';
 
 const create = async (payload: AdminActivity): Promise<AdminActivity> => {
@@ -28,8 +32,8 @@ const findByTargetUserId = async (targetUserId: Types.ObjectId): Promise<AdminAc
     .lean<AdminActivity[]>();
 };
 
-const find = async (query: AdminActivityQuery): Promise<AdminActivity[]> => {
-  const { adminId, targetUserId, action, limit = 50 } = query;
+const find = async (query: AdminActivityQuery): Promise<AdminActivityListResult> => {
+  const { adminId, targetUserId, action, page = 1, limit = 50 } = query;
 
   const filter: Record<string, unknown> = {};
 
@@ -45,10 +49,35 @@ const find = async (query: AdminActivityQuery): Promise<AdminActivity[]> => {
     filter.action = action;
   }
 
-  return AdminActivityModel.find(filter)
-    .sort({ createdAt: -1 })
-    .limit(limit)
-    .lean<AdminActivity[]>();
+  const skip = (page - 1) * limit;
+
+  const [activities, total] = await Promise.all([
+    AdminActivityModel.find(filter)
+      .populate({
+        path: 'adminId',
+        select: '_id name email role',
+      })
+      .populate({
+        path: 'targetUserId',
+        select: '_id name email role status',
+      })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean<AdminActivity[]>(),
+
+    AdminActivityModel.countDocuments(filter),
+  ]);
+
+  return {
+    activities,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
 };
 
 export const AdminActivityRepository = {

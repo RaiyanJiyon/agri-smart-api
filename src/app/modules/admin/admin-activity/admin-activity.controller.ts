@@ -22,6 +22,13 @@ const getActivities = catchAsync(async (req: Request, res: Response) => {
     query.targetUserId = getAdminUserObjectId(req.query.targetUserId);
   }
 
+  if (typeof req.query.page === 'string') {
+    const parsedPage = Number(req.query.page);
+    if (!isNaN(parsedPage)) {
+      query.page = parsedPage;
+    }
+  }
+
   if (typeof req.query.limit === 'string') {
     const parsedLimit = Number(req.query.limit);
     if (!isNaN(parsedLimit)) {

@@ -9,6 +9,8 @@ export const getAdminActivityValidationSchema = z.object({
 
     action: z.enum(Object.values(ADMIN_ACTIVITY_ACTION) as [string, ...string[]]).optional(),
 
+    page: z.coerce.number().int().positive().optional(),
+
     limit: z.coerce.number().int().positive().max(100).optional(),
   }),
 });

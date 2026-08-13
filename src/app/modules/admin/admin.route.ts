@@ -8,6 +8,7 @@ import {
   updateUserStatusValidationSchema,
 } from './admin.validation.js';
 import { AdminController } from './admin.controller.js';
+import { AdminActivityRoutes } from './admin-activity/admin-activity.route.js';
 
 const router = Router();
 
@@ -35,5 +36,7 @@ router.patch(
   validateRequest(updateUserStatusValidationSchema),
   AdminController.updateUserStatus
 );
+
+router.use('/activity', AdminActivityRoutes);
 
 export const AdminRoutes = router;

@@ -21,5 +21,16 @@ export interface AdminActivityQuery {
   adminId?: Types.ObjectId;
   targetUserId?: Types.ObjectId;
   action?: AdminActivityAction;
+  page?: number;
   limit?: number;
+}
+
+export interface AdminActivityListResult {
+  activities: AdminActivity[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
 }
