@@ -1,10 +1,10 @@
 import type { Request, Response } from 'express';
 import { catchAsync } from '../../shared/utils/catchAsync.js';
 import { getUserObjectId } from '../../shared/utils/request.utils.js';
-import { Types } from 'mongoose';
 import { NotificationService } from './notification.service.js';
 import { sendResponse } from '../../shared/utils/sendResponse.js';
 import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
+import { getNotificationObjectId } from './notification.utils.js';
 
 const getNotifications = catchAsync(async (req: Request, res: Response) => {
   const userId = getUserObjectId(req);
@@ -25,7 +25,7 @@ const getNotifications = catchAsync(async (req: Request, res: Response) => {
 
 const getNotificationById = catchAsync(async (req: Request, res: Response) => {
   const userId = getUserObjectId(req);
-  const notificationId = new Types.ObjectId(req.params.notificationId as string);
+  const notificationId = getNotificationObjectId(req.params.notificationId as string);
 
   const notification = await NotificationService.getById(notificationId, userId);
 
@@ -39,7 +39,7 @@ const getNotificationById = catchAsync(async (req: Request, res: Response) => {
 
 const markAsRead = catchAsync(async (req: Request, res: Response) => {
   const userId = getUserObjectId(req);
-  const notificationId = new Types.ObjectId(req.params.notificationId as string);
+  const notificationId = getNotificationObjectId(req.params.notificationId as string);
 
   const updatedNotification = await NotificationService.markAsRead(notificationId, userId);
 
@@ -67,7 +67,7 @@ const markAllAsRead = catchAsync(async (req: Request, res: Response) => {
 const deleteNotification = catchAsync(async (req: Request, res: Response) => {
   const userId = getUserObjectId(req);
 
-  const notificationId = new Types.ObjectId(req.params.notificationId as string);
+  const notificationId = getNotificationObjectId(req.params.notificationId as string);
 
   await NotificationService.deleteNotification(notificationId, userId);
 
