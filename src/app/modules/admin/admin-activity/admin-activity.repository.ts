@@ -80,10 +80,24 @@ const find = async (query: AdminActivityQuery): Promise<AdminActivityListResult>
   };
 };
 
+const findById = async (activityId: Types.ObjectId): Promise<AdminActivity | null> => {
+  return AdminActivityModel.findById(activityId)
+    .populate({
+      path: 'adminId',
+      select: '_id name email role',
+    })
+    .populate({
+      path: 'targetUserId',
+      select: '_id name email role status',
+    })
+    .lean<AdminActivity | null>();
+};
+
 export const AdminActivityRepository = {
   create,
   findRecent,
   findByAdminId,
   findByTargetUserId,
   find,
+  findById,
 };

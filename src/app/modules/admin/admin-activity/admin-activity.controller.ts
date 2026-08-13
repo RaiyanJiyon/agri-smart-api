@@ -6,6 +6,7 @@ import { AdminActivityService } from './admin-activity.service.js';
 import { sendResponse } from '../../../shared/utils/sendResponse.js';
 import { HTTP_STATUS } from '../../../shared/constants/httpStatus.js';
 import type { AdminActivityQuery } from './admin-activity.interface.js';
+import { getObjectId } from './admin-activity.utils.js';
 
 const getActivities = catchAsync(async (req: Request, res: Response) => {
   const query: AdminActivityQuery = {};
@@ -46,6 +47,20 @@ const getActivities = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getActivityById = catchAsync(async (req: Request, res: Response) => {
+  const activityId = req.params.activityId as string;
+
+  const activity = await AdminActivityService.getById(getObjectId(activityId));
+
+  sendResponse(res, {
+    statusCode: HTTP_STATUS.OK,
+    success: true,
+    message: 'Admin activity retrieved successfully.',
+    data: activity,
+  });
+});
+
 export const AdminActivityController = {
   getActivities,
+  getActivityById,
 };

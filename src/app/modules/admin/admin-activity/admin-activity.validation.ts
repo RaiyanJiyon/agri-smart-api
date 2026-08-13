@@ -14,3 +14,9 @@ export const getAdminActivityValidationSchema = z.object({
     limit: z.coerce.number().int().positive().max(100).optional(),
   }),
 });
+
+export const getAdminActivityByIdValidationSchema = z.object({
+  params: z.object({
+    activityId: z.string().min(1),
+  }),
+});
