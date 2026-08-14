@@ -3,7 +3,7 @@ import type { CropRecommendationInput } from '../../modules/crop-recommendations
 
 export interface DiseaseDetectionJobData {
   reportId: Types.ObjectId;
-  
+
   userId: Types.ObjectId;
   profileId: Types.ObjectId;
 

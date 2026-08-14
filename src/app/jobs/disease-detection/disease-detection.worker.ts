@@ -12,17 +12,21 @@ import { logger } from '../../shared/utils/logger.js';
 export const diseaseDetectionWorker = new Worker(
   QUEUE_NAME.DISEASE_DETECTION,
   async (job: Job<DiseaseDetectionJobData>) => {
-    const { userId, imageUrl } = job.data;
+    const { reportId, userId, imageUrl } = job.data;
 
-    const reportId = new Types.ObjectId(job.data.reportId);
+    const diseaseReportId = new Types.ObjectId(reportId);
+
+    logger.info(
+      `[DiseaseDetectionWorker] Processing job ${job.id} for report ${diseaseReportId.toString()}`
+    );
 
     // Mark report as processing.
-    const processingReport = await DiseaseDetectionRepository.updateById(reportId, {
+    const processingReport = await DiseaseDetectionRepository.updateById(diseaseReportId, {
       processingStatus: DISEASE_DETECTION_STATUS.PROCESSING,
     });
 
     if (!processingReport) {
-      throw new Error(`Disease report not found: ${reportId.toString()}`);
+      throw new Error(`Disease report not found: ${diseaseReportId.toString()}`);
     }
 
     try {
@@ -31,24 +35,30 @@ export const diseaseDetectionWorker = new Worker(
         imageUrl,
       });
 
-      const completedReport = await DiseaseDetectionRepository.updateById(reportId, {
+      const completedReport = await DiseaseDetectionRepository.updateById(diseaseReportId, {
         diagnosisResult: aiResult.diagnosisResult,
         processingStatus: DISEASE_DETECTION_STATUS.COMPLETED,
         completedAt: new Date(),
       });
 
       if (!completedReport) {
-        throw new Error(`Disease report not found after AI processing: ${reportId.toString()}`);
+        throw new Error(
+          `Disease report not found after AI processing: ${diseaseReportId.toString()}`
+        );
       }
 
       await safeSendDiseaseDetectionNotification(userId, completedReport);
 
+      logger.info(
+        `[DiseaseDetectionWorker] Disease detection completed for report ${diseaseReportId.toString()}`
+      );
+
       return {
-        reportId: reportId.toString(),
+        reportId: diseaseReportId.toString(),
         status: DISEASE_DETECTION_STATUS.COMPLETED,
       };
     } catch (error: unknown) {
-      await DiseaseDetectionRepository.updateById(reportId, {
+      await DiseaseDetectionRepository.updateById(diseaseReportId, {
         processingStatus: DISEASE_DETECTION_STATUS.FAILED,
       });
 
@@ -71,4 +81,8 @@ diseaseDetectionWorker.on('failed', (job, error) => {
 
 diseaseDetectionWorker.on('error', (error) => {
   logger.error('[DiseaseDetectionWorker] Worker error:', error);
+});
+
+diseaseDetectionWorker.on('ready', () => {
+  logger.info(`[DiseaseDetectionWorker] Worker connected to Redis.`);
 });

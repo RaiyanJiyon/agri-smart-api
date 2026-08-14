@@ -8,9 +8,8 @@ import { ProfileRepository } from '../profile/profile.repository.js';
 import { ApiError } from '../../shared/errors/index.js';
 import { HTTP_STATUS } from '../../shared/constants/index.js';
 import { CloudinaryService } from '../../shared/integrations/storage/cloudinary.service.js';
-import { aiService } from '../../shared/ai/ai.service.js';
 import { DISEASE_DETECTION_STATUS } from './disease-detection.constant.js';
-import { safeSendDiseaseDetectionNotification } from './disease-detection.helper.js';
+import { addDiseaseDetectionJob } from '../../jobs/disease-detection/disease-detection.queue.js';
 
 export const createDiseaseDetection = async (
   userId: Types.ObjectId,
@@ -38,25 +37,34 @@ export const createDiseaseDetection = async (
   const uploadedImage = await CloudinaryService.uploadImage(file.buffer, 'disease-detection');
 
   try {
-    const aiResult = await aiService.generateDiseaseDetection({
-      userId: userId.toString(),
-      imageUrl: uploadedImage.url,
-    });
-
     const report = await DiseaseDetectionRepository.create({
       userId,
       profileId: payload.profileId,
+
       image: {
         url: uploadedImage.url,
         publicId: uploadedImage.publicId!,
       },
-      diagnosisResult: aiResult.diagnosisResult,
+
+      // diagnosisResult: aiResult.diagnosisResult,
       processingStatus: DISEASE_DETECTION_STATUS.COMPLETED,
       requestedAt: new Date(),
-      completedAt: new Date(),
+      // completedAt: new Date(),
     });
 
-    await safeSendDiseaseDetectionNotification(userId, report);
+    const reportDoc = report as unknown as {
+      _id: Types.ObjectId;
+    };
+
+    // AI processing job to BullMQ.
+    await addDiseaseDetectionJob({
+      reportId: reportDoc._id,
+      userId,
+      profileId: payload.profileId,
+
+      imageUrl: uploadedImage.url,
+      imagePublicId: uploadedImage.publicId!,
+    });
 
     return report;
   } catch (error: unknown) {
