@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import app from './app.js';
 import { connectDatabase } from './app/shared/config/database.js';
 import { logger } from './app/shared/utils/logger.js';
+import './app/jobs/index.js';
 
 const PORT = Number(process.env.PORT ?? 5000);
 
