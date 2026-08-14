@@ -23,7 +23,7 @@ const findByUserId = async (userId: Types.ObjectId): Promise<CropRecommendation[
     userId: userId,
   }).sort({
     requestedAt: -1,
-  });
+  }).lean<CropRecommendation[]>();
 };
 
 const deleteByIdAndUserId = async (recommendationId: Types.ObjectId, userId: Types.ObjectId) => {
