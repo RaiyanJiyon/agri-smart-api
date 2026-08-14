@@ -29,7 +29,6 @@ const CropRecommendationSchema = new Schema<CropRecommendation>(
       enum: Object.values(CROP_RECOMMENDATION_STATUS),
       default: CROP_RECOMMENDATION_STATUS.PENDING,
       required: true,
-      index: true,
     },
     requestedAt: {
       type: Date,
