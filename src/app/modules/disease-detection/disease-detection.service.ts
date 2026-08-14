@@ -58,9 +58,9 @@ export const createDiseaseDetection = async (
 
     // AI processing job to BullMQ.
     await addDiseaseDetectionJob({
-      reportId: reportDoc._id,
-      userId,
-      profileId: payload.profileId,
+      reportId: reportDoc._id.toString(),
+      userId: userId.toString(),
+      profileId: payload.profileId.toString(),
 
       imageUrl: uploadedImage.url,
       imagePublicId: uploadedImage.publicId!,
