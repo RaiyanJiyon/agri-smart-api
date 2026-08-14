@@ -1,19 +1,15 @@
-import type { Types } from 'mongoose';
 import type { CropRecommendationInput } from '../../modules/crop-recommendations/crop-recommendation.interface.js';
 
 export interface DiseaseDetectionJobData {
-  reportId: Types.ObjectId;
-
-  userId: Types.ObjectId;
-  profileId: Types.ObjectId;
-
+  reportId: string;
+  userId: string;
+  profileId: string;
   imageUrl: string;
   imagePublicId: string;
 }
 
 export interface CropRecommendationJobData {
-  userId: Types.ObjectId;
-  profileId: Types.ObjectId;
-
+  userId: string;
+  profileId: string;
   inputParameters: CropRecommendationInput;
 }
