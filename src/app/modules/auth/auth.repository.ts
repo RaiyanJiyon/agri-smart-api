@@ -33,14 +33,22 @@ const createUser = async (
 };
 
 const updateLastLogin = async (userId: Types.ObjectId): Promise<HydratedDocument<User> | null> => {
-  return AuthModel.findByIdAndUpdate({ _id: userId }, { lastLoginAt: new Date() }, { new: true });
+  return AuthModel.findByIdAndUpdate(
+    { _id: userId },
+    { lastLoginAt: new Date() },
+    { returnDocument: 'after' }
+  );
 };
 
 const updateVerificationStatus = async (
   userId: Types.ObjectId,
   isEmailVerified: boolean
 ): Promise<HydratedDocument<User> | null> => {
-  return AuthModel.findByIdAndUpdate({ _id: userId }, { isEmailVerified }, { new: true });
+  return AuthModel.findByIdAndUpdate(
+    { _id: userId },
+    { isEmailVerified },
+    { returnDocument: 'after' }
+  );
 };
 
 const updatePassword = async (
@@ -54,7 +62,7 @@ const updatePassword = async (
       passwordChangedAt: new Date(),
     },
     {
-      new: true,
+      returnDocument: 'after',
       runValidators: true,
     }
   );

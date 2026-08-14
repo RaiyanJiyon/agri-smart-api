@@ -24,7 +24,7 @@ const createOrReplace = async (
     payload,
     {
       upsert: true,
-      new: true,
+      returnDocument: 'after',
       runValidators: true,
     }
   );
@@ -66,7 +66,7 @@ const consumeToken = async (
       $set: { usedAt: new Date() }, // Ensures it's not already used and not expired
     },
     {
-      new: true,
+      returnDocument: 'after',
     }
   );
 };
@@ -81,7 +81,7 @@ const markAsUsed = async (id: Types.ObjectId): Promise<HydratedDocument<Verifica
       usedAt: new Date(),
     },
     {
-      new: true,
+      returnDocument: 'after',
     }
   );
 };

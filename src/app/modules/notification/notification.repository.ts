@@ -48,7 +48,7 @@ const markAsRead = async (notificationId: Types.ObjectId): Promise<Notification 
     },
     {
       runValidators: true,
-      new: true,
+      returnDocument: 'after',
     }
   ).lean<Notification | null>();
 };

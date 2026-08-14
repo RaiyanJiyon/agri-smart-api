@@ -26,7 +26,7 @@ export const updateByUserId = async (
     { $set: payload },
     {
       runValidators: true,
-      new: true,
+      returnDocument: 'after',
     }
   );
 };

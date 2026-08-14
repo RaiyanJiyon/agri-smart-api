@@ -41,7 +41,7 @@ const updateById = async (
   update: UpdateQuery<DiseaseReport>
 ): Promise<DiseaseReport | null> => {
   return DiseaseReportModel.findByIdAndUpdate(diseaseReportId, update, {
-    new: true,
+    returnDocument: 'after',
     runValidators: true,
   }).lean<DiseaseReport | null>();
 };

@@ -86,7 +86,7 @@ const updateUserStatus = async (
       status,
     },
     {
-      new: true,
+      returnDocument: 'after',
     }
   )
     .select(

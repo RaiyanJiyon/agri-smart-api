@@ -40,7 +40,7 @@ const updateByIdAndUserId = async (
     },
     {
       runValidators: true,
-      new: true,
+      returnDocument: 'after',
     }
   );
 };

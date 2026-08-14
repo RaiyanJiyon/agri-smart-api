@@ -74,7 +74,7 @@ const revoke = async (sessionId: Types.ObjectId): Promise<Session | null> => {
       revokedAt: new Date(),
     },
     {
-      new: true,
+      returnDocument: 'after',
     }
   );
 };
@@ -136,7 +136,7 @@ const rotateRefreshToken = async (
       lastUsedAt: new Date(),
     },
     {
-      new: true,
+      returnDocument: 'after',
       runValidators: true,
     }
   );

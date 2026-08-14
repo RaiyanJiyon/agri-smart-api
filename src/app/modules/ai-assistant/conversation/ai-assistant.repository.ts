@@ -58,7 +58,7 @@ const updateByIdAndUserId = async (
       },
     },
     {
-      new: true,
+      returnDocument: 'after',
       runValidators: true,
     }
   ).lean<Conversation | null>();
@@ -79,7 +79,7 @@ const softDeleteByIdAndUserId = async (
       },
     },
     {
-      new: true,
+      returnDocument: 'after',
       runValidators: true,
     }
   ).lean<Conversation | null>();
