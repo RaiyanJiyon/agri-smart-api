@@ -37,6 +37,6 @@ router.patch(
   AdminController.updateUserStatus
 );
 
-router.use('/activity', AdminActivityRoutes);
+router.use('/activity', auth(USER_ROLE.ADMIN), AdminActivityRoutes);
 
 export const AdminRoutes = router;
