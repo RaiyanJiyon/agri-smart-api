@@ -18,16 +18,19 @@ const findUsers = async (query: AdminUserQuery): Promise<AdminUserListResult> =>
   const filter: Record<string, unknown> = {};
 
   if (search) {
+    // Escape all special regex characters so they are treated as literal text
+    const escapedSearch = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
     filter.$or = [
       {
         name: {
-          $regex: search,
+          $regex: escapedSearch,
           $options: 'i',
         },
       },
       {
         email: {
-          $regex: search,
+          $regex: escapedSearch,
           $options: 'i',
         },
       },
