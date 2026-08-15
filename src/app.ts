@@ -14,6 +14,8 @@ app.use(express.json({ limit: '10kb' }));
 
 app.use(express.urlencoded({ extended: false, limit: '10kb' }));
 
+app.use(helmet());
+
 app.use(
   cors({
     origin: config.CLIENT_URL.length > 0 ? config.CLIENT_URL : ['http://localhost:5173'], // Allow multiple origins from the .env file
@@ -21,9 +23,23 @@ app.use(
   })
 );
 
-app.use(helmet());
-
-app.use(compression());
+// Configure secure compression with a custom filter to avoid BREACH risks
+app.use(
+  compression({
+    filter: (req: Request, res: Response) => {
+      // Avoid compress responses if a header indicates sensitive data or explicit opt-out
+      if (req.headers['x-no-compression']) {
+        return false;
+      }
+      // Avoid compressing responses that set cookies to help mitigate BREACH attacks
+      if (res.getHeader('Set-Cookie')) {
+        return false;
+      }
+      // Fallback to standard compression filter for non-sensitive assets
+      return compression.filter(req, res);
+    },
+  })
+);
 
 app.use(cookieParser());
 
