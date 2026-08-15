@@ -8,6 +8,7 @@ import {
   CropRecommendationRepository,
 } from '../../modules/crop-recommendations/index.js';
 import { aiService } from '../../shared/ai/ai.service.js';
+import { safeSendCropRecommendationNotification } from '../../modules/crop-recommendations/crop-recommendation.helper.js';
 
 export const cropRecommendationWorker = new Worker(
   QUEUE_NAME.CROP_RECOMMENDATION,
@@ -59,6 +60,8 @@ export const cropRecommendationWorker = new Worker(
           `Crop recommendation not found after AI processing: ${recommendationId.toString()}`
         );
       }
+
+      await safeSendCropRecommendationNotification(userId, completedRecommendation);
 
       logger.info(
         `[CropRecommendationWorker] Crop recommendation completed for profile ${profileId.toString()}`
