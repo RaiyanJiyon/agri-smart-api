@@ -9,6 +9,7 @@ export interface DiseaseDetectionJobData {
 }
 
 export interface CropRecommendationJobData {
+  recommendationId: string;
   userId: string;
   profileId: string;
   inputParameters: CropRecommendationInput;
