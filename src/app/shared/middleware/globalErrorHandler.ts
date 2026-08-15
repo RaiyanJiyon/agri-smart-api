@@ -39,7 +39,7 @@ export const globalErrorHandler = (
     message = err.message;
   }
 
-  // Handle Zod Validation Errors
+  // Handle Zod Validation Errors (e.g., schema validation failures)
   if (err instanceof ZodError) {
     statusCode = HTTP_STATUS.BAD_REQUEST;
     message = 'Validation Error';
@@ -56,7 +56,7 @@ export const globalErrorHandler = (
       };
     });
   }
-  // Handle Mongoose Validation Errors
+  // Handle Mongoose Validation Errors (e.g., schema validation failures)
   else if (err.name === 'ValidationError') {
     statusCode = HTTP_STATUS.BAD_REQUEST;
     message = 'Validation Error';
@@ -64,7 +64,17 @@ export const globalErrorHandler = (
   // Handle Mongoose Cast Errors (e.g. invalid ObjectId)
   else if (err.name === 'CastError') {
     statusCode = HTTP_STATUS.BAD_REQUEST;
-    message = 'Cast Error';
+
+    const path = 'path' in err && typeof err.path === 'string' ? err.path : 'field';
+
+    message = `Invalid value for field '${path}'`;
+
+    errorSources = [
+      {
+        path,
+        message: `Invalid ${String(path)} format. Expected a valid identifier.`,
+      },
+    ];
   }
   // Handle Unique Constraint Conflicts (e.g. Prisma P2002)
   else if ('code' in err && err.code === 'P2002') {
