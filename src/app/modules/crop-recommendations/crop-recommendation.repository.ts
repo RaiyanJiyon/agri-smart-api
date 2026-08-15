@@ -1,4 +1,4 @@
-import type { Types } from 'mongoose';
+import type { Types, UpdateQuery } from 'mongoose';
 import type { CropRecommendation } from './crop-recommendation.interface.js';
 import { CropRecommendationModel } from './crop-recommendation.model.js';
 
@@ -35,9 +35,20 @@ const deleteByIdAndUserId = async (recommendationId: Types.ObjectId, userId: Typ
   });
 };
 
+const updateById = async (
+  recommendationId: Types.ObjectId,
+  update: UpdateQuery<CropRecommendation>
+): Promise<CropRecommendation | null> => {
+  return CropRecommendationModel.findByIdAndUpdate(recommendationId, update, {
+    returnDocument: 'after',
+    runValidators: true,
+  }).lean<CropRecommendation | null>();
+};
+
 export const CropRecommendationRepository = {
   create,
   findByIdAndUserId,
   findByUserId,
   deleteByIdAndUserId,
+  updateById,
 };
