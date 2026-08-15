@@ -30,17 +30,6 @@ const createOrReplace = async (
   );
 };
 
-const findByToken = async (
-  tokenHash: string,
-  type: VerificationType
-): Promise<HydratedDocument<Verification> | null> => {
-  return VerificationModel.findOne({
-    tokenHash,
-    type,
-    ...getActiveVerificationFilter(),
-  });
-};
-
 const findActiveVerificationByHash = async (
   tokenHash: string,
   type: VerificationType
@@ -98,7 +87,6 @@ const deleteByUserAndType = async (
 
 export const VerificationRepository = {
   createOrReplace,
-  findByToken,
   findActiveVerificationByHash,
   consumeToken,
   markAsUsed,

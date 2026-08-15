@@ -67,7 +67,7 @@ export const getActiveVerification = async (
 ): Promise<Verification> => {
   const tokenHash = hashToken(token);
 
-  const verification = await VerificationRepository.findByToken(tokenHash, type);
+  const verification = await VerificationRepository.findActiveVerificationByHash(tokenHash, type);
 
   if (!verification) {
     throw new ApiError(HTTP_STATUS.BAD_REQUEST, 'Invalid or expired verification token.');
