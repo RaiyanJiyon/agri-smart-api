@@ -48,7 +48,9 @@ const createCropRecommendation = async (
 
     return recommendation;
   } catch (error: unknown) {
-    logger.error(`[CropRecommendationService] Failed to create crop recommendation: ${error instanceof Error ? error.message : String(error)}`);
+    logger.error(
+      `[CropRecommendationService] Failed to create crop recommendation: ${error instanceof Error ? error.message : String(error)}`
+    );
     throw new ApiError(HTTP_STATUS.INTERNAL_SERVER_ERROR, 'Failed to create crop recommendation.');
   }
 };
