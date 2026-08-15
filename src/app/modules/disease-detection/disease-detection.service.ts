@@ -47,7 +47,7 @@ export const createDiseaseDetection = async (
       },
 
       // diagnosisResult: aiResult.diagnosisResult,
-      processingStatus: DISEASE_DETECTION_STATUS.COMPLETED,
+      processingStatus: DISEASE_DETECTION_STATUS.PENDING,
       requestedAt: new Date(),
       // completedAt: new Date(),
     });
