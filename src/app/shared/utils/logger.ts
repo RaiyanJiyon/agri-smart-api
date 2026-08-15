@@ -3,16 +3,14 @@ import { config } from '../config/env.js';
 
 const transports: winston.transport[] = [
   new winston.transports.Console({
-    format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
+    format: winston.format.combine(
+      config.NODE_ENV === 'production'
+        ? winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' })
+        : winston.format.colorize({ all: true }),
+      winston.format.simple()
+    ),
   }),
 ];
-
-if (config.NODE_ENV === 'production') {
-  transports.push(
-    new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
-    new winston.transports.File({ filename: 'logs/combined.log' })
-  );
-}
 
 const winstonLogger = winston.createLogger({
   level: config.NODE_ENV === 'production' ? 'info' : 'debug',
