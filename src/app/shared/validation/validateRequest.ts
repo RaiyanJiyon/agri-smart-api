@@ -14,7 +14,6 @@ const validateRequest =
         params: req.params,
         query: req.query,
         cookies: req.cookies,
-        headers: req.headers,
       });
 
       next();
