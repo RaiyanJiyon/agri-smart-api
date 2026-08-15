@@ -8,6 +8,8 @@ import { safeSendDiseaseDetectionNotification } from '../../modules/disease-dete
 import { redisConnection } from '../../shared/queue/queue.connection.js';
 import { Worker, type Job } from 'bullmq';
 import { logger } from '../../shared/utils/logger.js';
+import { config } from '../../shared/config/env.js';
+import { ApiError } from '../../shared/errors/ApiError.js';
 
 export const diseaseDetectionWorker = new Worker(
   QUEUE_NAME.DISEASE_DETECTION,
@@ -27,10 +29,22 @@ export const diseaseDetectionWorker = new Worker(
     });
 
     if (!processingReport) {
-      throw new Error(`Disease report not found: ${reportId.toString()}`);
+      throw new ApiError(404, `Disease report not found: ${reportId.toString()}`);
     }
 
+    const ALLOWED_CLOUD_NAME = config.STORAGE.CLOUDINARY_CLOUD_NAME;
+
     try {
+      const parsedUrl = new URL(imageUrl);
+
+      if (
+        parsedUrl.protocol !== 'https:' ||
+        !parsedUrl.hostname.endsWith('cloudinary.com') ||
+        !parsedUrl.pathname.includes(`/${ALLOWED_CLOUD_NAME}/`)
+      ) {
+        throw new ApiError(403, 'Invalid image URL source detected.');
+      }
+
       const aiResult = await aiService.generateDiseaseDetection({
         userId: userId.toString(),
         imageUrl,
@@ -43,7 +57,10 @@ export const diseaseDetectionWorker = new Worker(
       });
 
       if (!completedReport) {
-        throw new Error(`Disease report not found after AI processing: ${reportId.toString()}`);
+        throw new ApiError(
+          404,
+          `Disease report not found after AI processing: ${reportId.toString()}`
+        );
       }
 
       await safeSendDiseaseDetectionNotification(userId, completedReport);
