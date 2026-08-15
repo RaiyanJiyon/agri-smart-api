@@ -77,6 +77,8 @@ sessionSchema.index({
 sessionSchema.index(
   {
     refreshTokenHash: 1,
+    revokedAt: 1,
+    expiresAt: 1,
   },
   {
     unique: true,
