@@ -6,10 +6,10 @@ import type {
 import { ProfileRepository } from '../profile/profile.repository.js';
 import { ApiError } from '../../shared/errors/ApiError.js';
 import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
-import { aiService } from '../../shared/ai/ai.service.js';
 import { CropRecommendationRepository } from './crop-recommendation.repository.js';
 import { CROP_RECOMMENDATION_STATUS } from './crop-recommendation.constant.js';
-import { safeSendCropRecommendationNotification } from './crop-recommendation.helper.js';
+import { addCropRecommendationJob } from '../../jobs/crop-recommendation/crop-recommendation.queue.js';
+import { logger } from '../../shared/utils/logger.js';
 
 const createCropRecommendation = async (
   userId: Types.ObjectId,
@@ -28,32 +28,29 @@ const createCropRecommendation = async (
     throw new ApiError(HTTP_STATUS.FORBIDDEN, 'You do not have permission to use this profile.');
   }
 
-  const aiResult = await aiService.generateCropRecommendation({
-    userId: userId.toString(),
-    profileId: payload.profileId.toString(),
-    inputParameters: payload.inputParameters,
-  });
+  try {
+    const recommendation = await CropRecommendationRepository.create({
+      userId,
+      profileId: payload.profileId,
+      inputParameters: payload.inputParameters,
+      processingStatus: CROP_RECOMMENDATION_STATUS.PENDING,
+      requestedAt: new Date(),
+    });
 
-  if (!aiResult?.recommendationResult) {
-    throw new ApiError(
-      HTTP_STATUS.INTERNAL_SERVER_ERROR,
-      'Failed to generate crop recommendation.'
-    );
+    const recommendationDoc = recommendation as unknown as { _id: Types.ObjectId };
+
+    await addCropRecommendationJob({
+      recommendationId: recommendationDoc._id.toString(),
+      userId: userId.toString(),
+      profileId: payload.profileId.toString(),
+      inputParameters: payload.inputParameters,
+    });
+
+    return recommendation;
+  } catch (error: unknown) {
+    logger.error(`[CropRecommendationService] Failed to create crop recommendation: ${error instanceof Error ? error.message : String(error)}`);
+    throw new ApiError(HTTP_STATUS.INTERNAL_SERVER_ERROR, 'Failed to create crop recommendation.');
   }
-
-  const recommendation = await CropRecommendationRepository.create({
-    userId,
-    profileId: payload.profileId,
-    inputParameters: payload.inputParameters,
-    recommendationResult: aiResult.recommendationResult,
-    processingStatus: CROP_RECOMMENDATION_STATUS.COMPLETED,
-    requestedAt: new Date(),
-    completedAt: new Date(),
-  });
-
-  await safeSendCropRecommendationNotification(userId, recommendation);
-
-  return recommendation;
 };
 
 const getMyRecommendations = async (userId: Types.ObjectId): Promise<CropRecommendation[]> => {
