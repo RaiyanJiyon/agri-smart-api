@@ -41,7 +41,7 @@ interface envConfig {
   REDIS: {
     REDIS_HOST: string;
     REDIS_PORT: number;
-    REDIS_PASSWORD: string;
+    REDIS_PASSWORD?: string | undefined;
   };
 }
 
@@ -71,7 +71,6 @@ const loadEnvVariables = (): envConfig => {
     'CLOUDINARY_API_SECRET',
     'REDIS_HOST',
     'REDIS_PORT',
-    'REDIS_PASSWORD',
   ];
 
   requiredEnvVariables.forEach((key) => {
@@ -138,7 +137,7 @@ const loadEnvVariables = (): envConfig => {
     REDIS: {
       REDIS_HOST: process.env.REDIS_HOST!,
       REDIS_PORT: Number(process.env.REDIS_PORT!),
-      REDIS_PASSWORD: process.env.REDIS_PASSWORD!,
+      REDIS_PASSWORD: process.env.REDIS_PASSWORD ?? undefined,
     },
   };
 };
