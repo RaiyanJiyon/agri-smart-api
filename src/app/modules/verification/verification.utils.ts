@@ -11,6 +11,7 @@ import type { Types } from 'mongoose';
 import { ApiError } from '../../shared/errors/ApiError.js';
 import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
 import { generateVerificationToken, hashToken } from '../../shared/utils/crypto.js';
+import { escapeHtml } from '../../shared/utils/escape.js';
 
 /**
  * * HELPER: Creates a verification token, saves its hash to the database,
@@ -53,7 +54,10 @@ export const createVerificationAndSendEmail = async ({
   await EmailService.send({
     to: existingUser.email,
     subject,
-    html: buildTemplate(buildUrl(token), existingUser),
+    html: buildTemplate(buildUrl(token), {
+      ...existingUser,
+      name: escapeHtml(existingUser.name),
+    }),
   });
 };
 
