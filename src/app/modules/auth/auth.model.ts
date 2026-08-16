@@ -63,4 +63,12 @@ userSchema.set('toJSON', {
   },
 });
 
+userSchema.set('toObject', {
+  transform: (doc, ret) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _password, ...rest } = ret;
+    return rest;
+  },
+});
+
 export const AuthModel = model<User>(COLLECTION_NAME.USER, userSchema);
