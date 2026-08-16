@@ -79,7 +79,7 @@ const deleteByUserAndType = async (
   userId: Types.ObjectId,
   type: VerificationType
 ): Promise<DeleteResult> => {
-  return VerificationModel.deleteOne({
+  return VerificationModel.deleteMany({
     userId,
     type,
   });
