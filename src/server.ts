@@ -50,7 +50,7 @@ const startServer = async (): Promise<void> => {
   // Handle unhandled promise rejections (e.g., background async tasks without .catch)
   process.on('unhandledRejection', (reason: Error) => {
     logger.error('UNHANDLED REJECTION! Shutting down...', reason);
-    handleShutdown('unhandledRejection');
+    void handleShutdown('unhandledRejection');
   });
 
   // Handle uncaught synchronous exceptions (e.g., programming errors)
