@@ -37,9 +37,6 @@ export const createVerificationAndSendEmail = async ({
     return;
   }
 
-  // Clear out any existing verification records of the same type for the user to ensure only one active token exists at a time.
-  await VerificationRepository.deleteByUserAndType(existingUser._id, type);
-
   const { token, tokenHash } = generateVerificationToken();
 
   const expiresAt = new Date(Date.now() + ms(expiresIn as StringValue));
