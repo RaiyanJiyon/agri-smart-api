@@ -35,13 +35,15 @@ const sendMessage = async (
     );
   }
 
-  /*
-   * Load previous messages.
-   *
-   * The current message has NOT been saved yet, so this gives
-   * us only the previous conversation history.
+/*
+   * Load previous messages with a pagination limit (last 20 messages).
    */
-  const previousMessages = await MessageRepository.findByConversationId(conversationId);
+  const previousMessagesQuery = await MessageRepository.findByConversationId(conversationId, {
+    limit: 20,
+    sort: { createdAt: -1 },
+  });
+
+  const previousMessages = previousMessagesQuery.reverse(); // Reverse to get chronological order
 
   /*
    * Save the user's message.
