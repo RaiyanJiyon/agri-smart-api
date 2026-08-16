@@ -95,6 +95,17 @@ const loadEnvVariables = (): envConfig => {
     throw new Error('ARGON2_PARALLELISM must be a valid integer ≥ 1');
   }
 
+  // Validate JWT expiration formats (e.g., 15m, 1h, 1d)
+  const jwtExpiryRegex = /^\d+[smhd]$/;
+
+  if (!jwtExpiryRegex.test(process.env.JWT_ACCESS_EXPIRES_IN!)) {
+    throw new Error('JWT_ACCESS_EXPIRES_IN must be a valid time format (e.g., 15m, 1h, 1d)');
+  }
+
+  if (!jwtExpiryRegex.test(process.env.JWT_REFRESH_EXPIRES_IN!)) {
+    throw new Error('JWT_REFRESH_EXPIRES_IN must be a valid time format (e.g., 7d, 30d)');
+  }
+
   return {
     PORT: Number(process.env.PORT!),
     NODE_ENV: process.env.NODE_ENV!,
