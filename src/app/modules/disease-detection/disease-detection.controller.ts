@@ -43,7 +43,7 @@ const getMyReports = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const getMyReport = catchAsync(async (req: Request, res: Response) => {
+const getMyReport = catchAsync(async (req: Request, res: Response) => {
   const userId = getUserObjectId(req);
   const params = req.params as { reportId: string };
   const reportId = getDiseaseReportObjectId(params.reportId);
