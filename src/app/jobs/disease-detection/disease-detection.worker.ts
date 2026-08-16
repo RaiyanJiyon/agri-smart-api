@@ -11,6 +11,8 @@ import { logger } from '../../shared/utils/logger.js';
 import { config } from '../../shared/config/env.js';
 import { ApiError } from '../../shared/errors/ApiError.js';
 
+import { CloudinaryService } from '../../shared/integrations/storage/cloudinary.service.js';
+
 export const diseaseDetectionWorker = new Worker(
   QUEUE_NAME.DISEASE_DETECTION,
   async (job: Job<DiseaseDetectionJobData>) => {
@@ -93,6 +95,27 @@ diseaseDetectionWorker.on('completed', (job) => {
 
 diseaseDetectionWorker.on('failed', (job, error) => {
   logger.error(`[DiseaseDetectionWorker] Job failed: ${job?.id}`, error);
+
+  if (!job) {
+    return;
+  }
+
+  const maxAttempts = job.opts.attempts ?? 1;
+  if (job.attemptsMade >= maxAttempts && job.data?.imagePublicId) {
+    void (async () => {
+      try {
+        await CloudinaryService.deleteImage(job.data.imagePublicId);
+        logger.info(
+          `[DiseaseDetectionWorker] Cleaned up Cloudinary image (${job.data.imagePublicId}) for permanently failed job ${job.id}.`
+        );
+      } catch (cleanupError) {
+        logger.error(
+          `[DiseaseDetectionWorker] Failed to clean up Cloudinary image for job ${job.id}:`,
+          cleanupError
+        );
+      }
+    })();
+  }
 });
 
 diseaseDetectionWorker.on('error', (error) => {
