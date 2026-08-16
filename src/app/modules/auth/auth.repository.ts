@@ -2,6 +2,7 @@ import type { ClientSession, HydratedDocument, Types } from 'mongoose';
 import type { User } from './auth.interface.js';
 import { AuthModel } from './auth.model.js';
 import { ApiError } from '../../shared/errors/ApiError.js';
+import { HTTP_STATUS } from '../../shared/constants/index.js';
 
 const findUserById = async (id: Types.ObjectId): Promise<HydratedDocument<User> | null> => {
   return AuthModel.findById(id);
@@ -31,7 +32,7 @@ const createUser = async (
   const [user] = await AuthModel.create([payload], options);
 
   if (!user) {
-    throw new ApiError(500, 'User creation returned no document.');
+    throw new ApiError(HTTP_STATUS.INTERNAL_SERVER_ERROR, 'User creation returned no document.');
   }
 
   return user;
