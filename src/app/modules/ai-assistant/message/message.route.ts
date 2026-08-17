@@ -26,4 +26,3 @@ router.get(
 );
 
 export const MessageRoutes = router;
-

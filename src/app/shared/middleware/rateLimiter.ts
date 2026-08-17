@@ -216,4 +216,3 @@ export const adminRateLimiter = createRateLimiter({
   duration: config.RATE_LIMIT.ADMIN_DURATION,
   keyGenerator: (req) => `${req.user?.userId ?? getClientIp(req)}:${req.user?.role ?? 'guest'}`,
 });
-

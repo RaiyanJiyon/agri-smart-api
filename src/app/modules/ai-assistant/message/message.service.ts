@@ -35,7 +35,7 @@ const sendMessage = async (
     );
   }
 
-/*
+  /*
    * Load previous messages with a pagination limit (last 20 messages).
    */
   const previousMessagesQuery = await MessageRepository.findByConversationId(conversationId, {

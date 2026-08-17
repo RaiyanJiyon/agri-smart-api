@@ -59,12 +59,15 @@ export const globalErrorHandler = (
     res.setHeader('Retry-After', retryAfter);
   } else if (statusCode === HTTP_STATUS.TOO_MANY_REQUESTS) {
     message = message || 'Too many requests. Please try again later.';
-    errorSources = errorSources.length > 0 ? errorSources : [
-      {
-        path: 'rate_limit',
-        message: 'Rate limit exceeded. Please try again later.',
-      },
-    ];
+    errorSources =
+      errorSources.length > 0
+        ? errorSources
+        : [
+            {
+              path: 'rate_limit',
+              message: 'Rate limit exceeded. Please try again later.',
+            },
+          ];
   }
 
   // Handle Zod Validation Errors (e.g., schema validation failures)

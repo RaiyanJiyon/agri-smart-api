@@ -24,4 +24,3 @@ router.get('/:reportId', auth(), DiseaseDetectionController.getMyReport);
 router.delete('/:reportId', auth(), DiseaseDetectionController.deleteMyReport);
 
 export const DiseaseDetectionRoutes = router;
-

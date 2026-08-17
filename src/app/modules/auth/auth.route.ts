@@ -20,7 +20,6 @@ router.use(authRateLimiter);
 
 router.post('/register', validateRequest(registerValidationSchema), AuthController.register);
 
-
 router.post(
   '/verify-email',
   validateRequest(verifyEmailValidationSchema),

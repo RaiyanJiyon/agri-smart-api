@@ -51,7 +51,6 @@ app.use(cookieParser());
 // Mount Tier 4 Global Rate Limiter baseline across all /api/v1 routes
 app.use('/api/v1', globalRateLimiter, router);
 
-
 app.get('/', (_req: Request, res: Response) => {
   res.send('Agri Smart server is up and running!');
 });

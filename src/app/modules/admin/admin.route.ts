@@ -20,17 +20,9 @@ router.get('/dashboard/statistics', AdminController.getDashboardStatistics);
 
 router.get('/ai-usage/statistics', AdminController.getAIUsageStatistics);
 
-router.get(
-  '/users',
-  validateRequest(getUsersValidationSchema),
-  AdminController.getUsers
-);
+router.get('/users', validateRequest(getUsersValidationSchema), AdminController.getUsers);
 
-router.get(
-  '/users/:userId',
-  validateRequest(getUserValidationSchema),
-  AdminController.getUser
-);
+router.get('/users/:userId', validateRequest(getUserValidationSchema), AdminController.getUser);
 
 router.patch(
   '/users/:userId/status',
@@ -41,4 +33,3 @@ router.patch(
 router.use('/activity', AdminActivityRoutes);
 
 export const AdminRoutes = router;
-

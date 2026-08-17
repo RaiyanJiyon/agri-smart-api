@@ -22,4 +22,3 @@ router.get('/:recommendationId', auth(), CropRecommendationController.getMyRecom
 router.delete('/:recommendationId', auth(), CropRecommendationController.deleteMyRecommendation);
 
 export const CropRecommendationRoutes = router;
-
