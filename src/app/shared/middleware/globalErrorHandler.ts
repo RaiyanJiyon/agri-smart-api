@@ -13,6 +13,8 @@ interface CustomErrorObject {
   name?: string;
   path?: string;
   value?: unknown;
+  msBeforeNext?: number;
+  retryAfter?: number;
   [key: string]: unknown;
 }
 
@@ -30,6 +32,7 @@ export const globalErrorHandler = (
   let statusCode: number = HTTP_STATUS.INTERNAL_SERVER_ERROR;
   let message = 'Internal Server Error';
   let errorSources: ErrorSource[] = [];
+  let retryAfter: number | undefined;
 
   // Handle Custom ApiError or errors with a status code property
   if ('statusCode' in err && typeof err.statusCode === 'number') {
@@ -37,6 +40,31 @@ export const globalErrorHandler = (
   }
   if ('message' in err && typeof err.message === 'string') {
     message = err.message;
+  }
+
+  // Handle Rate Limit (RateLimiterRes / HTTP 429) errors
+  if ('msBeforeNext' in err && typeof err.msBeforeNext === 'number') {
+    statusCode = HTTP_STATUS.TOO_MANY_REQUESTS;
+    message = 'Too many requests. Please try again later.';
+    retryAfter = Math.ceil(err.msBeforeNext / 1000) || 1;
+    res.setHeader('Retry-After', retryAfter);
+    errorSources = [
+      {
+        path: 'rate_limit',
+        message: `Rate limit exceeded. Please wait ${retryAfter} second(s) before retrying.`,
+      },
+    ];
+  } else if ('retryAfter' in err && typeof err.retryAfter === 'number') {
+    retryAfter = err.retryAfter;
+    res.setHeader('Retry-After', retryAfter);
+  } else if (statusCode === HTTP_STATUS.TOO_MANY_REQUESTS) {
+    message = message || 'Too many requests. Please try again later.';
+    errorSources = errorSources.length > 0 ? errorSources : [
+      {
+        path: 'rate_limit',
+        message: 'Rate limit exceeded. Please try again later.',
+      },
+    ];
   }
 
   // Handle Zod Validation Errors (e.g., schema validation failures)
@@ -83,7 +111,11 @@ export const globalErrorHandler = (
   }
 
   // Operational vs Programming error logging distinction
-  const isOperational = ('isOperational' in err && err.isOperational) || err instanceof ZodError;
+  const isOperational =
+    ('isOperational' in err && err.isOperational) ||
+    err instanceof ZodError ||
+    statusCode < HTTP_STATUS.INTERNAL_SERVER_ERROR;
+
   if (!isOperational) {
     logger.error('UNEXPECTED CRITICAL ERROR:', { message: err.message, stack: err.stack });
   }
@@ -92,9 +124,8 @@ export const globalErrorHandler = (
     success: false,
     status: statusCode,
     message,
-    // Include field-specific error details if they exist
     ...(errorSources.length > 0 && { errorSources }),
-    // Expose stack trace only in development mode for debugging
+    ...(retryAfter !== undefined && { retryAfter }),
     ...(config.NODE_ENV === 'development' && { stack: err.stack }),
   });
 };
