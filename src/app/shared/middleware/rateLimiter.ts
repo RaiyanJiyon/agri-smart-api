@@ -4,6 +4,7 @@ import { redisConnection } from '../queue/queue.connection.js';
 import { config } from '../config/env.js';
 import { logger } from '../utils/logger.js';
 import { HTTP_STATUS } from '../constants/httpStatus.js';
+import { getClientIp } from '../utils/ip.utils.js';
 
 export interface RateLimiterOptions {
   keyPrefix: string;
@@ -25,7 +26,7 @@ export const createRateLimiter = (options: RateLimiterOptions) => {
     points,
     duration,
     blockDuration,
-    keyGenerator = (req: Request) => req.ip ?? '127.0.0.1',
+    keyGenerator = (req: Request) => getClientIp(req),
     failClosed = false,
     skip,
   } = options;
@@ -167,7 +168,7 @@ export const globalRateLimiter = createRateLimiter({
   keyPrefix: 'rl:global',
   points: config.RATE_LIMIT.GLOBAL_POINTS,
   duration: config.RATE_LIMIT.GLOBAL_DURATION,
-  keyGenerator: (req) => req.ip ?? '127.0.0.1',
+  keyGenerator: (req) => getClientIp(req),
 });
 
 /**
@@ -181,7 +182,7 @@ export const authRateLimiter = createRateLimiter({
   failClosed: true,
   keyGenerator: (req) => {
     const rawEmail = typeof req.body?.email === 'string' ? req.body.email.trim().toLowerCase() : '';
-    const ip = req.ip ?? '127.0.0.1';
+    const ip = getClientIp(req);
     return rawEmail ? `${ip}:${rawEmail}` : ip;
   },
 });
@@ -193,7 +194,7 @@ export const aiRateLimiter = createRateLimiter({
   keyPrefix: 'rl:ai',
   points: config.RATE_LIMIT.AI_POINTS,
   duration: config.RATE_LIMIT.AI_DURATION,
-  keyGenerator: (req) => req.user?.userId ?? req.ip ?? '127.0.0.1',
+  keyGenerator: (req) => req.user?.userId ?? getClientIp(req),
 });
 
 /**
@@ -203,7 +204,7 @@ export const coreRateLimiter = createRateLimiter({
   keyPrefix: 'rl:core',
   points: config.RATE_LIMIT.CORE_POINTS,
   duration: config.RATE_LIMIT.CORE_DURATION,
-  keyGenerator: (req) => req.user?.userId ?? req.ip ?? '127.0.0.1',
+  keyGenerator: (req) => req.user?.userId ?? getClientIp(req),
 });
 
 /**
@@ -213,5 +214,6 @@ export const adminRateLimiter = createRateLimiter({
   keyPrefix: 'rl:admin',
   points: config.RATE_LIMIT.ADMIN_POINTS,
   duration: config.RATE_LIMIT.ADMIN_DURATION,
-  keyGenerator: (req) => `${req.user?.userId ?? req.ip}:${req.user?.role ?? 'guest'}`,
+  keyGenerator: (req) => `${req.user?.userId ?? getClientIp(req)}:${req.user?.role ?? 'guest'}`,
 });
+
