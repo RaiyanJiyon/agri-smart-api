@@ -11,10 +11,15 @@ import {
 } from './auth.validation.js';
 import { AuthController } from './auth.controller.js';
 import { auth } from '../../shared/middleware/auth.js';
+import { authRateLimiter } from '../../shared/middleware/rateLimiter.js';
 
 const router = Router();
 
+// Apply Tier 0 Auth Rate Limiting (IP + Email tracking, 10 attempts / 15 mins, Fail-Closed)
+router.use(authRateLimiter);
+
 router.post('/register', validateRequest(registerValidationSchema), AuthController.register);
+
 
 router.post(
   '/verify-email',
