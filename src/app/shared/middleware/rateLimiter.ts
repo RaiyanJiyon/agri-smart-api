@@ -181,9 +181,13 @@ export const authRateLimiter = createRateLimiter({
   blockDuration: config.RATE_LIMIT.AUTH_BLOCK_DURATION,
   failClosed: true,
   keyGenerator: (req) => {
-    const rawEmail = typeof req.body?.email === 'string' ? req.body.email.trim().toLowerCase() : '';
+    const body: unknown = req.body;
+    let rawEmail = '';
+    if (body && typeof body === 'object' && 'email' in body && typeof body.email === 'string') {
+      rawEmail = body.email.trim().toLowerCase();
+    }
     const ip = getClientIp(req);
-    return rawEmail ? `${ip}:${rawEmail}` : ip;
+    return rawEmail !== '' ? `${ip}:${rawEmail}` : ip;
   },
 });
 

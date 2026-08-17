@@ -5,7 +5,7 @@ import type { Request } from 'express';
  * Takes into account `app.set('trust proxy', 1)` configuration in `app.ts`.
  */
 export const getClientIp = (req: Request): string => {
-  let ip = req.ip || req.socket?.remoteAddress || '127.0.0.1';
+  let ip = req.ip ?? req.socket?.remoteAddress ?? '127.0.0.1';
 
   // Normalize IPv6-mapped IPv4 addresses (e.g. "::ffff:192.168.1.1" -> "192.168.1.1")
   if (ip.startsWith('::ffff:')) {
@@ -17,7 +17,8 @@ export const getClientIp = (req: Request): string => {
     ip = '127.0.0.1';
   }
 
-  return ip.trim() || '127.0.0.1';
+  const trimmed = ip.trim();
+  return trimmed !== '' ? trimmed : '127.0.0.1';
 };
 
 /**
