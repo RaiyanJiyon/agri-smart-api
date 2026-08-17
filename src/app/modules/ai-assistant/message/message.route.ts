@@ -6,12 +6,14 @@ import {
   sendMessageValidationSchema,
 } from './message.validation.js';
 import { MessageController } from './message.controller.js';
+import { aiRateLimiter } from '../../../shared/middleware/rateLimiter.js';
 
 const router = Router();
 
 router.post(
   '/:conversationId/messages',
   auth(),
+  aiRateLimiter,
   validateRequest(sendMessageValidationSchema),
   MessageController.sendMessage
 );
@@ -24,3 +26,4 @@ router.get(
 );
 
 export const MessageRoutes = router;
+

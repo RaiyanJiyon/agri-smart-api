@@ -9,34 +9,36 @@ import {
 } from './admin.validation.js';
 import { AdminController } from './admin.controller.js';
 import { AdminActivityRoutes } from './admin-activity/admin-activity.route.js';
+import { adminRateLimiter } from '../../shared/middleware/rateLimiter.js';
 
 const router = Router();
 
-router.get('/dashboard/statistics', auth(USER_ROLE.ADMIN), AdminController.getDashboardStatistics);
+// Apply Admin Auth & Admin Rate Limiter globally across all admin routes
+router.use(auth(USER_ROLE.ADMIN), adminRateLimiter);
 
-router.get('/ai-usage/statistics', auth(USER_ROLE.ADMIN), AdminController.getAIUsageStatistics);
+router.get('/dashboard/statistics', AdminController.getDashboardStatistics);
+
+router.get('/ai-usage/statistics', AdminController.getAIUsageStatistics);
 
 router.get(
   '/users',
-  auth(USER_ROLE.ADMIN),
   validateRequest(getUsersValidationSchema),
   AdminController.getUsers
 );
 
 router.get(
   '/users/:userId',
-  auth(USER_ROLE.ADMIN),
   validateRequest(getUserValidationSchema),
   AdminController.getUser
 );
 
 router.patch(
   '/users/:userId/status',
-  auth(USER_ROLE.ADMIN),
   validateRequest(updateUserStatusValidationSchema),
   AdminController.updateUserStatus
 );
 
-router.use('/activity', auth(USER_ROLE.ADMIN), AdminActivityRoutes);
+router.use('/activity', AdminActivityRoutes);
 
 export const AdminRoutes = router;
+

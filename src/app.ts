@@ -7,6 +7,7 @@ import { config } from './app/shared/config/env.js';
 import { router } from './app/routes/index.js';
 import { notFound } from './app/shared/middleware/notFound.js';
 import { globalErrorHandler } from './app/shared/middleware/globalErrorHandler.js';
+import { globalRateLimiter } from './app/shared/middleware/rateLimiter.js';
 
 const app = express();
 
@@ -47,7 +48,9 @@ app.use(
 
 app.use(cookieParser());
 
-app.use('/api/v1', router);
+// Mount Tier 4 Global Rate Limiter baseline across all /api/v1 routes
+app.use('/api/v1', globalRateLimiter, router);
+
 
 app.get('/', (_req: Request, res: Response) => {
   res.send('Agri Smart server is up and running!');
