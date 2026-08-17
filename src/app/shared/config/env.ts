@@ -43,6 +43,20 @@ interface envConfig {
     REDIS_PORT: number;
     REDIS_PASSWORD?: string | undefined;
   };
+
+  RATE_LIMIT: {
+    GLOBAL_POINTS: number;
+    GLOBAL_DURATION: number;
+    AUTH_POINTS: number;
+    AUTH_DURATION: number;
+    AUTH_BLOCK_DURATION: number;
+    AI_POINTS: number;
+    AI_DURATION: number;
+    CORE_POINTS: number;
+    CORE_DURATION: number;
+    ADMIN_POINTS: number;
+    ADMIN_DURATION: number;
+  };
 }
 
 const loadEnvVariables = (): envConfig => {
@@ -78,6 +92,17 @@ const loadEnvVariables = (): envConfig => {
       throw new Error(`Environment variable ${key} is not set.`);
     }
   });
+
+  // Helper for parsing optional rate limit env variables with positive integer validation
+  const getPositiveInt = (key: string, defaultValue: number): number => {
+    const value = process.env[key];
+    if (!value) return defaultValue;
+    const parsed = Number(value);
+    if (!Number.isInteger(parsed) || parsed < 1) {
+      throw new Error(`${key} must be a valid positive integer ≥ 1.`);
+    }
+    return parsed;
+  };
 
   // Parse and strictly validate Argon2 numeric values
   const argonMemory = Number(process.env.ARGON2_MEMORY);
@@ -149,6 +174,20 @@ const loadEnvVariables = (): envConfig => {
       REDIS_HOST: process.env.REDIS_HOST!,
       REDIS_PORT: Number(process.env.REDIS_PORT!),
       REDIS_PASSWORD: process.env.REDIS_PASSWORD ?? undefined,
+    },
+
+    RATE_LIMIT: {
+      GLOBAL_POINTS: getPositiveInt('RATE_LIMIT_GLOBAL_POINTS', 300),
+      GLOBAL_DURATION: getPositiveInt('RATE_LIMIT_GLOBAL_DURATION', 60),
+      AUTH_POINTS: getPositiveInt('RATE_LIMIT_AUTH_POINTS', 10),
+      AUTH_DURATION: getPositiveInt('RATE_LIMIT_AUTH_DURATION', 900), // 15 minutes
+      AUTH_BLOCK_DURATION: getPositiveInt('RATE_LIMIT_AUTH_BLOCK_DURATION', 3600), // 1 hour
+      AI_POINTS: getPositiveInt('RATE_LIMIT_AI_POINTS', 5),
+      AI_DURATION: getPositiveInt('RATE_LIMIT_AI_DURATION', 300), // 5 minutes
+      CORE_POINTS: getPositiveInt('RATE_LIMIT_CORE_POINTS', 120),
+      CORE_DURATION: getPositiveInt('RATE_LIMIT_CORE_DURATION', 60),
+      ADMIN_POINTS: getPositiveInt('RATE_LIMIT_ADMIN_POINTS', 300),
+      ADMIN_DURATION: getPositiveInt('RATE_LIMIT_ADMIN_DURATION', 60),
     },
   };
 };
