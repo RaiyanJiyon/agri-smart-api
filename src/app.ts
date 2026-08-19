@@ -11,8 +11,12 @@ import { globalRateLimiter } from './app/shared/middleware/rateLimiter.js';
 
 const app = express();
 
-// Tell Express it is running behind a trusted proxy (e.g., Nginx, ALB, Cloudflare)
-// This ensures req.ip correctly reflects the client's actual browser IP address.
+/**
+ * Tell Express it is running behind a trusted proxy (e.g., Nginx, ALB, Cloudflare)
+
+ * This ensures req.ip correctly reflects the client's actual browser IP address.
+
+ */
 app.set('trust proxy', 1);
 
 app.use(express.json({ limit: '10kb' }));
