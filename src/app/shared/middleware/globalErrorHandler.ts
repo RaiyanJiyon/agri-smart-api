@@ -38,6 +38,8 @@ export const globalErrorHandler = (
   if ('statusCode' in err && typeof err.statusCode === 'number') {
     statusCode = err.statusCode;
   }
+
+  // Handle errors with a message property
   if ('message' in err && typeof err.message === 'string') {
     message = err.message;
   }
