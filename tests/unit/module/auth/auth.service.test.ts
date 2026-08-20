@@ -233,4 +233,84 @@ describe('AuthService.login', () => {
     expect(JwtUtil.signAccessToken).not.toHaveBeenCalled();
     expect(JwtUtil.signRefreshToken).not.toHaveBeenCalled();
   });
+
+  it('should successfully login an active verified user', async () => {
+    const password = 'CorrectPassword123!';
+
+    const user = {
+      _id: new mongoose.Types.ObjectId(),
+      name: 'Test Farmer',
+      email: 'farmer@example.com',
+      password: await hashPassword(password),
+      role: 'farmer' as const,
+      isEmailVerified: true,
+      status: 'active' as const,
+      passwordChangedAt: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    const accessToken = 'mock-access-token';
+    const refreshToken = 'mock-refresh-token';
+
+    vi.mocked(AuthRepository.findUserByEmailWithPassword).mockResolvedValue(user as never);
+
+    vi.mocked(JwtUtil.signAccessToken).mockReturnValue(accessToken);
+    vi.mocked(JwtUtil.signRefreshToken).mockReturnValue(refreshToken);
+
+    vi.mocked(SessionService.createSession).mockResolvedValue({
+      _id: new mongoose.Types.ObjectId(),
+      userId: user._id,
+      refreshTokenHash: 'hashed-refresh-token',
+      ipAddress: '127.0.0.1',
+      userAgent: 'Vitest',
+      expiresAt: new Date(),
+      revokedAt: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    } as never);
+
+    vi.mocked(AuthRepository.updateLastLogin).mockResolvedValue(user as never);
+
+    const result = await AuthService.login({
+      email: user.email,
+      password,
+      ipAddress: '127.0.0.1',
+      userAgent: 'Vitest',
+    });
+
+    const expectedPayload = {
+      userId: user._id.toString(),
+      email: user.email,
+      role: user.role,
+    };
+
+    expect(AuthRepository.findUserByEmailWithPassword).toHaveBeenCalledWith(user.email);
+
+    expect(JwtUtil.signAccessToken).toHaveBeenCalledWith(expectedPayload);
+
+    expect(JwtUtil.signRefreshToken).toHaveBeenCalledWith(expectedPayload);
+
+    expect(SessionService.createSession).toHaveBeenCalledWith({
+      userId: user._id,
+      refreshToken,
+      ipAddress: '127.0.0.1',
+      userAgent: 'Vitest',
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      expiresAt: expect.any(Date),
+    });
+
+    expect(AuthRepository.updateLastLogin).toHaveBeenCalledWith(user._id);
+
+    expect(result).toEqual({
+      accessToken,
+      refreshToken,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        isEmailVerified: user.isEmailVerified,
+      },
+    });
+  });
 });
