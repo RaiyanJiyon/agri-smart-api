@@ -2,12 +2,14 @@ import mongoose from 'mongoose';
 import app from './app.js';
 import { connectDatabase } from './app/shared/config/database.js';
 import { logger } from './app/shared/utils/logger.js';
-import './app/jobs/index.js';
+import { startWorkers } from './app/jobs/index.js';
 
 const PORT = Number(process.env.PORT ?? 5000);
 
 const startServer = async (): Promise<void> => {
   await connectDatabase();
+
+  await startWorkers();
 
   const server = app.listen(PORT, () => {
     logger.info(`Server is running on port http://localhost:${PORT}`);
