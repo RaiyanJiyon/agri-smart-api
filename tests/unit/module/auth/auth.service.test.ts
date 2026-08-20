@@ -167,4 +167,37 @@ describe('AuthService.login', () => {
     expect(JwtUtil.signAccessToken).not.toHaveBeenCalled();
     expect(JwtUtil.signRefreshToken).not.toHaveBeenCalled();
   });
+
+  it('should reject login when the account is inactive', async () => {
+    const password = 'CorrectPassword123!';
+
+    const user = {
+      _id: new mongoose.Types.ObjectId(),
+      name: 'Inactive Farmer',
+      email: 'inactive@example.com',
+      password: await hashPassword(password),
+      role: 'farmer' as const,
+      isEmailVerified: true,
+      status: 'inactive' as const,
+      passwordChangedAt: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    vi.mocked(AuthRepository.findUserByEmailWithPassword).mockResolvedValue(user as never);
+
+    await expect(
+      AuthService.login({
+        email: user.email,
+        password,
+      })
+    ).rejects.toMatchObject({
+      statusCode: 403,
+      message: 'Your account has been suspended or is inactive.',
+    });
+
+    expect(SessionService.createSession).not.toHaveBeenCalled();
+    expect(JwtUtil.signAccessToken).not.toHaveBeenCalled();
+    expect(JwtUtil.signRefreshToken).not.toHaveBeenCalled();
+  });
 });
