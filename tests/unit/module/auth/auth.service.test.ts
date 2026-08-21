@@ -314,3 +314,220 @@ describe('AuthService.login', () => {
     });
   });
 });
+
+describe('AuthService.changePassword', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('should reject password change when the user does not exist', async () => {
+    const userId = new mongoose.Types.ObjectId();
+
+    vi.mocked(AuthRepository.findUserByIdWithPassword).mockResolvedValue(null);
+
+    await expect(
+      AuthService.changePassword({
+        userId,
+        currentPassword: 'CurrentPassword123!',
+        newPassword: 'NewPassword123!',
+      })
+    ).rejects.toMatchObject({
+      statusCode: 404,
+      message: 'User not found.',
+    });
+
+    expect(AuthRepository.findUserByIdWithPassword).toHaveBeenCalledWith(userId);
+
+    expect(AuthRepository.updatePassword).not.toHaveBeenCalled();
+    expect(SessionService.revokeAllSessions).not.toHaveBeenCalled();
+  });
+
+  it('should reject password change when the user password is missing', async () => {
+    const userId = new mongoose.Types.ObjectId();
+
+    const user = {
+      _id: userId,
+      name: 'Test Farmer',
+      email: 'farmer@example.com',
+      password: '',
+      role: 'farmer' as const,
+      isEmailVerified: true,
+      status: 'active' as const,
+      passwordChangedAt: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    vi.mocked(AuthRepository.findUserByIdWithPassword).mockResolvedValue(user as never);
+
+    await expect(
+      AuthService.changePassword({
+        userId,
+        currentPassword: 'CurrentPassword123!',
+        newPassword: 'NewPassword123!',
+      })
+    ).rejects.toMatchObject({
+      statusCode: 500,
+      message: 'User credential state is invalid.',
+    });
+
+    expect(AuthRepository.updatePassword).not.toHaveBeenCalled();
+    expect(SessionService.revokeAllSessions).not.toHaveBeenCalled();
+  });
+
+  it('should reject password change when the current password is incorrect', async () => {
+    const userId = new mongoose.Types.ObjectId();
+
+    const currentPassword = 'CorrectPassword123!';
+    const wrongPassword = 'WrongPassword123!';
+
+    const user = {
+      _id: userId,
+      name: 'Test Farmer',
+      email: 'farmer@example.com',
+      password: await hashPassword(currentPassword),
+      role: 'farmer' as const,
+      isEmailVerified: true,
+      status: 'active' as const,
+      passwordChangedAt: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    vi.mocked(AuthRepository.findUserByIdWithPassword).mockResolvedValue(user as never);
+
+    await expect(
+      AuthService.changePassword({
+        userId,
+        currentPassword: wrongPassword,
+        newPassword: 'NewPassword123!',
+      })
+    ).rejects.toMatchObject({
+      statusCode: 400,
+      message: 'Current password is incorrect.',
+    });
+
+    expect(AuthRepository.updatePassword).not.toHaveBeenCalled();
+    expect(SessionService.revokeAllSessions).not.toHaveBeenCalled();
+  });
+
+  it('should reject password change when the new password is the same as the current password', async () => {
+    const userId = new mongoose.Types.ObjectId();
+
+    const currentPassword = 'CurrentPassword123!';
+
+    const user = {
+      _id: userId,
+      name: 'Test Farmer',
+      email: 'farmer@example.com',
+      password: await hashPassword(currentPassword),
+      role: 'farmer' as const,
+      isEmailVerified: true,
+      status: 'active' as const,
+      passwordChangedAt: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    vi.mocked(AuthRepository.findUserByIdWithPassword).mockResolvedValue(user as never);
+
+    await expect(
+      AuthService.changePassword({
+        userId,
+        currentPassword,
+        newPassword: currentPassword,
+      })
+    ).rejects.toMatchObject({
+      statusCode: 400,
+      message: 'New password must be different from the current password.',
+    });
+
+    expect(AuthRepository.updatePassword).not.toHaveBeenCalled();
+    expect(SessionService.revokeAllSessions).not.toHaveBeenCalled();
+  });
+
+  it('should reject password change when updating the password fails', async () => {
+    const userId = new mongoose.Types.ObjectId();
+
+    const currentPassword = 'CurrentPassword123!';
+    const newPassword = 'NewPassword123!';
+
+    const user = {
+      _id: userId,
+      name: 'Test Farmer',
+      email: 'farmer@example.com',
+      password: await hashPassword(currentPassword),
+      role: 'farmer' as const,
+      isEmailVerified: true,
+      status: 'active' as const,
+      passwordChangedAt: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    vi.mocked(AuthRepository.findUserByIdWithPassword).mockResolvedValue(user as never);
+
+    vi.mocked(AuthRepository.updatePassword).mockResolvedValue(null);
+
+    await expect(
+      AuthService.changePassword({
+        userId,
+        currentPassword,
+        newPassword,
+      })
+    ).rejects.toMatchObject({
+      statusCode: 500,
+      message: 'Failed to update password.',
+    });
+
+    expect(AuthRepository.updatePassword).toHaveBeenCalledWith(userId, expect.any(String));
+
+    expect(SessionService.revokeAllSessions).not.toHaveBeenCalled();
+  });
+
+  it('should successfully change the password and revoke all sessions', async () => {
+    const userId = new mongoose.Types.ObjectId();
+
+    const currentPassword = 'CurrentPassword123!';
+    const newPassword = 'NewPassword123!';
+
+    const user = {
+      _id: userId,
+      name: 'Test Farmer',
+      email: 'farmer@example.com',
+      password: await hashPassword(currentPassword),
+      role: 'farmer' as const,
+      isEmailVerified: true,
+      status: 'active' as const,
+      passwordChangedAt: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    const updatedUser = {
+      ...user,
+      password: 'new-hashed-password',
+      passwordChangedAt: new Date(),
+    };
+
+    vi.mocked(AuthRepository.findUserByIdWithPassword).mockResolvedValue(user as never);
+
+    vi.mocked(AuthRepository.updatePassword).mockResolvedValue(updatedUser);
+
+    vi.mocked(SessionService.revokeAllSessions).mockResolvedValue(undefined);
+
+    await expect(
+      AuthService.changePassword({
+        userId,
+        currentPassword,
+        newPassword,
+      })
+    ).resolves.toBeUndefined();
+
+    expect(AuthRepository.findUserByIdWithPassword).toHaveBeenCalledWith(userId);
+
+    expect(AuthRepository.updatePassword).toHaveBeenCalledWith(userId, expect.any(String));
+
+    expect(SessionService.revokeAllSessions).toHaveBeenCalledWith(userId);
+  });
+});
