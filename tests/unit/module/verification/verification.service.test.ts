@@ -4,6 +4,8 @@ import mongoose from 'mongoose';
 import { VerificationService } from '../../../../src/app/modules/verification/verification.service.js';
 import { VerificationRepository } from '../../../../src/app/modules/verification/verification.repository.js';
 import { AuthRepository } from '../../../../src/app/modules/auth/auth.repository.js';
+import { SessionService } from '../../../../src/app/modules/session/session.service.js';
+import { hashPassword } from '../../../../src/app/shared/utils/argon.js';
 
 vi.mock('../../../../src/app/modules/verification/verification.repository.js', () => ({
   VerificationRepository: {
@@ -167,5 +169,147 @@ describe('VerificationService.verifyEmail', () => {
     expect(AuthRepository.updateVerificationStatus).toHaveBeenCalledWith(userId, true);
 
     expect(VerificationRepository.markAsUsed).toHaveBeenCalledWith(verificationId);
+  });
+});
+
+describe('VerificationService.resetPassword', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('should reject password reset when the token is invalid or expired', async () => {
+    vi.mocked(VerificationRepository.consumeToken).mockResolvedValue(null);
+
+    await expect(
+      VerificationService.resetPassword('invalid-token', 'NewPassword123!')
+    ).rejects.toMatchObject({
+      statusCode: 400,
+      message: 'Invalid or expired password reset token.',
+    });
+
+    expect(VerificationRepository.consumeToken).toHaveBeenCalled();
+
+    expect(AuthRepository.findUserByIdWithPassword).not.toHaveBeenCalled();
+    expect(AuthRepository.updatePassword).not.toHaveBeenCalled();
+    expect(SessionService.revokeAllSessions).not.toHaveBeenCalled();
+  });
+
+  it('should reject password reset when the user does not exist', async () => {
+    const userId = new mongoose.Types.ObjectId();
+
+    vi.mocked(VerificationRepository.consumeToken).mockResolvedValue({
+      _id: new mongoose.Types.ObjectId(),
+      userId,
+      type: 'password_reset',
+      tokenHash: 'hashed-token',
+      expiresAt: new Date(Date.now() + 60_000),
+      usedAt: new Date(),
+    } as never);
+
+    vi.mocked(AuthRepository.findUserByIdWithPassword).mockResolvedValue(null);
+
+    await expect(
+      VerificationService.resetPassword('valid-token', 'NewPassword123!')
+    ).rejects.toMatchObject({
+      statusCode: 404,
+      message: 'User not found.',
+    });
+
+    expect(AuthRepository.findUserByIdWithPassword).toHaveBeenCalledWith(userId);
+
+    expect(AuthRepository.updatePassword).not.toHaveBeenCalled();
+    expect(SessionService.revokeAllSessions).not.toHaveBeenCalled();
+  });
+
+  it('should reject password reset when the new password is the same as the current password', async () => {
+    const userId = new mongoose.Types.ObjectId();
+
+    const currentPassword = 'CurrentPassword123!';
+
+    const user = {
+      _id: userId,
+      name: 'Test Farmer',
+      email: 'farmer@example.com',
+      password: await hashPassword(currentPassword),
+      role: 'farmer' as const,
+      isEmailVerified: true,
+      status: 'active' as const,
+      passwordChangedAt: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    vi.mocked(VerificationRepository.consumeToken).mockResolvedValue({
+      _id: new mongoose.Types.ObjectId(),
+      userId,
+      type: 'password_reset',
+      tokenHash: 'hashed-token',
+      expiresAt: new Date(Date.now() + 60_000),
+      usedAt: new Date(),
+    } as never);
+
+    vi.mocked(AuthRepository.findUserByIdWithPassword).mockResolvedValue(user as never);
+
+    await expect(
+      VerificationService.resetPassword('valid-token', currentPassword)
+    ).rejects.toMatchObject({
+      statusCode: 400,
+      message: 'New password must be different from the current password.',
+    });
+
+    expect(AuthRepository.updatePassword).not.toHaveBeenCalled();
+    expect(SessionService.revokeAllSessions).not.toHaveBeenCalled();
+  });
+
+  it('should successfully reset the password and revoke all sessions', async () => {
+    const userId = new mongoose.Types.ObjectId();
+
+    const currentPassword = 'CurrentPassword123!';
+    const newPassword = 'NewPassword123!';
+
+    const user = {
+      _id: userId,
+      name: 'Test Farmer',
+      email: 'farmer@example.com',
+      password: await hashPassword(currentPassword),
+      role: 'farmer' as const,
+      isEmailVerified: true,
+      status: 'active' as const,
+      passwordChangedAt: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    const verificationId = new mongoose.Types.ObjectId();
+
+    vi.mocked(VerificationRepository.consumeToken).mockResolvedValue({
+      _id: verificationId,
+      userId,
+      type: 'password_reset',
+      tokenHash: 'hashed-token',
+      expiresAt: new Date(Date.now() + 60_000),
+      usedAt: new Date(),
+    } as never);
+
+    vi.mocked(AuthRepository.findUserByIdWithPassword).mockResolvedValue(user as never);
+
+    vi.mocked(AuthRepository.updatePassword).mockResolvedValue({
+      ...user,
+      password: 'new-hashed-password',
+    });
+
+    vi.mocked(SessionService.revokeAllSessions).mockResolvedValue(undefined);
+
+    await expect(
+      VerificationService.resetPassword('valid-token', newPassword)
+    ).resolves.toBeUndefined();
+
+    expect(VerificationRepository.consumeToken).toHaveBeenCalled();
+
+    expect(AuthRepository.findUserByIdWithPassword).toHaveBeenCalledWith(userId);
+
+    expect(AuthRepository.updatePassword).toHaveBeenCalledWith(userId, expect.any(String));
+
+    expect(SessionService.revokeAllSessions).toHaveBeenCalledWith(userId);
   });
 });
