@@ -1,7 +1,7 @@
 import type { Types } from 'mongoose';
 import { ProfileRepository } from './profile.repository.js';
 import { ApiError } from '../../shared/errors/ApiError.js';
-import type { Profile } from './profile.interface.js';
+import type { UpdateProfileBody } from './profile.interface.js';
 import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
 
 const getMyProfile = async (userId: Types.ObjectId) => {
@@ -14,7 +14,7 @@ const getMyProfile = async (userId: Types.ObjectId) => {
   return profile;
 };
 
-const updateMyProfile = async (userId: Types.ObjectId, payload: Partial<Profile>) => {
+const updateMyProfile = async (userId: Types.ObjectId, payload: UpdateProfileBody) => {
   const profile = await ProfileRepository.updateByUserId(userId, payload);
 
   if (!profile) {
