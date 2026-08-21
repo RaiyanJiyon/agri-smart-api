@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import mongoose from 'mongoose';
 
@@ -6,6 +7,7 @@ import { VerificationRepository } from '../../../../src/app/modules/verification
 import { AuthRepository } from '../../../../src/app/modules/auth/auth.repository.js';
 import { SessionService } from '../../../../src/app/modules/session/session.service.js';
 import { hashPassword } from '../../../../src/app/shared/utils/argon.js';
+import { createVerificationAndSendEmail } from '../../../../src/app/modules/verification/verification.utils.js';
 
 vi.mock('../../../../src/app/modules/verification/verification.repository.js', () => ({
   VerificationRepository: {
@@ -30,6 +32,10 @@ vi.mock('../../../../src/app/modules/session/session.service.js', () => ({
   SessionService: {
     revokeAllSessions: vi.fn(),
   },
+}));
+
+vi.mock('../../../../src/app/modules/verification/verification.utils.js', () => ({
+  createVerificationAndSendEmail: vi.fn(),
 }));
 
 describe('VerificationService.verifyEmail', () => {
@@ -311,5 +317,56 @@ describe('VerificationService.resetPassword', () => {
     expect(AuthRepository.updatePassword).toHaveBeenCalledWith(userId, expect.any(String));
 
     expect(SessionService.revokeAllSessions).toHaveBeenCalledWith(userId);
+  });
+});
+
+describe('VerificationService.sendVerificationEmail', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('should create and send an email verification email', async () => {
+    vi.mocked(createVerificationAndSendEmail).mockResolvedValue(undefined);
+
+    await expect(
+      VerificationService.sendVerificationEmail('farmer@example.com')
+    ).resolves.toBeUndefined();
+
+    expect(createVerificationAndSendEmail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        email: 'farmer@example.com',
+        type: 'email_verification',
+        subject: expect.any(String),
+        expiresIn: expect.any(String),
+        requireUnverifiedEmail: true,
+        buildUrl: expect.any(Function),
+        buildTemplate: expect.any(Function),
+      })
+    );
+  });
+});
+
+describe('VerificationService.sendPasswordResetEmail', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('should create and send a password reset email', async () => {
+    vi.mocked(createVerificationAndSendEmail).mockResolvedValue(undefined);
+
+    await expect(
+      VerificationService.sendPasswordResetEmail('farmer@example.com')
+    ).resolves.toBeUndefined();
+
+    expect(createVerificationAndSendEmail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        email: 'farmer@example.com',
+        type: 'password_reset',
+        subject: expect.any(String),
+        expiresIn: expect.any(String),
+        buildUrl: expect.any(Function),
+        buildTemplate: expect.any(Function),
+      })
+    );
   });
 });
