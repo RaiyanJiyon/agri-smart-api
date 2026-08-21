@@ -267,6 +267,50 @@ describe('VerificationService.resetPassword', () => {
     expect(SessionService.revokeAllSessions).not.toHaveBeenCalled();
   });
 
+  it('should reject password reset when updating the password fails', async () => {
+    const userId = new mongoose.Types.ObjectId();
+
+    const currentPassword = 'CurrentPassword123!';
+    const newPassword = 'NewPassword123!';
+
+    const user = {
+      _id: userId,
+      name: 'Test Farmer',
+      email: 'farmer@example.com',
+      password: await hashPassword(currentPassword),
+      role: 'farmer' as const,
+      isEmailVerified: true,
+      status: 'active' as const,
+      passwordChangedAt: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    vi.mocked(VerificationRepository.consumeToken).mockResolvedValue({
+      _id: new mongoose.Types.ObjectId(),
+      userId,
+      type: 'password_reset',
+      tokenHash: 'hashed-token',
+      expiresAt: new Date(Date.now() + 60_000),
+      usedAt: new Date(),
+    } as never);
+
+    vi.mocked(AuthRepository.findUserByIdWithPassword).mockResolvedValue(user as never);
+
+    vi.mocked(AuthRepository.updatePassword).mockResolvedValue(null);
+
+    await expect(
+      VerificationService.resetPassword('valid-token', newPassword)
+    ).rejects.toMatchObject({
+      statusCode: 500,
+      message: 'Failed to update password.',
+    });
+
+    expect(AuthRepository.updatePassword).toHaveBeenCalledWith(userId, expect.any(String));
+
+    expect(SessionService.revokeAllSessions).not.toHaveBeenCalled();
+  });
+
   it('should successfully reset the password and revoke all sessions', async () => {
     const userId = new mongoose.Types.ObjectId();
 

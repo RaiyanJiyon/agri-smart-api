@@ -95,7 +95,11 @@ const resetPassword = async (token: string, newPassword: string): Promise<void> 
 
   const hashedNewPassword = await hashPassword(newPassword);
 
-  await AuthRepository.updatePassword(user._id, hashedNewPassword);
+  const updatedUser = await AuthRepository.updatePassword(user._id, hashedNewPassword);
+
+  if (!updatedUser) {
+    throw new ApiError(HTTP_STATUS.INTERNAL_SERVER_ERROR, 'Failed to update password.');
+  }
 
   await SessionService.revokeAllSessions(user._id);
 };
