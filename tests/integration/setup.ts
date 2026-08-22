@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 
-let mongoServer: MongoMemoryServer;
+let mongoServer: MongoMemoryServer | undefined;
 
 export const setupTestDatabase = async (): Promise<void> => {
   mongoServer = await MongoMemoryServer.create();
@@ -11,17 +11,18 @@ export const setupTestDatabase = async (): Promise<void> => {
   await mongoose.connect(mongoUri);
 };
 
+export const clearTestDatabase = async (): Promise<void> => {
+  const collections = mongoose.connection.collections;
+
+  await Promise.all(Object.values(collections).map((collection) => collection.deleteMany({})));
+};
+
 export const teardownTestDatabase = async (): Promise<void> => {
   await mongoose.connection.dropDatabase();
   await mongoose.connection.close();
 
-  await mongoServer.stop();
-};
-
-export const clearTestDatabase = async (): Promise<void> => {
-  const collections = mongoose.connection.collections;
-
-  for (const collection of Object.values(collections)) {
-    await collection.deleteMany({});
+  if (mongoServer) {
+    await mongoServer.stop();
+    mongoServer = undefined;
   }
 };
