@@ -1,10 +1,15 @@
 import mongoose from 'mongoose';
-import { MongoMemoryServer } from 'mongodb-memory-server';
+import { MongoMemoryReplSet } from 'mongodb-memory-server';
 
-let mongoServer: MongoMemoryServer | undefined;
+let mongoServer: MongoMemoryReplSet | undefined;
 
 export const setupTestDatabase = async (): Promise<void> => {
-  mongoServer = await MongoMemoryServer.create();
+  mongoServer = await MongoMemoryReplSet.create({
+    replSet: {
+      count: 1,
+      storageEngine: 'wiredTiger',
+    }
+  });
 
   const mongoUri = mongoServer.getUri();
 

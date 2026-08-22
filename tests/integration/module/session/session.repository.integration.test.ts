@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
-import { clearTestDatabase, setupTestDatabase, teardownTestDatabase } from '../../setup.js';
+import { clearTestDatabase, setupTestDatabase, teardownTestDatabase } from '../../../setup.js';
 
 import { SessionRepository } from '../../../../src/app/modules/session/session.repository.js';
 
