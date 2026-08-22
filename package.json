@@ -14,7 +14,10 @@
     "test": "node --env-file=.env.test ./node_modules/vitest/vitest.mjs",
     "test:run": "node --env-file=.env.test ./node_modules/vitest/vitest.mjs run",
     "test:watch": "node --env-file=.env.test ./node_modules/vitest/vitest.mjs --watch",
-    "test:coverage": "node --env-file=.env.test ./node_modules/vitest/vitest.mjs run --coverage"
+    "test:coverage": "node --env-file=.env.test ./node_modules/vitest/vitest.mjs run --coverage",
+    "test:unit": "node --env-file=.env.test ./node_modules/vitest/vitest.mjs run tests/unit",
+    "test:integration": "node --env-file=.env.test ./node_modules/vitest/vitest.mjs run tests/integration",
+    "test:e2e": "node --env-file=.env.test ./node_modules/vitest/vitest.mjs run tests/e2e"
   },
   "keywords": [
     "api",
