@@ -10,7 +10,7 @@ const getActiveSessionFilter = () => ({
   },
 });
 
-const create = async (payload: Omit<Session, 'revokedAt'>): Promise<Session> => {
+const create = async (payload: Omit<Session, 'revokedAt'>): Promise<HydratedDocument<Session>> => {
   return SessionModel.create(payload);
 };
 
@@ -42,7 +42,7 @@ const findActiveByRefreshTokenHash = async (
  * * Will be used for the "Active Devices" dashboard where users
  * * can view all currently logged-in browsers/devices.
  */
-const findAllByUserId = async (userId: Types.ObjectId): Promise<Session[]> => {
+const findAllByUserId = async (userId: Types.ObjectId): Promise<HydratedDocument<Session>[]> => {
   return SessionModel.find({
     userId,
   }).sort({
@@ -55,7 +55,7 @@ const findAllByUserId = async (userId: Types.ObjectId): Promise<Session[]> => {
  * * Will be used for the "Active Devices" dashboard where users
  * * can view and manage all currently logged-in browsers or devices.
  */
-const findActiveByUserId = async (userId: Types.ObjectId): Promise<Session[]> => {
+const findActiveByUserId = async (userId: Types.ObjectId): Promise<HydratedDocument<Session>[]> => {
   return SessionModel.find({
     userId,
     ...getActiveSessionFilter(),
@@ -64,7 +64,7 @@ const findActiveByUserId = async (userId: Types.ObjectId): Promise<Session[]> =>
   });
 };
 
-const revoke = async (sessionId: Types.ObjectId): Promise<Session | null> => {
+const revoke = async (sessionId: Types.ObjectId): Promise<HydratedDocument<Session> | null> => {
   return SessionModel.findByIdAndUpdate(
     {
       _id: sessionId,
