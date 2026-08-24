@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { FarmRepository } from '../../../../src/app/modules/farm/farm.repository.js';
 import { FarmService } from '../../../../src/app/modules/farm/farm.service.js';
+import { createMockFarm, createMockFarmList } from '../../../fixtures/index.js';
 
 vi.mock('../../../../src/app/modules/farm/farm.repository.js', () => ({
   FarmRepository: {
@@ -29,13 +30,7 @@ describe('FarmService', () => {
         areaUnit: 'acre' as const,
       };
 
-      const createdFarm = {
-        _id: new mongoose.Types.ObjectId(),
-        userId,
-        ...payload,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
+      const createdFarm = createMockFarm({ userId, ...payload });
 
       vi.mocked(FarmRepository.create).mockResolvedValue(createdFarm);
 
@@ -53,25 +48,7 @@ describe('FarmService', () => {
   describe('getMyFarms', () => {
     it('should return all farms belonging to the user', async () => {
       const userId = new mongoose.Types.ObjectId();
-
-      const farms = [
-        {
-          _id: new mongoose.Types.ObjectId(),
-          userId,
-          name: 'Farm One',
-          location: 'Rajshahi',
-          area: 10,
-          areaUnit: 'acre' as const,
-        },
-        {
-          _id: new mongoose.Types.ObjectId(),
-          userId,
-          name: 'Farm Two',
-          location: 'Bogura',
-          area: 5,
-          areaUnit: 'hectare' as const,
-        },
-      ];
+      const farms = createMockFarmList(2, { userId });
 
       vi.mocked(FarmRepository.findAllByUserId).mockResolvedValue(farms);
 
@@ -100,14 +77,7 @@ describe('FarmService', () => {
       const userId = new mongoose.Types.ObjectId();
       const farmId = new mongoose.Types.ObjectId();
 
-      const farm = {
-        _id: farmId,
-        userId,
-        name: 'Green Valley Farm',
-        location: 'Rajshahi',
-        area: 10,
-        areaUnit: 'acre' as const,
-      };
+      const farm = createMockFarm({ _id: farmId, userId });
 
       vi.mocked(FarmRepository.findByIdAndUserId).mockResolvedValue(farm);
 
@@ -143,14 +113,7 @@ describe('FarmService', () => {
         area: 15,
       };
 
-      const updatedFarm = {
-        _id: farmId,
-        userId,
-        name: 'Updated Farm',
-        location: 'Rajshahi',
-        area: 15,
-        areaUnit: 'acre' as const,
-      };
+      const updatedFarm = createMockFarm({ _id: farmId, userId, ...payload });
 
       vi.mocked(FarmRepository.updateByIdAndUserId).mockResolvedValue(updatedFarm);
 
@@ -185,14 +148,7 @@ describe('FarmService', () => {
       const userId = new mongoose.Types.ObjectId();
       const farmId = new mongoose.Types.ObjectId();
 
-      const deletedFarm = {
-        _id: farmId,
-        userId,
-        name: 'Farm',
-        location: 'Rajshahi',
-        area: 10,
-        areaUnit: 'acre' as const,
-      };
+      const deletedFarm = createMockFarm({ _id: farmId, userId });
 
       vi.mocked(FarmRepository.deleteByIdAndUserId).mockResolvedValue(
         deletedFarm as unknown as never
