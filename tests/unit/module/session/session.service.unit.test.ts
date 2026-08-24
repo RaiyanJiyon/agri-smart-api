@@ -43,7 +43,7 @@ describe('SessionService.createSession', () => {
       updatedAt: new Date(),
     };
 
-    vi.mocked(SessionRepository.create).mockResolvedValue(createdSession);
+    vi.mocked(SessionRepository.create).mockResolvedValue(createdSession as unknown as never);
 
     const result = await SessionService.createSession({
       userId,
@@ -88,7 +88,7 @@ describe('SessionService.createSession', () => {
       updatedAt: new Date(),
     };
 
-    vi.mocked(SessionRepository.create).mockResolvedValue(createdSession);
+    vi.mocked(SessionRepository.create).mockResolvedValue(createdSession as unknown as never);
 
     const result = await SessionService.createSession({
       userId,
@@ -172,7 +172,7 @@ describe('SessionService.revokeSession', () => {
       revokedAt: new Date(),
     };
 
-    vi.mocked(SessionRepository.revoke).mockResolvedValue(revokedSession);
+    vi.mocked(SessionRepository.revoke).mockResolvedValue(revokedSession as unknown as never);
 
     const result = await SessionService.revokeSession(sessionId);
 
