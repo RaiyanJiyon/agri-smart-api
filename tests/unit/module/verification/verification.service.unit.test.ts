@@ -8,6 +8,7 @@ import { AuthRepository } from '../../../../src/app/modules/auth/auth.repository
 import { SessionService } from '../../../../src/app/modules/session/session.service.js';
 import { hashPassword } from '../../../../src/app/shared/utils/argon.js';
 import { createVerificationAndSendEmail } from '../../../../src/app/modules/verification/verification.utils.js';
+import { createMockUser } from '../../../fixtures/index.js';
 
 vi.mock('../../../../src/app/modules/verification/verification.repository.js', () => ({
   VerificationRepository: {
@@ -96,17 +97,7 @@ describe('VerificationService.verifyEmail', () => {
       usedAt: null,
     };
 
-    const user = {
-      _id: userId,
-      name: 'Test Farmer',
-      email: 'farmer@example.com',
-      isEmailVerified: true,
-      role: 'farmer' as const,
-      status: 'active' as const,
-      passwordChangedAt: new Date(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+    const user = createMockUser({ _id: userId, isEmailVerified: true });
 
     vi.mocked(VerificationRepository.findActiveVerificationByHash).mockResolvedValue(
       verification as never

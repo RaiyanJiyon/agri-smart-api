@@ -5,6 +5,7 @@ import type { Request, Response, NextFunction } from 'express';
 import { auth } from '../../../../src/app/shared/middleware/auth.js';
 import { JwtUtil } from '../../../../src/app/shared/utils/jwt.js';
 import { ApiError } from '../../../../src/app/shared/errors/ApiError.js';
+import { createMockJwtPayload } from '../../../fixtures/index.js';
 
 // ─── Mock JwtUtil so no real JWT secrets or signing is required ───────────────
 
@@ -43,17 +44,8 @@ const makeMockNext = (): NextFunction => vi.fn() as NextFunction;
 
 // ─── Shared decoded payload fixture ───────────────────────────────────────────
 
-const DECODED_FARMER = {
-  userId: 'user-id-123',
-  email: 'farmer@example.com',
-  role: 'farmer' as const,
-};
-
-const DECODED_ADMIN = {
-  userId: 'admin-id-456',
-  email: 'admin@example.com',
-  role: 'admin' as const,
-};
+const DECODED_FARMER = createMockJwtPayload({ userId: 'user-id-123', role: 'farmer' });
+const DECODED_ADMIN = createMockJwtPayload({ userId: 'admin-id-456', email: 'admin@example.com', role: 'admin' });
 
 // ─── Test Suite ───────────────────────────────────────────────────────────────
 

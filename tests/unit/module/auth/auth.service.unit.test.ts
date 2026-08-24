@@ -7,6 +7,7 @@ import { SessionService } from '../../../../src/app/modules/session/session.serv
 import { JwtUtil } from '../../../../src/app/shared/utils/jwt.js';
 import mongoose from 'mongoose';
 import { hashPassword } from '../../../../src/app/shared/utils/argon.js';
+import { createMockUser } from '../../../fixtures/index.js';
 
 vi.mock('../../../../src/app/modules/auth/auth.repository.js', () => ({
   AuthRepository: {
@@ -97,18 +98,7 @@ describe('AuthService.login', () => {
   });
 
   it('should reject login when the user password is missing', async () => {
-    const user = {
-      _id: new mongoose.Types.ObjectId(),
-      name: 'Test Farmer',
-      email: 'farmer@example.com',
-      password: '',
-      role: 'farmer' as const,
-      isEmailVerified: true,
-      status: 'active' as const,
-      passwordChangedAt: new Date(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+    const user = createMockUser({ password: '' });
 
     vi.mocked(AuthRepository.findUserByEmailWithPassword).mockResolvedValue(user as never);
 
@@ -133,18 +123,7 @@ describe('AuthService.login', () => {
     const password = 'CorrectPassword123!';
     const wrongPassword = 'WrongPassword123!';
 
-    const user = {
-      _id: new mongoose.Types.ObjectId(),
-      name: 'Test Farmer',
-      email: 'farmer@example.com',
-      password: await hashPassword(password),
-      role: 'farmer' as const,
-      isEmailVerified: true,
-      status: 'active' as const,
-      passwordChangedAt: new Date(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+    const user = createMockUser({ password: await hashPassword(password) });
 
     vi.mocked(AuthRepository.findUserByEmailWithPassword).mockResolvedValue(user as never);
 
@@ -168,18 +147,11 @@ describe('AuthService.login', () => {
   it('should reject login when the email is not verified', async () => {
     const password = 'CorrectPassword123!';
 
-    const user = {
-      _id: new mongoose.Types.ObjectId(),
-      name: 'Test Farmer',
+    const user = createMockUser({
       email: 'unverified@example.com',
       password: await hashPassword(password),
-      role: 'farmer' as const,
       isEmailVerified: false,
-      status: 'active' as const,
-      passwordChangedAt: new Date(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+    });
 
     vi.mocked(AuthRepository.findUserByEmailWithPassword).mockResolvedValue(user as never);
 
@@ -203,18 +175,12 @@ describe('AuthService.login', () => {
   it('should reject login when the account is inactive', async () => {
     const password = 'CorrectPassword123!';
 
-    const user = {
-      _id: new mongoose.Types.ObjectId(),
+    const user = createMockUser({
       name: 'Inactive Farmer',
       email: 'inactive@example.com',
       password: await hashPassword(password),
-      role: 'farmer' as const,
-      isEmailVerified: true,
-      status: 'inactive' as const,
-      passwordChangedAt: new Date(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+      status: 'inactive',
+    });
 
     vi.mocked(AuthRepository.findUserByEmailWithPassword).mockResolvedValue(user as never);
 
@@ -236,18 +202,12 @@ describe('AuthService.login', () => {
   it('should reject login when the account is blocked', async () => {
     const password = 'CorrectPassword123!';
 
-    const user = {
-      _id: new mongoose.Types.ObjectId(),
+    const user = createMockUser({
       name: 'Blocked Farmer',
       email: 'blocked@example.com',
       password: await hashPassword(password),
-      role: 'farmer' as const,
-      isEmailVerified: true,
-      status: 'blocked' as const,
-      passwordChangedAt: new Date(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+      status: 'blocked',
+    });
 
     vi.mocked(AuthRepository.findUserByEmailWithPassword).mockResolvedValue(user as never);
 

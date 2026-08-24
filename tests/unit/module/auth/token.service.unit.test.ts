@@ -5,6 +5,7 @@ import { TokenService } from '../../../../src/app/modules/auth/token.service.js'
 import { AuthRepository } from '../../../../src/app/modules/auth/auth.repository.js';
 import { SessionService } from '../../../../src/app/modules/session/session.service.js';
 import { JwtUtil } from '../../../../src/app/shared/utils/jwt.js';
+import { createMockUser, createMockSession, createMockJwtPayload } from '../../../fixtures/index.js';
 
 vi.mock('../../../../src/app/modules/auth/auth.repository.js', () => ({
   AuthRepository: {
@@ -51,14 +52,11 @@ describe('TokenService.refreshTokens', () => {
 
   it('should reject when no active session exists for the refresh token', async () => {
     const refreshToken = 'refresh-token';
-
     const userId = new mongoose.Types.ObjectId();
 
-    vi.mocked(JwtUtil.verifyRefreshToken).mockReturnValue({
-      userId: userId.toString(),
-      email: 'farmer@example.com',
-      role: 'farmer',
-    });
+    vi.mocked(JwtUtil.verifyRefreshToken).mockReturnValue(
+      createMockJwtPayload({ userId: userId.toString() })
+    );
 
     vi.mocked(SessionService.findActiveSession).mockResolvedValue(null);
 
@@ -80,23 +78,13 @@ describe('TokenService.refreshTokens', () => {
     const tokenUserId = new mongoose.Types.ObjectId();
     const sessionUserId = new mongoose.Types.ObjectId();
 
-    vi.mocked(JwtUtil.verifyRefreshToken).mockReturnValue({
-      userId: tokenUserId.toString(),
-      email: 'farmer@example.com',
-      role: 'farmer',
-    });
+    vi.mocked(JwtUtil.verifyRefreshToken).mockReturnValue(
+      createMockJwtPayload({ userId: tokenUserId.toString() })
+    );
 
-    vi.mocked(SessionService.findActiveSession).mockResolvedValue({
-      _id: new mongoose.Types.ObjectId(),
-      userId: sessionUserId,
-      refreshTokenHash: 'hashed-refresh-token',
-      ipAddress: '127.0.0.1',
-      userAgent: 'Vitest',
-      expiresAt: new Date(Date.now() + 60_000),
-      revokedAt: null,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    } as never);
+    vi.mocked(SessionService.findActiveSession).mockResolvedValue(
+      createMockSession({ userId: sessionUserId }) as never
+    );
 
     await expect(TokenService.refreshTokens(refreshToken)).rejects.toMatchObject({
       statusCode: 401,
@@ -112,23 +100,13 @@ describe('TokenService.refreshTokens', () => {
     const userId = new mongoose.Types.ObjectId();
     const sessionId = new mongoose.Types.ObjectId();
 
-    vi.mocked(JwtUtil.verifyRefreshToken).mockReturnValue({
-      userId: userId.toString(),
-      email: 'farmer@example.com',
-      role: 'farmer',
-    });
+    vi.mocked(JwtUtil.verifyRefreshToken).mockReturnValue(
+      createMockJwtPayload({ userId: userId.toString() })
+    );
 
-    vi.mocked(SessionService.findActiveSession).mockResolvedValue({
-      _id: sessionId,
-      userId,
-      refreshTokenHash: 'hashed-refresh-token',
-      ipAddress: '127.0.0.1',
-      userAgent: 'Vitest',
-      expiresAt: new Date(Date.now() + 60_000),
-      revokedAt: null,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    } as never);
+    vi.mocked(SessionService.findActiveSession).mockResolvedValue(
+      createMockSession({ _id: sessionId, userId }) as never
+    );
 
     vi.mocked(AuthRepository.findUserById).mockResolvedValue(null);
 
@@ -146,36 +124,15 @@ describe('TokenService.refreshTokens', () => {
     const userId = new mongoose.Types.ObjectId();
     const sessionId = new mongoose.Types.ObjectId();
 
-    const user = {
-      _id: userId,
-      name: 'Test Farmer',
-      email: 'farmer@example.com',
-      password: 'hashed-password',
-      role: 'farmer' as const,
-      isEmailVerified: false,
-      status: 'active' as const,
-      passwordChangedAt: new Date(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+    const user = createMockUser({ _id: userId, isEmailVerified: false });
 
-    vi.mocked(JwtUtil.verifyRefreshToken).mockReturnValue({
-      userId: userId.toString(),
-      email: user.email,
-      role: user.role,
-    });
+    vi.mocked(JwtUtil.verifyRefreshToken).mockReturnValue(
+      createMockJwtPayload({ userId: userId.toString(), email: user.email, role: user.role })
+    );
 
-    vi.mocked(SessionService.findActiveSession).mockResolvedValue({
-      _id: sessionId,
-      userId,
-      refreshTokenHash: 'hashed-refresh-token',
-      ipAddress: '127.0.0.1',
-      userAgent: 'Vitest',
-      expiresAt: new Date(Date.now() + 60_000),
-      revokedAt: null,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    } as never);
+    vi.mocked(SessionService.findActiveSession).mockResolvedValue(
+      createMockSession({ _id: sessionId, userId }) as never
+    );
 
     vi.mocked(AuthRepository.findUserById).mockResolvedValue(user as never);
 
@@ -192,36 +149,20 @@ describe('TokenService.refreshTokens', () => {
     const userId = new mongoose.Types.ObjectId();
     const sessionId = new mongoose.Types.ObjectId();
 
-    const user = {
+    const user = createMockUser({
       _id: userId,
       name: 'Inactive Farmer',
       email: 'inactive@example.com',
-      password: 'hashed-password',
-      role: 'farmer' as const,
-      isEmailVerified: true,
-      status: 'inactive' as const,
-      passwordChangedAt: new Date(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-
-    vi.mocked(JwtUtil.verifyRefreshToken).mockReturnValue({
-      userId: userId.toString(),
-      email: user.email,
-      role: user.role,
+      status: 'inactive',
     });
 
-    vi.mocked(SessionService.findActiveSession).mockResolvedValue({
-      _id: sessionId,
-      userId,
-      refreshTokenHash: 'hashed-refresh-token',
-      ipAddress: '127.0.0.1',
-      userAgent: 'Vitest',
-      expiresAt: new Date(Date.now() + 60_000),
-      revokedAt: null,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    } as never);
+    vi.mocked(JwtUtil.verifyRefreshToken).mockReturnValue(
+      createMockJwtPayload({ userId: userId.toString(), email: user.email, role: user.role })
+    );
+
+    vi.mocked(SessionService.findActiveSession).mockResolvedValue(
+      createMockSession({ _id: sessionId, userId }) as never
+    );
 
     vi.mocked(AuthRepository.findUserById).mockResolvedValue(user as never);
 
