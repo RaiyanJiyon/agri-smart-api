@@ -96,7 +96,41 @@ describe('FarmService', () => {
   });
 
   describe('getMyFarm', () => {
-    // Add your test cases for getMyFarm here
+    it('should return the farm when it belongs to the user', async () => {
+      const userId = new mongoose.Types.ObjectId();
+      const farmId = new mongoose.Types.ObjectId();
+
+      const farm = {
+        _id: farmId,
+        userId,
+        name: 'Green Valley Farm',
+        location: 'Rajshahi',
+        area: 10,
+        areaUnit: 'acre' as const,
+      };
+
+      vi.mocked(FarmRepository.findByIdAndUserId).mockResolvedValue(farm);
+
+      const result = await FarmService.getMyFarm(userId, farmId);
+
+      expect(result).toEqual(farm);
+
+      expect(FarmRepository.findByIdAndUserId).toHaveBeenCalledWith(farmId, userId);
+    });
+
+    it('should throw NOT_FOUND when the farm does not exist or does not belong to the user', async () => {
+      const userId = new mongoose.Types.ObjectId();
+      const farmId = new mongoose.Types.ObjectId();
+
+      vi.mocked(FarmRepository.findByIdAndUserId).mockResolvedValue(null);
+
+      await expect(FarmService.getMyFarm(userId, farmId)).rejects.toMatchObject({
+        statusCode: 404,
+        message: 'Farm not found.',
+      });
+
+      expect(FarmRepository.findByIdAndUserId).toHaveBeenCalledWith(farmId, userId);
+    });
   });
 
   describe('updateMyFarm', () => {
