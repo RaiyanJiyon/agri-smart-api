@@ -181,6 +181,40 @@ describe('FarmService', () => {
   });
 
   describe('deleteMyFarm', () => {
-    // Add your test cases for deleteMyFarm here
+    it('should delete the farm when it belongs to the user', async () => {
+      const userId = new mongoose.Types.ObjectId();
+      const farmId = new mongoose.Types.ObjectId();
+
+      const deletedFarm = {
+        _id: farmId,
+        userId,
+        name: 'Farm',
+        location: 'Rajshahi',
+        area: 10,
+        areaUnit: 'acre' as const,
+      };
+
+      vi.mocked(FarmRepository.deleteByIdAndUserId).mockResolvedValue(
+        deletedFarm as unknown as never
+      );
+
+      await expect(FarmService.deleteMyFarm(userId, farmId)).resolves.toBeUndefined();
+
+      expect(FarmRepository.deleteByIdAndUserId).toHaveBeenCalledWith(farmId, userId);
+    });
+
+    it('should throw NOT_FOUND when the farm does not exist or does not belong to the user', async () => {
+      const userId = new mongoose.Types.ObjectId();
+      const farmId = new mongoose.Types.ObjectId();
+
+      vi.mocked(FarmRepository.deleteByIdAndUserId).mockResolvedValue(null);
+
+      await expect(FarmService.deleteMyFarm(userId, farmId)).rejects.toMatchObject({
+        statusCode: 404,
+        message: 'Farm not found.',
+      });
+
+      expect(FarmRepository.deleteByIdAndUserId).toHaveBeenCalledWith(farmId, userId);
+    });
   });
 });
