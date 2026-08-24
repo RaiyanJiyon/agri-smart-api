@@ -1,17 +1,15 @@
 import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import app from '../../src/app.js';
-import mongoose from 'mongoose';
+import { setupTestDatabase, teardownTestDatabase } from '../setup.js';
 
 describe('Health API', () => {
   beforeAll(async () => {
-    if (process.env.DB_URL) {
-      await mongoose.connect(process.env.DB_URL);
-    }
+    await setupTestDatabase();
   });
 
   afterAll(async () => {
-    await mongoose.connection.close();
+    await teardownTestDatabase();
   });
 
   it('should return a successful health response', async () => {
