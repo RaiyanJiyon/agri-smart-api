@@ -5,7 +5,7 @@ import { FarmRepository } from '../../../../src/app/modules/farm/farm.repository
 import { FarmModel } from '../../../../src/app/modules/farm/farm.model.js';
 import { FARM_AREA_UNITS } from '../../../../src/app/modules/farm/farm.constant.js';
 import { clearTestDatabase, setupTestDatabase, teardownTestDatabase } from '../../../setup.js';
-import { Farm } from '../../../../src/app/modules/farm/farm.interface.js';
+import type { Farm } from '../../../../src/app/modules/farm/farm.interface.js';
 
 describe('FarmRepository integration', () => {
   let userId: mongoose.Types.ObjectId;
