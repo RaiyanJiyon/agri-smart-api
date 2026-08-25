@@ -5,6 +5,7 @@ import { getUserObjectId } from '../../shared/utils/request.utils.js';
 import { DiseaseDetectionService } from './disease-detection.service.js';
 import { sendResponse } from '../../shared/utils/index.js';
 import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
+import { ApiError } from '../../shared/errors/index.js';
 import { getDiseaseReportObjectId } from './disease-detection.utils.js';
 
 const createDiseaseDetection = catchAsync(
@@ -16,7 +17,7 @@ const createDiseaseDetection = catchAsync(
     if (!file) {
       // The service also checks this, but doing it here gives the
       // controller a clear request-level failure.
-      throw new Error('Disease image is required.');
+      throw new ApiError(HTTP_STATUS.BAD_REQUEST, 'Disease image is required.');
     }
 
     const data = await DiseaseDetectionService.createDiseaseDetection(userId, req.body, file);
