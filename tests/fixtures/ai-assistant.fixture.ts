@@ -17,13 +17,11 @@ export const createMockConversation = (
 ): MockConversation => {
   const conversationId = overrides._id ?? new mongoose.Types.ObjectId();
   const userId = overrides.userId ?? new mongoose.Types.ObjectId();
-  const profileId = overrides.profileId ?? new mongoose.Types.ObjectId();
   const defaultDate = new Date();
 
-  return {
+  const base: MockConversation = {
     _id: conversationId,
     userId,
-    profileId,
     title: 'Soil pH Consultation',
     status: CONVERSATION_STATUS.ACTIVE,
     lastActivityAt: defaultDate,
@@ -31,6 +29,8 @@ export const createMockConversation = (
     updatedAt: defaultDate,
     ...overrides,
   };
+
+  return base;
 };
 
 export const createMockConversationList = (
