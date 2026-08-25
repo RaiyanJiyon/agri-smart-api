@@ -3,3 +3,4 @@ export * from './session.fixture.js';
 export * from './profile.fixture.js';
 export * from './jwt.fixture.js';
 export * from './farm.fixture.js';
+export * from './crop-recommendation.fixture.js';
