@@ -8,7 +8,17 @@ export default defineConfig({
     restoreMocks: true,
     exclude: ['dist/**', 'node_modules/**'],
     coverage: {
-      reporter: ['text', 'html'],
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      include: ['src/app/**/*.ts'],
+      exclude: [
+        'src/app/**/*.interface.ts',
+        'src/app/**/*.constant.ts',
+        'src/app/**/*.d.ts',
+        'src/app/**/index.ts',
+        'src/app/shared/integrations/**',
+        'src/app/shared/types/**',
+      ],
     },
   },
 });
