@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     // File Layout
-    "rootDir": ".",
+    "rootDir": "./src",
     "outDir": "./dist",
 
     // Environment Settings
@@ -25,8 +25,6 @@
     "skipLibCheck": true
   },
   "include": [
-    "src/**/*",
-    "tests/**/*",
-    "vitest.config.ts"
+    "src"
   ]
 }

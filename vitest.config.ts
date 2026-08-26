@@ -6,6 +6,7 @@ export default defineConfig({
     globals: true,
     clearMocks: true,
     restoreMocks: true,
+    exclude: ['dist/**', 'node_modules/**'],
     coverage: {
       reporter: ['text', 'html'],
     },
