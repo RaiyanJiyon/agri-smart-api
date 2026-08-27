@@ -18,6 +18,7 @@ export default defineConfig({
         'src/app/**/index.ts',
         'src/app/shared/integrations/**',
         'src/app/shared/types/**',
+        'src/app/shared/validators/**',
       ],
     },
   },
