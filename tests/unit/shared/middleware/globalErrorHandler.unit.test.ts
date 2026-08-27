@@ -183,6 +183,27 @@ describe('globalErrorHandler middleware', () => {
     );
   });
 
+  it('should handle Mongoose CastError without path property', () => {
+    const castErr = {
+      name: 'CastError',
+    };
+
+    globalErrorHandler(castErr, mockReq as Request, mockRes as Response, nextFn);
+
+    expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.BAD_REQUEST);
+    expect(mockRes.json).toHaveBeenCalledWith(
+      expect.objectContaining({
+        message: "Invalid value for field 'field'",
+        errorSources: [
+          {
+            path: 'field',
+            message: 'Invalid field format. Expected a valid identifier.',
+          },
+        ],
+      })
+    );
+  });
+
   it('should handle non-operational internal server errors', () => {
     const unexpectedErr = new Error('Database connection failed');
 
