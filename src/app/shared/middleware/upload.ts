@@ -6,7 +6,7 @@ const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
 const storage = multer.memoryStorage();
 
-const fileFilter: multer.Options['fileFilter'] = (_req, file, callback) => {
+export const fileFilter: multer.Options['fileFilter'] = (_req, file, callback) => {
   if (!ALLOWED_IMAGE_TYPES.includes(file.mimetype)) {
     callback(new Error('Invalid image type. Only JPEG, PNG, and WebP images are allowed.'));
     return;
