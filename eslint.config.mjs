@@ -1,12 +1,13 @@
 // @ts-check
 import js from '@eslint/js';
+import { defineConfig } from 'eslint/config';
 import tseslint from 'typescript-eslint';
-import eslintConfigPrettier from 'eslint-config-prettier'
+import eslintConfigPrettier from 'eslint-config-prettier';
 
-export default tseslint.config(
+export default defineConfig(
   // Ignore build output and dependencies
   {
-    ignores: ['dist/', 'node_modules/', 'eslint.config.mjs'],
+    ignores: ['dist/', 'node_modules/', 'coverage/', 'eslint.config.mjs'],
   },
   // Base JavaScript rules
   js.configs.recommended,
