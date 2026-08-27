@@ -189,6 +189,30 @@ describe('DiseaseDetectionService', () => {
 
       expect(CloudinaryService.deleteImage).toHaveBeenCalledWith('disease-detection/sample');
     });
+
+    it('should silently swallow Cloudinary delete failure during creation error cleanup', async () => {
+      const userId = new mongoose.Types.ObjectId();
+      const profileId = new mongoose.Types.ObjectId();
+      const profile = createMockProfile({ _id: profileId, userId });
+
+      const uploadedImage = {
+        url: 'https://cloudinary.com/sample.jpg',
+        publicId: 'disease-detection/sample',
+      };
+
+      vi.mocked(ProfileRepository.findByUserId).mockResolvedValue(profile);
+      vi.mocked(CloudinaryService.uploadImage).mockResolvedValue(uploadedImage);
+      vi.mocked(DiseaseDetectionRepository.create).mockRejectedValue(
+        new Error('Database Failure')
+      );
+      vi.mocked(CloudinaryService.deleteImage).mockRejectedValue(
+        new Error('Cloudinary Delete Error')
+      );
+
+      await expect(
+        DiseaseDetectionService.createDiseaseDetection(userId, { profileId }, mockFile)
+      ).rejects.toThrow('Database Failure');
+    });
   });
 
   describe('getMyReports', () => {
