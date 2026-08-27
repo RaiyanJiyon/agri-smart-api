@@ -1,7 +1,11 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { logger } from '../../../../src/app/shared/utils/logger.js';
 
 describe('logger utility', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it('should execute info, warn, error, and debug log methods without throwing', () => {
     const noop = () => {
       // Intentionally empty for mock implementation
@@ -21,10 +25,16 @@ describe('logger utility', () => {
     expect(warnSpy).toHaveBeenCalledWith('Test warn message');
     expect(errorSpy).toHaveBeenCalledWith('Test error message', expect.any(Error));
     expect(debugSpy).toHaveBeenCalledWith('Test debug message');
+  });
 
-    infoSpy.mockRestore();
-    warnSpy.mockRestore();
-    errorSpy.mockRestore();
-    debugSpy.mockRestore();
+  it('should call underlying logger methods with correct arguments (no meta)', () => {
+    const noop = () => {
+      // Intentionally empty for mock implementation
+    };
+    const infoSpy = vi.spyOn(logger, 'info').mockImplementation(noop);
+
+    logger.info('Info without meta');
+
+    expect(infoSpy).toHaveBeenCalledWith('Info without meta');
   });
 });
