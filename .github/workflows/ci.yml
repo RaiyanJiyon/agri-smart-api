@@ -58,6 +58,9 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Create .env.test
+        run: cp .env.test.example .env.test
+
       - name: Run Unit Tests with Coverage
         run: pnpm test:coverage
 
