@@ -1,5 +1,6 @@
 allowBuilds:
   '@google/genai': true
+  '@scarf/scarf': true
   argon2: true
   esbuild: true
   mongodb-memory-server: true
