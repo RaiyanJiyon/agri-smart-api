@@ -71,7 +71,7 @@ jobs:
       - name: Create .env.test
         run: cp .env.test.example .env.test
 
-      - name: Run Unit Tests with Coverage
+      - name: Run Unit Tests with Coverage (Includes OpenAPI/Swagger Specs)
         run: pnpm test:coverage
 
       - name: Upload Coverage Artifact
@@ -80,6 +80,24 @@ jobs:
           name: code-coverage-report
           path: coverage/
           retention-days: 14
+
+  docker-build:
+    name: Docker Image Build Verification
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Production Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: false
+          tags: agri-smart-api:test
 
   security-audit:
     name: Security Audit
