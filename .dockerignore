@@ -1,0 +1,14 @@
+node_modules
+dist
+coverage
+.git
+.github
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+npm-debug.log
+pnpm-debug.log
+*.md
+tests
