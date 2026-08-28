@@ -64,6 +64,16 @@ Example:
 /api/v1
 ```
 
+### 3.1.1 Interactive OpenAPI Specification & Swagger UI
+
+The platform provides a live interactive OpenAPI 3.0.3 specification mounted at:
+
+```text
+/api/v1/docs
+```
+
+Developer teams and API consumers can inspect schemas, parameters, and execute live API requests directly from this endpoint.
+
 ## 3.2 Content Type
 
 Request and response bodies shall use JSON unless otherwise specified.
