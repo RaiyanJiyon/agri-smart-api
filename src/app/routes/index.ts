@@ -10,6 +10,7 @@ import { AiAssistantRoutes } from '../modules/ai-assistant/conversation/ai-assis
 import { MessageRoutes } from '../modules/ai-assistant/message/message.route.js';
 import { AdminRoutes } from '../modules/admin/admin.route.js';
 import { NotificationRoutes } from '../modules/notification/notification.route.js';
+import { DocsRoutes } from '../docs/docs.route.js';
 
 export const router = Router();
 
@@ -57,6 +58,10 @@ const moduleRoutes = [
   {
     path: '/notification',
     route: NotificationRoutes,
+  },
+  {
+    path: '/docs',
+    route: DocsRoutes,
   },
 ];
 
