@@ -6,6 +6,7 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
+    image: agri-smart-api:latest
     container_name: agri-smart-api
     restart: unless-stopped
     ports:
