@@ -16,7 +16,7 @@ export const swaggerSpec = {
       description: 'Local Development Server',
     },
     {
-      url: 'https://api.agrismart.com/api/v1',
+      url: 'https://agri-smart-api-meud.onrender.com/api/v1',
       description: 'Production API Gateway',
     },
   ],
