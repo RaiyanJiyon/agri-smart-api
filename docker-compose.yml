@@ -53,8 +53,7 @@ services:
     image: redis:7-alpine
     container_name: agri-smart-redis
     restart: unless-stopped
-    ports:
-      - '6379:6379'
+    # No host port binding — API reaches Redis via internal Docker network (redis:6379)
     volumes:
       - redis_data:/data
     healthcheck:
