@@ -5,7 +5,7 @@ import { DiseaseDetectionRepository } from '../../modules/disease-detection/dise
 import { DISEASE_DETECTION_STATUS } from '../../modules/disease-detection/index.js';
 import { aiService } from '../../shared/ai/ai.service.js';
 import { safeSendDiseaseDetectionNotification } from '../../modules/disease-detection/disease-detection.helper.js';
-import { redisConnection } from '../../shared/queue/queue.connection.js';
+import { redisConnectionOptions } from '../../shared/config/redis.config.js';
 import { Worker, type Job } from 'bullmq';
 import { logger } from '../../shared/utils/logger.js';
 import { config } from '../../shared/config/env.js';
@@ -84,7 +84,7 @@ export const diseaseDetectionWorker = new Worker(
     }
   },
   {
-    connection: redisConnection,
+    connection: redisConnectionOptions,
     concurrency: 5,
   }
 );
