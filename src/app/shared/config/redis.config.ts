@@ -7,7 +7,7 @@ const isLocalRedis =
 export const redisConnectionOptions = {
   host: redisHost,
   port: config.REDIS?.REDIS_PORT ?? 6379,
-  password: config.REDIS?.REDIS_PASSWORD || undefined,
+  password: config.REDIS?.REDIS_PASSWORD ?? undefined,
   ...(isLocalRedis
     ? {}
     : {
