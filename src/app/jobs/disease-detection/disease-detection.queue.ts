@@ -1,11 +1,12 @@
-import { Queue, RedisConnection } from 'bullmq';
+import { Queue } from 'bullmq';
 import type { DiseaseDetectionJobData } from '../../shared/queue/queue.interface.js';
 import { JOB_NAME, QUEUE_NAME } from '../../shared/queue/queue.constant.js';
+import { redisConnectionOptions } from '../../shared/config/redis.config.js';
 
 export const diseaseDetectionQueue = new Queue<DiseaseDetectionJobData>(
   QUEUE_NAME.DISEASE_DETECTION,
   {
-    connection: RedisConnection,
+    connection: redisConnectionOptions,
   }
 );
 
