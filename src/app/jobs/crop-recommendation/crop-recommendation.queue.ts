@@ -1,11 +1,12 @@
-import { Queue, RedisConnection } from 'bullmq';
+import { Queue } from 'bullmq';
 import type { CropRecommendationJobData } from '../../shared/queue/queue.interface.js';
 import { QUEUE_NAME } from '../../shared/queue/queue.constant.js';
+import { redisConnectionOptions } from '../../shared/config/redis.config.js';
 
 export const cropRecommendationQueue = new Queue<CropRecommendationJobData>(
   QUEUE_NAME.CROP_RECOMMENDATION,
   {
-    connection: RedisConnection,
+    connection: redisConnectionOptions,
   }
 );
 

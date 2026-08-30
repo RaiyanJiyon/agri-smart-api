@@ -1,4 +1,4 @@
-import { Job, RedisConnection, Worker } from 'bullmq';
+import { Job, Worker } from 'bullmq';
 import { QUEUE_NAME } from '../../shared/queue/queue.constant.js';
 import type { CropRecommendationJobData } from '../../shared/queue/queue.interface.js';
 import { Types } from 'mongoose';
@@ -9,6 +9,7 @@ import {
 } from '../../modules/crop-recommendations/index.js';
 import { aiService } from '../../shared/ai/ai.service.js';
 import { safeSendCropRecommendationNotification } from '../../modules/crop-recommendations/crop-recommendation.helper.js';
+import { redisConnectionOptions } from '../../shared/config/redis.config.js';
 
 export const cropRecommendationWorker = new Worker(
   QUEUE_NAME.CROP_RECOMMENDATION,
@@ -80,7 +81,7 @@ export const cropRecommendationWorker = new Worker(
     }
   },
   {
-    connection: RedisConnection,
+    connection: redisConnectionOptions,
     concurrency: 5,
   }
 );
