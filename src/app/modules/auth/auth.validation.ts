@@ -1,6 +1,5 @@
 import z from 'zod';
-import { emailSchema } from '../../shared/validators/email.validator.js';
-import { passwordSchema } from '../../shared/validators/password.validator.js';
+import { emailSchema, passwordSchema } from '../../shared/validators/index.js';
 
 export const registerValidationSchema = z.object({
   body: z
