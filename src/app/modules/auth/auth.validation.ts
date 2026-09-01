@@ -18,19 +18,23 @@ export const registerValidationSchema = z.object({
 });
 
 export const verifyEmailValidationSchema = z.object({
-  body: z.object({
-    token: z
-      .string({
-        error: 'Verification token is required.',
-      })
-      .min(1, 'Verification token is required.'),
-  }),
+  body: z
+    .object({
+      token: z
+        .string({
+          error: 'Verification token is required.',
+        })
+        .min(1, 'Verification token is required.'),
+    })
+    .strict(),
 });
 
 export const resendVerificationEmailValidationSchema = z.object({
-  body: z.object({
-    email: emailSchema,
-  }),
+  body: z
+    .object({
+      email: emailSchema,
+    })
+    .strict(),
 });
 
 export const loginValidationSchema = z.object({
