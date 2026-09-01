@@ -23,8 +23,7 @@ if (host.startsWith('redis://') || host.startsWith('rediss://')) {
   }
 }
 
-const isLocalRedis =
-  host === 'localhost' || host === '127.0.0.1' || host === 'redis';
+const isLocalRedis = host === 'localhost' || host === '127.0.0.1' || host === 'redis';
 
 export const redisConnectionOptions = {
   host,
@@ -41,4 +40,3 @@ export const redisConnectionOptions = {
   enableReadyCheck: false,
   keepAlive: 10000,
 };
-

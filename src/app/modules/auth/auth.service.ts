@@ -33,6 +33,10 @@ const register = async (payload: Pick<User, 'name' | 'email' | 'password'>): Pro
         session
       );
 
+      if (!user) {
+        throw new ApiError(HTTP_STATUS.INTERNAL_SERVER_ERROR, 'Failed to create user.');
+      }
+
       await ProfileRepository.create(
         {
           userId: user._id,
