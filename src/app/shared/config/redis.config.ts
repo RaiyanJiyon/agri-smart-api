@@ -1,21 +1,44 @@
 import { config } from './env.js';
 
-const redisHost = config.REDIS?.REDIS_HOST ?? '127.0.0.1';
+let host = config.REDIS?.REDIS_HOST ?? '127.0.0.1';
+let port = config.REDIS?.REDIS_PORT ?? 6379;
+let password = config.REDIS?.REDIS_PASSWORD ?? undefined;
+let isTlsScheme = false;
+
+if (host.startsWith('redis://') || host.startsWith('rediss://')) {
+  try {
+    const url = new URL(host);
+    if (url.protocol === 'rediss:') {
+      isTlsScheme = true;
+    }
+    host = url.hostname;
+    if (url.port) {
+      port = Number(url.port);
+    }
+    if (url.password) {
+      password = decodeURIComponent(url.password);
+    }
+  } catch {
+    // Keep fallback host if URL parsing fails
+  }
+}
+
 const isLocalRedis =
-  redisHost === 'localhost' || redisHost === '127.0.0.1' || redisHost === 'redis';
+  host === 'localhost' || host === '127.0.0.1' || host === 'redis';
 
 export const redisConnectionOptions = {
-  host: redisHost,
-  port: config.REDIS?.REDIS_PORT ?? 6379,
-  password: config.REDIS?.REDIS_PASSWORD ?? undefined,
-  ...(isLocalRedis
-    ? {}
-    : {
+  host,
+  port,
+  ...(password ? { password } : {}),
+  ...(!isLocalRedis || isTlsScheme
+    ? {
         tls: {
           rejectUnauthorized: false,
         },
-      }),
+      }
+    : {}),
   maxRetriesPerRequest: null,
   enableReadyCheck: false,
   keepAlive: 10000,
 };
+
