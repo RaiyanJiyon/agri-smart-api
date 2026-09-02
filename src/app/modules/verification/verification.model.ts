@@ -33,6 +33,7 @@ const verificationSchema = new Schema<Verification>(
   },
   {
     timestamps: true,
+    versionKey: false,
   }
 );
 
