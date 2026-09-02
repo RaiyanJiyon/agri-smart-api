@@ -1,6 +1,6 @@
 import { model, Schema } from 'mongoose';
 import type { Profile } from './profile.interface.js';
-import { COLLECTION_NAME } from '../../shared/constants/database.js';
+import { COLLECTION_NAME } from '../../shared/constants/index.js';
 
 const ProfileSchema = new Schema<Profile>(
   {

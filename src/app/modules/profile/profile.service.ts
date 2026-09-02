@@ -1,8 +1,8 @@
 import type { Types } from 'mongoose';
 import { ProfileRepository } from './profile.repository.js';
-import { ApiError } from '../../shared/errors/ApiError.js';
+import { ApiError } from '../../shared/errors/index.js';
 import type { UpdateProfileBody } from './profile.interface.js';
-import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
+import { HTTP_STATUS } from '../../shared/constants/index.js';
 
 const getMyProfile = async (userId: Types.ObjectId) => {
   const profile = await ProfileRepository.findByUserId(userId);
