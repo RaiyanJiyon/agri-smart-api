@@ -1,6 +1,6 @@
 import { model, Schema } from 'mongoose';
 import type { AIUsage } from './ai-usage.interface.js';
-import { COLLECTION_NAME } from '../constants/index.js';
+import { COLLECTION_NAME } from '../../constants/index.js';
 import { AI_EXECUTION_STATUS, AI_OPERATION } from './ai-usage.constant.js';
 
 const aiUsageSchema = new Schema<AIUsage>(

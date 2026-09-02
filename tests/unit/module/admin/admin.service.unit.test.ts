@@ -3,8 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AdminService } from '../../../../src/app/modules/admin/admin.service.js';
 import { AdminRepository } from '../../../../src/app/modules/admin/admin.repository.js';
 import { AdminActivityService } from '../../../../src/app/modules/admin/admin-activity/admin-activity.service.js';
-import { AIUsageService } from '../../../../src/app/shared/ai/ai-usage.service.js';
-import type { AIUsageStatistics } from '../../../../src/app/shared/ai/ai-usage.interface.js';
+import { AIUsageService, AIUsageStatistics } from '../../../../src/app/shared/ai/index.js';
 import { USER_ROLE, USER_STATUS } from '../../../../src/app/modules/auth/auth.constant.js';
 import { ADMIN_ACTIVITY_ACTION } from '../../../../src/app/modules/admin/admin.constant.js';
 import { createMockUser } from '../../../fixtures/index.js';
@@ -26,7 +25,7 @@ vi.mock('../../../../src/app/modules/admin/admin-activity/admin-activity.service
   },
 }));
 
-vi.mock('../../../../src/app/shared/ai/ai-usage.service.js', () => ({
+vi.mock('../../../../src/app/shared/ai/ai-usage/ai-usage.service.js', () => ({
   AIUsageService: {
     getStatistics: vi.fn(),
   },

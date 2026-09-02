@@ -1,12 +1,9 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import mongoose from 'mongoose';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { AIUsageRepository } from '../../../../src/app/shared/ai/ai-usage.repository.js';
-import { AIUsageModel } from '../../../../src/app/shared/ai/ai-usage.model.js';
-import { AI_EXECUTION_STATUS, AI_OPERATION } from '../../../../src/app/shared/ai/ai-usage.constant.js';
-import type { AIUsage } from '../../../../src/app/shared/ai/ai-usage.interface.js';
+import { AIUsageRepository, AIUsageModel, AI_EXECUTION_STATUS, AI_OPERATION, type AIUsage } from '../../../../src/app/shared/ai/index.js';
 
-vi.mock('../../../../src/app/shared/ai/ai-usage.model.js', () => ({
+vi.mock('../../../../src/app/shared/ai/ai-usage/ai-usage.model.js', () => ({
   AIUsageModel: {
     create: vi.fn(),
     find: vi.fn(),

@@ -10,7 +10,7 @@ import type { UserStatus } from '../auth/auth.interface.js';
 import { USER_STATUS } from '../auth/auth.constant.js';
 import { CropRecommendationModel } from '../crop-recommendations/crop-recommendation.model.js';
 import { DiseaseReportModel } from '../disease-detection/disease-detection.model.js';
-import { AIUsageModel } from '../../shared/ai/ai-usage.model.js';
+import { AIUsageModel } from '../../shared/ai/ai-usage/ai-usage.model.js';
 
 const findUsers = async (query: AdminUserQuery): Promise<AdminUserListResult> => {
   const { search, role, status, page = 1, limit = 20 } = query;

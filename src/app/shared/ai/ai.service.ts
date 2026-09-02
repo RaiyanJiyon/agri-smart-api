@@ -1,7 +1,7 @@
 import { Types } from 'mongoose';
 import { MistralService } from '../integrations/mistral/mistral.service.js';
-import { AI_EXECUTION_STATUS, AI_OPERATION } from './ai-usage.constant.js';
-import { AIUsageService } from './ai-usage.service.js';
+import { AI_EXECUTION_STATUS, AI_OPERATION } from './ai-usage/ai-usage.constant.js';
+import { AIUsageService } from './ai-usage/ai-usage.service.js';
 
 import type {
   AIChatInput,

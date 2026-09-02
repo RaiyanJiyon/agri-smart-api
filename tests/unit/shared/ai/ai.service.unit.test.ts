@@ -2,8 +2,7 @@ import mongoose from 'mongoose';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { aiService } from '../../../../src/app/shared/ai/ai.service.js';
-import { AI_EXECUTION_STATUS } from '../../../../src/app/shared/ai/ai-usage.constant.js';
-import { AIUsageService } from '../../../../src/app/shared/ai/ai-usage.service.js';
+import { AI_EXECUTION_STATUS, AIUsageService } from '../../../../src/app/shared/ai/index.js';
 import { MistralService } from '../../../../src/app/shared/integrations/mistral/mistral.service.js';
 
 vi.mock('../../../../src/app/shared/integrations/mistral/mistral.service.js', () => ({
@@ -14,7 +13,7 @@ vi.mock('../../../../src/app/shared/integrations/mistral/mistral.service.js', ()
   },
 }));
 
-vi.mock('../../../../src/app/shared/ai/ai-usage.service.js', () => ({
+vi.mock('../../../../src/app/shared/ai/ai-usage/ai-usage.service.js', () => ({
   AIUsageService: {
     record: vi.fn(),
   },

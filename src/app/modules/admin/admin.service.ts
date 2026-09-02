@@ -10,7 +10,7 @@ import { ApiError } from '../../shared/errors/ApiError.js';
 import { HTTP_STATUS } from '../../shared/constants/index.js';
 import { AdminRepository } from './admin.repository.js';
 import { USER_ROLE } from '../auth/auth.constant.js';
-import { AIUsageService } from '../../shared/ai/ai-usage.service.js';
+import { AIUsageService } from '../../shared/ai/ai-usage/ai-usage.service.js';
 import { AdminActivityService } from './admin-activity/admin-activity.service.js';
 import { ADMIN_ACTIVITY_ACTION } from './admin.constant.js';
 import type { AdminAuditContext } from './admin.utils.js';

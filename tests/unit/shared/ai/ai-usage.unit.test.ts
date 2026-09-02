@@ -1,14 +1,9 @@
 import mongoose from 'mongoose';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { AIUsageService } from '../../../../src/app/shared/ai/ai-usage.service.js';
-import { AIUsageRepository } from '../../../../src/app/shared/ai/ai-usage.repository.js';
-import {
-  AI_EXECUTION_STATUS,
-  AI_OPERATION,
-} from '../../../../src/app/shared/ai/ai-usage.constant.js';
-import { AIUsage, AIUsageStatistics } from '../../../../src/app/shared/ai/ai-usage.interface.js';
+import { AIUsageService, AIUsageRepository, AI_EXECUTION_STATUS,
+  AI_OPERATION, type AIUsage, type AIUsageStatistics } from '../../../../src/app/shared/ai/index.js';
 
-vi.mock('../../../../src/app/shared/ai/ai-usage.repository.js', () => ({
+vi.mock('../../../../src/app/shared/ai/ai-usage/ai-usage.repository.js', () => ({
   AIUsageRepository: {
     create: vi.fn(),
     findByUserId: vi.fn(),
