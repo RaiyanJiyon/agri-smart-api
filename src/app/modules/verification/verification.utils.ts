@@ -1,5 +1,5 @@
 import ms, { type StringValue } from 'ms';
-import { AuthRepository } from '../auth/auth.repository.js';
+import { AuthRepository } from '../auth/index.js';
 import type {
   SendVerificationEmailOptions,
   Verification,
@@ -34,7 +34,7 @@ export const createVerificationAndSendEmail = async ({
   }
 
   if (requireUnverifiedEmail && existingUser.isEmailVerified) {
-    return;
+    return; // If the email is already verified, we don't send another verification email.
   }
 
   const { token, tokenHash } = generateVerificationToken();
