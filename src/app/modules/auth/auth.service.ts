@@ -4,13 +4,13 @@ import { ApiError } from '../../shared/errors/ApiError.js';
 import type { JwtPayload } from '../../shared/types/jwt.js';
 import { comparePassword, hashPassword } from '../../shared/utils/argon.js';
 import { JwtUtil } from '../../shared/utils/jwt.js';
-import { SessionService } from '../session/session.service.js';
-import { VerificationService } from '../verification/verification.service.js';
+import { SessionService } from '../session/index.js';
+import { VerificationService } from '../verification/index.js';
 import { USER_STATUS } from './auth.constant.js';
 import type { ChangePasswordPayload, LoginPayload, User } from './auth.interface.js';
 import { AuthRepository } from './auth.repository.js';
 import { getRefreshTokenExpiry } from './auth.utils.js';
-import { ProfileRepository } from '../profile/profile.repository.js';
+import { ProfileRepository } from '../profile/index.js';
 
 const register = async (payload: Pick<User, 'name' | 'email' | 'password'>): Promise<User> => {
   const existingUser = await AuthRepository.findUserByEmail(payload.email);
