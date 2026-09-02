@@ -1,9 +1,11 @@
-import { AuthRepository } from '../auth/auth.repository.js';
+import { AuthRepository } from '../auth/index.js';
 import { VerificationRepository } from './verification.repository.js';
 import { VERIFICATION_TYPE } from './verification.constant.js';
-import { EMAIL_SUBJECT } from '../../shared/email/email.constant.js';
-import { verificationEmailTemplate } from '../../shared/email/email.template.js';
-import { forgotPasswordEmailTemplate } from '../../shared/email/forgot-password.template.js';
+import {
+  EMAIL_SUBJECT,
+  verificationEmailTemplate,
+  forgotPasswordEmailTemplate,
+} from '../../shared/email/index.js';
 import { createVerificationAndSendEmail } from './verification.utils.js';
 import { SessionService } from '../session/index.js';
 import { config } from '../../shared/config/env.js';

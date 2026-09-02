@@ -52,7 +52,7 @@ const consumeToken = async (
       ...getActiveVerificationFilter(),
     },
     {
-      $set: { usedAt: new Date() }, // Ensures it's not already used and not expired
+      usedAt: new Date(), // Ensures it's not already used and not expired
     },
     {
       returnDocument: 'after',
