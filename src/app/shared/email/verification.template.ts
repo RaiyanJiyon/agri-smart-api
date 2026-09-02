@@ -76,5 +76,5 @@ export const verificationEmailTemplate = (verificationUrl: string, user: User): 
   </table>
 </body>
 </html>
-`;
+`.trim();
 };

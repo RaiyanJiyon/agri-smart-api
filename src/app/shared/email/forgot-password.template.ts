@@ -84,5 +84,5 @@ export const forgotPasswordEmailTemplate = ({
   </table>
 </body>
 </html>
-`;
+`.trim();
 };
