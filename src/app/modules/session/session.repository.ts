@@ -37,11 +37,6 @@ const findActiveByRefreshTokenHash = async (
   });
 };
 
-/**
- * * FUTURE: Retrieve only active, non-revoked sessions for a user.
- * * Will be used for the "Active Devices" dashboard where users
- * * can view all currently logged-in browsers/devices.
- */
 const findAllByUserId = async (userId: Types.ObjectId): Promise<HydratedDocument<Session>[]> => {
   return SessionModel.find({
     userId,
