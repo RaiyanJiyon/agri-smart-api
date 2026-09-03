@@ -1,6 +1,6 @@
 import { model, Schema } from 'mongoose';
 import type { Session } from './session.interface.js';
-import { COLLECTION_NAME } from '../../shared/constants/database.js';
+import { COLLECTION_NAME } from '../../shared/constants/index.js';
 
 const sessionSchema = new Schema<Session>(
   {

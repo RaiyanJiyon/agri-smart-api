@@ -1,7 +1,7 @@
 import { model, Schema } from 'mongoose';
 import type { Verification } from './verification.interface.js';
 import { VERIFICATION_TYPE } from './verification.constant.js';
-import { COLLECTION_NAME } from '../../shared/constants/database.js';
+import { COLLECTION_NAME } from '../../shared/constants/index.js';
 
 const verificationSchema = new Schema<Verification>(
   {

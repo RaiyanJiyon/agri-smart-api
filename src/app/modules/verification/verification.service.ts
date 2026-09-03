@@ -8,11 +8,10 @@ import {
 } from '../../shared/email/index.js';
 import { createVerificationAndSendEmail } from './verification.utils.js';
 import { SessionService } from '../session/index.js';
-import { config } from '../../shared/config/env.js';
-import { hashToken } from '../../shared/utils/crypto.js';
-import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
-import { ApiError } from '../../shared/errors/ApiError.js';
-import { comparePassword, hashPassword } from '../../shared/utils/argon.js';
+import { config } from '../../shared/config/index.js';
+import { hashToken, comparePassword, hashPassword } from '../../shared/utils/index.js';
+import { HTTP_STATUS } from '../../shared/constants/index.js';
+import { ApiError } from '../../shared/errors/index.js';
 
 const sendVerificationEmail = async (email: string): Promise<void> => {
   await createVerificationAndSendEmail({

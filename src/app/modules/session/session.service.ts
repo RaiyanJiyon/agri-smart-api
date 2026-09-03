@@ -1,5 +1,5 @@
 import type { HydratedDocument, Types } from 'mongoose';
-import { hashToken } from '../../shared/utils/crypto.js';
+import { hashToken } from '../../shared/utils/index.js';
 import type { CreateSession, Session } from './session.interface.js';
 import { SessionRepository } from './session.repository.js';
 
