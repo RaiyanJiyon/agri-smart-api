@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { auth } from '../../shared/middleware/auth.js';
-import { USER_ROLE } from '../auth/auth.constant.js';
-import validateRequest from '../../shared/validation/validateRequest.js';
+import { auth, adminRateLimiter } from '../../shared/middleware/index.js';
+import { USER_ROLE } from '../auth/index.js';
+import { validateRequest } from '../../shared/validation/index.js';
 import {
   getUsersValidationSchema,
   getUserValidationSchema,
@@ -9,7 +9,6 @@ import {
 } from './admin.validation.js';
 import { AdminController } from './admin.controller.js';
 import { AdminActivityRoutes } from './admin-activity/admin-activity.route.js';
-import { adminRateLimiter } from '../../shared/middleware/rateLimiter.js';
 
 const router = Router();
 

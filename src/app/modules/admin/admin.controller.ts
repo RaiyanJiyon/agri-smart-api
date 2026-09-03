@@ -1,9 +1,8 @@
 import type { Request, Response } from 'express';
-import { catchAsync } from '../../shared/utils/catchAsync.js';
-import type { UserRole, UserStatus } from '../auth/auth.interface.js';
-import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
+import { catchAsync, sendResponse } from '../../shared/utils/index.js';
+import type { UserRole, UserStatus } from '../auth/index.js';
+import { HTTP_STATUS } from '../../shared/constants/index.js';
 import { AdminService } from './admin.service.js';
-import { sendResponse } from '../../shared/utils/sendResponse.js';
 import type { AdminUserQuery } from './admin.interface.js';
 import { getAdminUserObjectId, getAuditContext } from './admin.utils.js';
 

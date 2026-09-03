@@ -1,8 +1,8 @@
-import { Types } from 'mongoose';
-import { ApiError } from '../../shared/errors/ApiError.js';
-import { HTTP_STATUS } from '../../shared/constants/index.js';
-import type { AdminActivity } from './admin-activity/admin-activity.interface.js';
 import type { Request } from 'express';
+import { Types } from 'mongoose';
+import { ApiError } from '../../shared/errors/index.js';
+import { HTTP_STATUS } from '../../shared/constants/index.js';
+import type { AdminActivity } from './admin-activity/index.js';
 
 export type AdminAuditContext = Pick<AdminActivity, 'adminId' | 'ipAddress' | 'userAgent'>;
 

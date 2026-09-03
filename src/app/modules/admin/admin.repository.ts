@@ -5,12 +5,10 @@ import type {
   AdminUserListResult,
   AdminUserQuery,
 } from './admin.interface.js';
-import { AuthModel } from '../auth/auth.model.js';
-import type { UserStatus } from '../auth/auth.interface.js';
-import { USER_STATUS } from '../auth/auth.constant.js';
-import { CropRecommendationModel } from '../crop-recommendations/crop-recommendation.model.js';
-import { DiseaseReportModel } from '../disease-detection/disease-detection.model.js';
-import { AIUsageModel } from '../../shared/ai/ai-usage/ai-usage.model.js';
+import { AuthModel, type UserStatus, USER_STATUS } from '../auth/index.js';
+import { CropRecommendationModel } from '../crop-recommendations/index.js';
+import { DiseaseReportModel } from '../disease-detection/index.js';
+import { AIUsageModel } from '../../shared/ai/index.js';
 
 const findUsers = async (query: AdminUserQuery): Promise<AdminUserListResult> => {
   const { search, role, status, page = 1, limit = 20 } = query;

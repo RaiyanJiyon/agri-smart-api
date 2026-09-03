@@ -1,5 +1,5 @@
 import type { Types } from 'mongoose';
-import type { UserRole, UserStatus } from '../auth/auth.interface.js';
+import type { UserRole, UserStatus } from '../auth/index.js';
 
 export interface AdminUser {
   _id: Types.ObjectId;

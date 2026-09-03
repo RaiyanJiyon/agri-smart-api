@@ -1,17 +1,16 @@
 import type { Types } from 'mongoose';
-import type { UserStatus } from '../auth/auth.interface.js';
+import { type UserStatus, USER_ROLE } from '../auth/index.js';
 import type {
   AdminDashboardStatistics,
   AdminUser,
   AdminUserListResult,
   AdminUserQuery,
 } from './admin.interface.js';
-import { ApiError } from '../../shared/errors/ApiError.js';
+import { ApiError } from '../../shared/errors/index.js';
 import { HTTP_STATUS } from '../../shared/constants/index.js';
 import { AdminRepository } from './admin.repository.js';
-import { USER_ROLE } from '../auth/auth.constant.js';
-import { AIUsageService } from '../../shared/ai/ai-usage/ai-usage.service.js';
-import { AdminActivityService } from './admin-activity/admin-activity.service.js';
+import { AIUsageService } from '../../shared/ai/index.js';
+import { AdminActivityService } from './admin-activity/index.js';
 import { ADMIN_ACTIVITY_ACTION } from './admin.constant.js';
 import type { AdminAuditContext } from './admin.utils.js';
 
