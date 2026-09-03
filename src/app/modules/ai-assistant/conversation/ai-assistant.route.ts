@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { auth } from '../../../shared/middleware/auth.js';
-import validateRequest from '../../../shared/validation/validateRequest.js';
+import { validateRequest } from '../../../shared/validation/index.js';
 import {
   createConversationValidationSchema,
   updateConversationValidationSchema,
