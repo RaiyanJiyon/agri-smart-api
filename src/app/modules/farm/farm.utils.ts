@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
-import { ApiError } from '../../shared/errors/ApiError.js';
-import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
+import { ApiError } from '../../shared/errors/index.js';
+import { HTTP_STATUS } from '../../shared/constants/index.js';
 
 export const getFarmObjectId = (farmId: string): Types.ObjectId => {
   if (!Types.ObjectId.isValid(farmId)) {

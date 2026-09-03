@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { FarmController } from './farm.controller.js';
-import validateRequest from '../../shared/validation/validateRequest.js';
+import { validateRequest } from '../../shared/validation/index.js';
 import { createFarmValidationSchema, updateFarmValidationSchema } from './farm.validation.js';
-import { auth } from '../../shared/middleware/auth.js';
+import { auth } from '../../shared/middleware/index.js';
 
 const router = Router();
 

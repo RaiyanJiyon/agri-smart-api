@@ -1,8 +1,8 @@
 import type { Types } from 'mongoose';
 import type { CreateFarmBody, Farm, UpdateFarmBody } from './farm.interface.js';
 import { FarmRepository } from './farm.repository.js';
-import { ApiError } from '../../shared/errors/ApiError.js';
-import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
+import { ApiError } from '../../shared/errors/index.js';
+import { HTTP_STATUS } from '../../shared/constants/index.js';
 
 const createFarm = async (userId: Types.ObjectId, payload: CreateFarmBody): Promise<Farm> => {
   return FarmRepository.create({
