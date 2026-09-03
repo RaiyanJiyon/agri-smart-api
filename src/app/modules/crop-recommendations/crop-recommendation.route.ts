@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { auth } from '../../shared/middleware/auth.js';
-import validateRequest from '../../shared/validation/validateRequest.js';
+import { auth } from '../../shared/middleware/index.js';
+import { validateRequest } from '../../shared/validation/index.js';
 import { createCropRecommendationValidationSchema } from './crop-recommendation.validation.js';
 import { CropRecommendationController } from './crop-recommendation.controller.js';
-import { aiRateLimiter } from '../../shared/middleware/rateLimiter.js';
+import { aiRateLimiter } from '../../shared/middleware/index.js';
 
 const router = Router();
 

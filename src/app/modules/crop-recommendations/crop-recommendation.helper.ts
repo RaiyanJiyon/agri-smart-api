@@ -1,7 +1,10 @@
 import type { Types } from 'mongoose';
 import type { CropRecommendation } from './index.js';
-import { NotificationService } from '../notification/notification.service.js';
-import { NOTIFICATION_STATUS, NOTIFICATION_TYPE } from '../notification/notification.constant.js';
+import {
+  NotificationService,
+  NOTIFICATION_STATUS,
+  NOTIFICATION_TYPE,
+} from '../notification/index.js';
 
 export const safeSendCropRecommendationNotification = async (
   userId: Types.ObjectId,

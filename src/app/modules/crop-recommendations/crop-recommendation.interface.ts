@@ -1,5 +1,4 @@
 import type { Types } from 'mongoose';
-
 import type { CropRecommendationStatus } from './crop-recommendation.constant.js';
 
 export interface CropRecommendationInput {

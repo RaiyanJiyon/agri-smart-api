@@ -3,13 +3,13 @@ import type {
   CreateCropRecommendationPayload,
   CropRecommendation,
 } from './crop-recommendation.interface.js';
-import { ProfileRepository } from '../profile/profile.repository.js';
-import { ApiError } from '../../shared/errors/ApiError.js';
-import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
+import { ProfileRepository } from '../profile/index.js';
+import { ApiError } from '../../shared/errors/index.js';
+import { HTTP_STATUS } from '../../shared/constants/index.js';
 import { CropRecommendationRepository } from './crop-recommendation.repository.js';
 import { CROP_RECOMMENDATION_STATUS } from './crop-recommendation.constant.js';
 import { addCropRecommendationJob } from '../../jobs/crop-recommendation/crop-recommendation.queue.js';
-import { logger } from '../../shared/utils/logger.js';
+import { logger } from '../../shared/utils/index.js';
 
 const createCropRecommendation = async (
   userId: Types.ObjectId,

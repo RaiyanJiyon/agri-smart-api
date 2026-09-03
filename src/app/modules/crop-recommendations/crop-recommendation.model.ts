@@ -1,6 +1,6 @@
 import { model, Schema } from 'mongoose';
 import type { CropRecommendation } from './crop-recommendation.interface.js';
-import { COLLECTION_NAME } from '../../shared/constants/database.js';
+import { COLLECTION_NAME } from '../../shared/constants/index.js';
 import { CROP_RECOMMENDATION_STATUS } from './crop-recommendation.constant.js';
 
 const CropRecommendationSchema = new Schema<CropRecommendation>(
