@@ -1,5 +1,9 @@
 import type { Types } from 'mongoose';
-import type { MessageRole, MessageStatus } from './message.constant.js';
+import type { MESSAGE_ROLE, MESSAGE_STATUS } from './message.constant.js';
+
+export type MessageRole = (typeof MESSAGE_ROLE)[keyof typeof MESSAGE_ROLE];
+
+export type MessageStatus = (typeof MESSAGE_STATUS)[keyof typeof MESSAGE_STATUS];
 
 export interface Message {
   conversationId: Types.ObjectId;
