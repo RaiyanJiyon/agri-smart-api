@@ -1,5 +1,5 @@
 import z from 'zod';
-import { objectIdSchema } from '../../shared/validators/object-id.validator.js';
+import { objectIdSchema } from '../../shared/validators/index.js';
 
 export const getNotificationsValidationSchema = z.object({
   query: z

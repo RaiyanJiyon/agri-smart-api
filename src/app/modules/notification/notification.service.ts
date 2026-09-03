@@ -1,8 +1,8 @@
 import type { Types } from 'mongoose';
 import type { Notification, NotificationListResult } from './notification.interface.js';
 import { NotificationRepository } from './notification.repository.js';
-import { ApiError } from '../../shared/errors/ApiError.js';
-import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
+import { ApiError } from '../../shared/errors/index.js';
+import { HTTP_STATUS } from '../../shared/constants/index.js';
 import { NOTIFICATION_STATUS } from './notification.constant.js';
 
 const create = async (payload: Notification): Promise<Notification> => {
