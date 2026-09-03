@@ -1,6 +1,9 @@
 import type { Types } from 'mongoose';
-import { NotificationService } from '../notification/notification.service.js';
-import { NOTIFICATION_STATUS, NOTIFICATION_TYPE } from '../notification/notification.constant.js';
+import {
+  NotificationService,
+  NOTIFICATION_STATUS,
+  NOTIFICATION_TYPE,
+} from '../notification/index.js';
 import type { DiseaseReport } from './disease-detection.interface.js';
 
 export const safeSendDiseaseDetectionNotification = async (

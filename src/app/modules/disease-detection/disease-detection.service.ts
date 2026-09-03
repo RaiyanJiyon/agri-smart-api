@@ -4,7 +4,7 @@ import type {
   DiseaseReport,
 } from './disease-detection.interface.js';
 import { DiseaseDetectionRepository } from './disease-detection.repository.js';
-import { ProfileRepository } from '../profile/profile.repository.js';
+import { ProfileRepository } from '../profile/index.js';
 import { ApiError } from '../../shared/errors/index.js';
 import { HTTP_STATUS } from '../../shared/constants/index.js';
 import { CloudinaryService } from '../../shared/integrations/storage/cloudinary.service.js';

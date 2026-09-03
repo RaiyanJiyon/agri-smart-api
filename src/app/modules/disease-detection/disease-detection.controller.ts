@@ -1,10 +1,8 @@
 import type { Request, Response } from 'express';
-import { catchAsync } from '../../shared/utils/catchAsync.js';
+import { catchAsync, sendResponse, getUserObjectId } from '../../shared/utils/index.js';
 import type { CreateDiseaseDetectionPayload } from './disease-detection.interface.js';
-import { getUserObjectId } from '../../shared/utils/request.utils.js';
 import { DiseaseDetectionService } from './disease-detection.service.js';
-import { sendResponse } from '../../shared/utils/index.js';
-import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
+import { HTTP_STATUS } from '../../shared/constants/index.js';
 import { ApiError } from '../../shared/errors/index.js';
 import { getDiseaseReportObjectId } from './disease-detection.utils.js';
 

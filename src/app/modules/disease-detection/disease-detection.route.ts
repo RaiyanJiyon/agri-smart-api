@@ -1,10 +1,8 @@
 import { Router } from 'express';
-import { auth } from '../../shared/middleware/auth.js';
-import { uploadCropImage } from '../../shared/middleware/upload.js';
-import validateRequest from '../../shared/validation/validateRequest.js';
+import { auth, uploadCropImage, aiRateLimiter } from '../../shared/middleware/index.js';
+import { validateRequest } from '../../shared/validation/index.js';
 import { createDiseaseDetectionValidationSchema } from './disease-detection.validation.js';
 import { DiseaseDetectionController } from './disease-detection.controller.js';
-import { aiRateLimiter } from '../../shared/middleware/rateLimiter.js';
 
 const router = Router();
 

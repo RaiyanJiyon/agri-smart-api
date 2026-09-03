@@ -5,7 +5,7 @@ import type {
   DiseaseReport,
 } from './disease-detection.interface.js';
 import { DISEASE_DETECTION_STATUS } from './disease-detection.constant.js';
-import { COLLECTION_NAME } from '../../shared/constants/database.js';
+import { COLLECTION_NAME } from '../../shared/constants/index.js';
 
 const diseaseDiagnosisResultSchema = new Schema<DiseaseDiagnosisResult>(
   {
