@@ -1,5 +1,9 @@
 import type { Types } from 'mongoose';
-import type { NotificationStatus, NotificationType } from './notification.constant.js';
+import type { NOTIFICATION_STATUS, NOTIFICATION_TYPE } from './notification.constant.js';
+
+export type NotificationType = (typeof NOTIFICATION_TYPE)[keyof typeof NOTIFICATION_TYPE];
+
+export type NotificationStatus = (typeof NOTIFICATION_STATUS)[keyof typeof NOTIFICATION_STATUS];
 
 export interface Notification {
   userId: Types.ObjectId;
