@@ -1,10 +1,10 @@
 import type { Types } from 'mongoose';
 import type { DashboardSummary } from './dashboard.interface.js';
-import { ProfileService } from '../profile/profile.service.js';
-import { FarmService } from '../farm/farm.service.js';
-import { CropRecommendationService } from '../crop-recommendations/crop-recommendation.service.js';
-import { DiseaseDetectionService } from '../disease-detection/disease-detection.service.js';
-import { ConversationService } from '../ai-assistant/conversation/ai-assistant.service.js';
+import { ProfileService } from '../profile/index.js';
+import { FarmService } from '../farm/index.js';
+import { CropRecommendationService } from '../crop-recommendations/index.js';
+import { DiseaseDetectionService } from '../disease-detection/index.js';
+import { ConversationService } from '../ai-assistant/index.js';
 
 const getMyDashboard = async (userId: Types.ObjectId): Promise<DashboardSummary> => {
   const [profile, farms, recentRecommendations, recentDiseaseReports, recentConversations] =

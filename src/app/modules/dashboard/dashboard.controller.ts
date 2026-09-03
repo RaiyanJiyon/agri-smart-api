@@ -1,10 +1,9 @@
 import type { Request, Response } from 'express';
-import { catchAsync } from '../../shared/utils/catchAsync.js';
-import { ApiError } from '../../shared/errors/ApiError.js';
+import { Types } from 'mongoose';
+import { catchAsync, sendResponse } from '../../shared/utils/index.js';
+import { ApiError } from '../../shared/errors/index.js';
 import { HTTP_STATUS } from '../../shared/constants/index.js';
 import { DashboardService } from './dashboard.service.js';
-import { Types } from 'mongoose';
-import { sendResponse } from '../../shared/utils/index.js';
 
 const getMyDashboard = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user?.userId;
