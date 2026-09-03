@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import validateRequest from '../../shared/validation/validateRequest.js';
+import { validateRequest } from '../../shared/validation/index.js';
 import {
   changePasswordValidationSchema,
   forgotPasswordValidationSchema,
@@ -10,8 +10,7 @@ import {
   verifyEmailValidationSchema,
 } from './auth.validation.js';
 import { AuthController } from './auth.controller.js';
-import { auth } from '../../shared/middleware/auth.js';
-import { authRateLimiter } from '../../shared/middleware/rateLimiter.js';
+import { auth, authRateLimiter } from '../../shared/middleware/index.js';
 
 const router = Router();
 

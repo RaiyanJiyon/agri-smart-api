@@ -1,9 +1,8 @@
 import mongoose from 'mongoose';
-import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
-import { ApiError } from '../../shared/errors/ApiError.js';
-import type { JwtPayload } from '../../shared/types/jwt.js';
-import { comparePassword, hashPassword } from '../../shared/utils/argon.js';
-import { JwtUtil } from '../../shared/utils/jwt.js';
+import { HTTP_STATUS } from '../../shared/constants/index.js';
+import { ApiError } from '../../shared/errors/index.js';
+import type { JwtPayload } from '../../shared/types/index.js';
+import { comparePassword, hashPassword, JwtUtil } from '../../shared/utils/index.js';
 import { SessionService } from '../session/index.js';
 import { VerificationService } from '../verification/index.js';
 import { USER_STATUS } from './auth.constant.js';
