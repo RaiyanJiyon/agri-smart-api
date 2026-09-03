@@ -1,12 +1,11 @@
 import type { Types } from 'mongoose';
 import type { Message, SendMessagePayload } from './message.interface.js';
-import { ConversationRepository } from '../conversation/ai-assistant.repository.js';
+import { ConversationRepository, CONVERSATION_STATUS } from '../conversation/index.js';
 import { ApiError } from '../../../shared/errors/ApiError.js';
-import { HTTP_STATUS } from '../../../shared/constants/httpStatus.js';
+import { HTTP_STATUS } from '../../../shared/constants/index.js';
 import { MessageRepository } from './message.repository.js';
 import { MESSAGE_ROLE, MESSAGE_STATUS } from './message.constant.js';
-import { aiService } from '../../../shared/ai/ai.service.js';
-import { CONVERSATION_STATUS } from '../conversation/ai-assistant.constant.js';
+import { aiService } from '../../../shared/ai/index.js';
 
 const sendMessage = async (
   userId: Types.ObjectId,

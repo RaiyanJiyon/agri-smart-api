@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import { auth } from '../../../shared/middleware/auth.js';
-import validateRequest from '../../../shared/validation/validateRequest.js';
+import { validateRequest } from '../../../shared/validation/index.js';
 import {
   conversationMessagesValidationSchema,
   sendMessageValidationSchema,
 } from './message.validation.js';
 import { MessageController } from './message.controller.js';
-import { aiRateLimiter } from '../../../shared/middleware/rateLimiter.js';
+import { aiRateLimiter } from '../../../shared/middleware/index.js';
 
 const router = Router();
 

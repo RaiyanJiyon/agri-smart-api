@@ -1,6 +1,6 @@
 import { model, Schema } from 'mongoose';
 import type { Message } from './message.interface.js';
-import { COLLECTION_NAME } from '../../../shared/constants/database.js';
+import { COLLECTION_NAME } from '../../../shared/constants/index.js';
 import { MESSAGE_ROLE, MESSAGE_STATUS } from './message.constant.js';
 
 const messageSchema = new Schema<Message>(
