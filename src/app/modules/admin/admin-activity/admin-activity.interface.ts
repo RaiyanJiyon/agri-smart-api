@@ -1,6 +1,6 @@
 import type { Types } from 'mongoose';
 import type { AdminActivityAction } from '../admin.constant.js';
-import type { UserRole, UserStatus } from '../../auth/auth.interface.js';
+import type { UserRole, UserStatus } from '../../auth/index.js';
 
 export interface AdminActivity {
   adminId: Types.ObjectId;

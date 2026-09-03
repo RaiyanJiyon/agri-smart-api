@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { auth } from '../../../shared/middleware/auth.js';
-import { USER_ROLE } from '../../auth/auth.constant.js';
-import validateRequest from '../../../shared/validation/validateRequest.js';
+import { auth } from '../../../shared/middleware/index.js';
+import { USER_ROLE } from '../../auth/index.js';
+import { validateRequest } from '../../../shared/validation/index.js';
 import {
   getAdminActivityByIdValidationSchema,
   getAdminActivityValidationSchema,

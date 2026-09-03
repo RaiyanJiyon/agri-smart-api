@@ -1,10 +1,9 @@
 import type { Request, Response } from 'express';
-import { catchAsync } from '../../../shared/utils/catchAsync.js';
+import { catchAsync, sendResponse } from '../../../shared/utils/index.js';
 import type { AdminActivityAction } from '../admin.constant.js';
 import { getAdminUserObjectId } from '../admin.utils.js';
 import { AdminActivityService } from './admin-activity.service.js';
-import { sendResponse } from '../../../shared/utils/sendResponse.js';
-import { HTTP_STATUS } from '../../../shared/constants/httpStatus.js';
+import { HTTP_STATUS } from '../../../shared/constants/index.js';
 import type { AdminActivityQuery } from './admin-activity.interface.js';
 import { getObjectId } from './admin-activity.utils.js';
 

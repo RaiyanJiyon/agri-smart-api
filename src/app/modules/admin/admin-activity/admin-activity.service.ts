@@ -6,11 +6,10 @@ import type {
   AdminActivityQuery,
 } from './admin-activity.interface.js';
 import { AdminActivityRepository } from './admin-activity.repository.js';
-import { ApiError } from '../../../shared/errors/ApiError.js';
-import { HTTP_STATUS } from '../../../shared/constants/httpStatus.js';
-import type { UserStatus } from '../../auth/auth.interface.js';
+import { ApiError } from '../../../shared/errors/index.js';
+import { HTTP_STATUS } from '../../../shared/constants/index.js';
+import { type UserStatus, USER_STATUS } from '../../auth/index.js';
 import { ADMIN_ACTIVITY_ACTION, type AdminActivityAction } from '../admin.constant.js';
-import { USER_STATUS } from '../../auth/auth.constant.js';
 
 const record = async (payload: AdminActivity): Promise<AdminActivity> => {
   return AdminActivityRepository.create(payload);

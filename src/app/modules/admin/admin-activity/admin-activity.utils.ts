@@ -1,5 +1,5 @@
 import { Types } from 'mongoose';
-import { ApiError } from '../../../shared/errors/ApiError.js';
+import { ApiError } from '../../../shared/errors/index.js';
 import { HTTP_STATUS } from '../../../shared/constants/index.js';
 
 export const getObjectId = (id: string): Types.ObjectId => {

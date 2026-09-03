@@ -1,6 +1,6 @@
 import { model, Schema } from 'mongoose';
 import type { AdminActivity } from './admin-activity.interface.js';
-import { COLLECTION_NAME } from '../../../shared/constants/database.js';
+import { COLLECTION_NAME } from '../../../shared/constants/index.js';
 import { ADMIN_ACTIVITY_ACTION } from '../admin.constant.js';
 
 const adminActivitySchema = new Schema<AdminActivity>(
