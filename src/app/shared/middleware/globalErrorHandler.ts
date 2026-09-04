@@ -1,8 +1,8 @@
 import type { NextFunction, Request, Response } from 'express';
 import { ZodError } from 'zod';
 import { HTTP_STATUS } from '../constants/index.js';
-import { config } from '../config/env.js';
-import { logger } from '../utils/logger.js';
+import { config } from '../config/index.js';
+import { logger } from '../utils/index.js';
 
 interface CustomErrorObject {
   statusCode?: number;
@@ -25,7 +25,7 @@ interface ErrorSource {
 
 export const globalErrorHandler = (
   err: CustomErrorObject | ZodError | Error,
-  req: Request,
+  _req: Request,
   res: Response,
   _next: NextFunction
 ) => {

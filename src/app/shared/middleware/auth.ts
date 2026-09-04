@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from 'express';
-import { ApiError } from '../errors/ApiError.js';
-import { HTTP_STATUS } from '../constants/httpStatus.js';
-import { JwtUtil } from '../utils/jwt.js';
+import { ApiError } from '../errors/index.js';
+import { HTTP_STATUS } from '../constants/index.js';
+import { JwtUtil } from '../utils/index.js';
 
 export const auth = (...requiredRoles: string[]) => {
   return (req: Request, _res: Response, next: NextFunction): void => {

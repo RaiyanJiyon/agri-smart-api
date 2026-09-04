@@ -1,11 +1,9 @@
 import type { NextFunction, Request, Response } from 'express';
 import { RateLimiterRedis, RateLimiterMemory, RateLimiterRes } from 'rate-limiter-flexible';
-import { redisConnection } from '../queue/queue.connection.js';
-import { config } from '../config/env.js';
-import { logger } from '../utils/logger.js';
-import { HTTP_STATUS } from '../constants/httpStatus.js';
-import { getClientIp } from '../utils/ip.utils.js';
-
+import { redisConnection } from '../queue/index.js';
+import { config } from '../config/index.js';
+import { logger, getClientIp } from '../utils/index.js';
+import { HTTP_STATUS } from '../constants/index.js';
 export interface RateLimiterOptions {
   keyPrefix: string;
   points: number;
