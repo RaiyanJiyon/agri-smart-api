@@ -1,4 +1,4 @@
-import { escapeHtml } from '../utils/escape.js';
+import { escapeHtml } from '../utils/index.js';
 
 interface ForgotPasswordEmailTemplatePayload {
   name: string;
