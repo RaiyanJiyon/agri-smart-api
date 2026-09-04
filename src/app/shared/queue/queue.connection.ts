@@ -1,6 +1,6 @@
 import { Redis } from 'ioredis';
-import { redisConnectionOptions } from '../config/redis.config.js';
-import { logger } from '../utils/logger.js';
+import { redisConnectionOptions } from '../config/index.js';
+import { logger } from '../utils/index.js';
 
 export const redisConnection = new Redis(redisConnectionOptions);
 
