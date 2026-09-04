@@ -1,5 +1,5 @@
 import type { CookieOptions } from 'express';
-import { config } from '../config/env.js';
+import { config } from '../config/index.js';
 import { getRefreshTokenMaxAge } from '../../modules/auth/auth.utils.js';
 
 export const getRefreshTokenCookieOptions = (): CookieOptions => {

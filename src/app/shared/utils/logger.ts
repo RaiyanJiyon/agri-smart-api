@@ -1,5 +1,5 @@
 import winston from 'winston';
-import { config } from '../config/env.js';
+import { config } from '../config/index.js';
 
 const transports: winston.transport[] = [
   new winston.transports.Console({

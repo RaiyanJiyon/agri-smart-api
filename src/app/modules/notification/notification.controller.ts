@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import { catchAsync } from '../../shared/utils/catchAsync.js';
-import { getUserObjectId } from '../../shared/utils/request.utils.js';
+import { getUserObjectId } from '../../shared/utils/user.utils.js';
 import { NotificationService } from './notification.service.js';
 import { sendResponse } from '../../shared/utils/sendResponse.js';
 import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { describe, expect, it } from 'vitest';
-import { getUserObjectId } from '../../../../src/app/shared/utils/request.utils.js';
+import { getUserObjectId } from '../../../../src/app/shared/utils/user.utils.js';
 
 describe('request.utils', () => {
   describe('getUserObjectId', () => {

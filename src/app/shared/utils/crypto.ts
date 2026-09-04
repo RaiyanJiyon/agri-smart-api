@@ -1,5 +1,5 @@
 import crypto from 'node:crypto';
-import { CRYPTO } from '../constants/crypto.js';
+import { CRYPTO } from '../constants/index.js';
 
 export interface IGeneratedVerificationToken {
   token: string;

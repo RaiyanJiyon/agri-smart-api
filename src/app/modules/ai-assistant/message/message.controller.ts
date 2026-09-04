@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import { catchAsync } from '../../../shared/utils/catchAsync.js';
-import { getUserObjectId } from '../../../shared/utils/request.utils.js';
+import { getUserObjectId } from '../../../shared/utils/user.utils.js';
 import { getConversationObjectId } from '../conversation/ai-assistant.utils.js';
 import { MessageService } from './message.service.js';
 import { sendResponse } from '../../../shared/utils/sendResponse.js';

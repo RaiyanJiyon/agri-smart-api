@@ -1,5 +1,5 @@
 import argon2 from 'argon2';
-import { config } from '../config/env.js';
+import { config } from '../config/index.js';
 
 // Secure default parameters recommended by OWASP
 const ARGON2_OPTIONS = {
