@@ -1,12 +1,8 @@
-/**
- * Pagination validator utility functions will be written here. These functions will be used to validate pagination parameters.
- * @module pagination.validator
- * @author Raiyan Jiyon
- * @version 1.0.0
- * @since 2026-07-06
- * @description This module contains utility functions for validating pagination parameters.
- * @example
- * import { validatePagination } from './pagination.validator';
- *
- * const isValidPagination = validatePagination({ page: 1, limit: 10 });
- */
+import z from 'zod';
+
+export const paginationSchema = z.object({
+  page: z.number().min(1).default(1),
+  limit: z.number().min(1).max(100).default(10),
+  sort: z.string().optional(),
+  order: z.enum(['asc', 'desc']).default('asc'),
+});
