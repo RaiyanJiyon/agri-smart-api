@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from 'express';
-import type z from 'zod';
+import type * as z from 'zod';
 
 // In Zod v4, z.ZodType covers all schemas (Objects, Effects, Strings, etc.)
 type ValidationSchema = z.ZodType;
