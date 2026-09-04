@@ -1,5 +1,5 @@
 import { GoogleGenAI, Type } from '@google/genai';
-import { config } from '../../config/env.js';
+import { config } from '../../config/index.js';
 import type {
   GeminiCropRecommendationInput,
   GeminiCropRecommendationOutput,
