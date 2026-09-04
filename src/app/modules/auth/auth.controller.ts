@@ -6,10 +6,11 @@ import { sendResponse } from '../../shared/utils/sendResponse.js';
 import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
 import { VerificationService } from '../verification/verification.service.js';
 import { COOKIE_NAME } from '../../shared/constants/cookie.js';
-import { getClearCookieOptions, getRefreshTokenCookieOptions } from '../../shared/utils/cookie.js';
+import { getClearCookieOptions } from '../../shared/utils/cookie.js';
 import { ApiError } from '../../shared/errors/ApiError.js';
 import { TokenService } from './token.service.js';
 import { Types } from 'mongoose';
+import { getRefreshTokenCookieOptions } from './auth.utils.js';
 
 const register = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthService.register(req.body as Pick<User, 'name' | 'email' | 'password'>);

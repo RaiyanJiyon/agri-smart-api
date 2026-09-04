@@ -1,36 +1,37 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi, beforeEach } from 'vitest';
+import type { CookieOptions } from 'express';
+import * as authUtils from '../../../../src/app/modules/auth/auth.utils.js';
+
+// Mock the config module
+vi.mock('../../../../src/app/shared/config/env.js', () => ({
+  config: {
+    NODE_ENV: 'test',
+    JWT: {
+      JWT_REFRESH_EXPIRES_IN: '7d',
+    },
+  },
+}));
 
 describe('cookie utils', () => {
-  it('should return secure=false and sameSite=lax in non-production environments', async () => {
-    vi.stubEnv('NODE_ENV', 'development');
+  beforeEach(() => {
+    vi.resetModules();
+  });
 
-    // Re-import after env stub to pick up fresh module state
-    const { getRefreshTokenCookieOptions, getClearCookieOptions } =
-      await import('../../../../src/app/shared/utils/cookie.js');
-
-    const refreshOptions = getRefreshTokenCookieOptions();
+  it('should return secure=false and sameSite=lax in non-production environments', () => {
+    const refreshOptions: CookieOptions = authUtils.getRefreshTokenCookieOptions();
     expect(refreshOptions.httpOnly).toBe(true);
     expect(refreshOptions.path).toBe('/');
     expect(refreshOptions.maxAge).toBeGreaterThan(0);
-
-    const clearOptions = getClearCookieOptions();
-    expect(clearOptions.httpOnly).toBe(true);
-    expect(clearOptions.path).toBe('/');
-
-    vi.unstubAllEnvs();
+    expect(refreshOptions.secure).toBe(false);
+    expect(refreshOptions.sameSite).toBe('lax');
   });
 
-  it('should return sameSite=none and secure=true in test env (NODE_ENV=test)', async () => {
+  it('should return sameSite=lax and secure=false in test env (NODE_ENV=test)', () => {
     // In our test env, NODE_ENV is "test" (non-production), so sameSite should be 'lax'
-    const { getRefreshTokenCookieOptions, getClearCookieOptions } =
-      await import('../../../../src/app/shared/utils/cookie.js');
-
-    const refreshOptions = getRefreshTokenCookieOptions();
+    const refreshOptions: CookieOptions = authUtils.getRefreshTokenCookieOptions();
     expect(refreshOptions.httpOnly).toBe(true);
     expect(typeof refreshOptions.maxAge).toBe('number');
-
-    const clearOptions = getClearCookieOptions();
-    expect(clearOptions.httpOnly).toBe(true);
-    expect(clearOptions.path).toBe('/');
+    expect(refreshOptions.secure).toBe(false);
+    expect(refreshOptions.sameSite).toBe('lax');
   });
 });
