@@ -1,5 +1,5 @@
 import { Mistral } from '@mistralai/mistralai';
-import { config } from '../../config/env.js';
+import { config } from '../../config/index.js';
 import type {
   MistralChatInput,
   MistralChatOutput,

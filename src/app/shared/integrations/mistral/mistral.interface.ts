@@ -1,4 +1,4 @@
-import type { CropRecommendationInput } from '../../../modules/crop-recommendations/crop-recommendation.interface.js';
+import type { CropRecommendationInput } from '../../../modules/crop-recommendations/index.js';
 
 export interface MistralUsage {
   promptTokens: number;
