@@ -1,5 +1,9 @@
 import type { Types } from 'mongoose';
-import type { AiExecutionStatus, AiOperation } from './ai-usage.constant.js';
+import type { AI_EXECUTION_STATUS, AI_OPERATION } from './ai-usage.constant.js';
+
+export type AiOperation = (typeof AI_OPERATION)[keyof typeof AI_OPERATION];
+
+export type AiExecutionStatus = (typeof AI_EXECUTION_STATUS)[keyof typeof AI_EXECUTION_STATUS];
 
 export interface AIUsage {
   userId: Types.ObjectId;

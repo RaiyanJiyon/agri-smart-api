@@ -1,7 +1,6 @@
 import type { Types } from 'mongoose';
-import type { AIUsage, AIUsageStatistics } from './ai-usage.interface.js';
+import type { AiOperation, AIUsage, AIUsageStatistics } from './ai-usage.interface.js';
 import { AIUsageRepository } from './ai-usage.repository.js';
-import type { AiOperation } from './ai-usage.constant.js';
 
 const record = async (payload: AIUsage): Promise<AIUsage> => {
   return AIUsageRepository.create(payload);

@@ -1,7 +1,7 @@
 import type { Types } from 'mongoose';
-import type { AIUsage, AIUsageStatistics } from './ai-usage.interface.js';
+import type { AiOperation, AIUsage, AIUsageStatistics } from './ai-usage.interface.js';
 import { AIUsageModel } from './ai-usage.model.js';
-import { AI_EXECUTION_STATUS, AI_OPERATION, type AiOperation } from './ai-usage.constant.js';
+import { AI_EXECUTION_STATUS, AI_OPERATION } from './ai-usage.constant.js';
 
 const create = async (payload: AIUsage): Promise<AIUsage> => {
   const aiUsage = await AIUsageModel.create(payload);
