@@ -5,9 +5,38 @@
 [![pnpm Version](https://img.shields.io/badge/pnpm-10.5.2-blue.svg)](https://pnpm.io/)
 [![OpenAPI 3.0](https://img.shields.io/badge/OpenAPI-3.0.3-orange.svg)](http://localhost:5000/api/v1/docs)
 
+> A modular Node.js/TypeScript backend powering an AI-driven agricultural platform with secure authentication, farm management, AI recommendations, plant disease diagnosis, background job processing, and administrative APIs.
+
+## 🔗 Quick Links
+
+- **Live API:** https://agri-smart-api-meud.onrender.com/
+- **API Documentation:** https://agri-smart-api-meud.onrender.com/api/v1/docs
+- **GitHub Repository:** https://github.com/RaiyanJiyon/agri-smart-api
+- **Architecture Documentation:** [`/docs`](./docs)
+
+> **Deployment note:** The live API is deployed on Render's Free tier. The service may take a short time to wake up after a period of inactivity.
+
+---
+
 ## 📌 Project Overview
 
-The **Agri-Smart API** is a high-performance, modular Node.js/Express backend powering the Agri-Smart platform. It delivers real-time AI-driven agricultural recommendations, automated plant disease detection, farm profile management, interactive AI advisory assistants, and administrative platform controls.
+**Agri-Smart API** is the backend service for an AI-powered farming platform.
+
+The system provides RESTful APIs for farmer authentication, farm profile management, AI-powered crop recommendations, plant disease diagnosis, conversational AI assistance, dashboard metrics, and administrative operations.
+
+The backend is designed around a modular, layered architecture using **Node.js, Express, TypeScript, MongoDB, Redis, and BullMQ**, with Docker-based development and CI validation through GitHub Actions.
+
+### Core Engineering Focus
+
+- Modular feature-based backend architecture
+- Controller-Service-Repository separation
+- Secure authentication and session management
+- Asynchronous processing for long-running AI workloads
+- Redis-backed queues and rate limiting
+- Secure image/file handling
+- Automated testing with high statement coverage
+- CI validation and Docker build verification
+- OpenAPI 3.0 API documentation
 
 ---
 
