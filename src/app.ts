@@ -11,12 +11,6 @@ import { globalRateLimiter } from './app/shared/middleware/rateLimiter.js';
 
 const app = express();
 
-/**
- * Tell Express it is running behind a trusted proxy (e.g., Nginx, ALB, Cloudflare)
-
- * This ensures req.ip correctly reflects the client's actual browser IP address.
-
- */
 app.set('trust proxy', 1);
 
 app.use(express.json({ limit: '10kb' }));
@@ -52,7 +46,6 @@ app.use(
 
 app.use(cookieParser());
 
-// Mount Tier 4 Global Rate Limiter baseline across all /api/v1 routes
 app.use('/api/v1', globalRateLimiter, router);
 
 app.get('/', (_req: Request, res: Response) => {
