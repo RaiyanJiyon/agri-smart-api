@@ -180,10 +180,10 @@ const loadEnvVariables = (): envConfig => {
       GLOBAL_POINTS: getPositiveInt('RATE_LIMIT_GLOBAL_POINTS', 300),
       GLOBAL_DURATION: getPositiveInt('RATE_LIMIT_GLOBAL_DURATION', 60),
       AUTH_POINTS: getPositiveInt('RATE_LIMIT_AUTH_POINTS', 10),
-      AUTH_DURATION: getPositiveInt('RATE_LIMIT_AUTH_DURATION', 900), // 15 minutes
-      AUTH_BLOCK_DURATION: getPositiveInt('RATE_LIMIT_AUTH_BLOCK_DURATION', 3600), // 1 hour
+      AUTH_DURATION: getPositiveInt('RATE_LIMIT_AUTH_DURATION', 900),
+      AUTH_BLOCK_DURATION: getPositiveInt('RATE_LIMIT_AUTH_BLOCK_DURATION', 3600),
       AI_POINTS: getPositiveInt('RATE_LIMIT_AI_POINTS', 5),
-      AI_DURATION: getPositiveInt('RATE_LIMIT_AI_DURATION', 300), // 5 minutes
+      AI_DURATION: getPositiveInt('RATE_LIMIT_AI_DURATION', 300),
       CORE_POINTS: getPositiveInt('RATE_LIMIT_CORE_POINTS', 120),
       CORE_DURATION: getPositiveInt('RATE_LIMIT_CORE_DURATION', 60),
       ADMIN_POINTS: getPositiveInt('RATE_LIMIT_ADMIN_POINTS', 300),
