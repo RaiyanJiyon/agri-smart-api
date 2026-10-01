@@ -15,6 +15,52 @@ export interface RateLimiterOptions {
 }
 
 /**
+ * Sets IETF / RFC compliant rate limit tracking headers on responses.
+ */
+const setRateLimitHeaders = (
+  res: Response,
+  points: number,
+  rateLimiterRes: RateLimiterRes
+): void => {
+  const resetSeconds = Math.ceil(rateLimiterRes.msBeforeNext / 1000);
+  const resetEpoch = Math.floor(Date.now() / 1000) + resetSeconds;
+
+  res.setHeader('RateLimit-Limit', points);
+  res.setHeader('RateLimit-Remaining', Math.max(0, rateLimiterRes.remainingPoints));
+  res.setHeader('RateLimit-Reset', resetEpoch);
+};
+
+/**
+ * Standardized HTTP 429 response handler.
+ */
+const handleRateLimitExceeded = (
+  res: Response,
+  points: number,
+  rateLimiterRes: RateLimiterRes
+): void => {
+  const retryAfterSeconds = Math.ceil(rateLimiterRes.msBeforeNext / 1000) || 1;
+  const resetEpoch = Math.floor(Date.now() / 1000) + retryAfterSeconds;
+
+  res.setHeader('RateLimit-Limit', points);
+  res.setHeader('RateLimit-Remaining', 0);
+  res.setHeader('RateLimit-Reset', resetEpoch);
+  res.setHeader('Retry-After', retryAfterSeconds);
+
+  res.status(HTTP_STATUS.TOO_MANY_REQUESTS).json({
+    success: false,
+    status: HTTP_STATUS.TOO_MANY_REQUESTS,
+    message: 'Too many requests. Please try again later.',
+    errorSources: [
+      {
+        path: 'rate_limit',
+        message: `Rate limit exceeded. Please wait ${retryAfterSeconds} second(s) before retrying.`,
+      },
+    ],
+    retryAfter: retryAfterSeconds,
+  });
+};
+
+/**
  * Creates a rate limiting Express middleware powered by Redis
  * with a process-local memory fallback for high resilience.
  */
@@ -107,52 +153,6 @@ export const createRateLimiter = (options: RateLimiterOptions) => {
       }
     }
   };
-};
-
-/**
- * Sets IETF / RFC compliant rate limit tracking headers on responses.
- */
-const setRateLimitHeaders = (
-  res: Response,
-  points: number,
-  rateLimiterRes: RateLimiterRes
-): void => {
-  const resetSeconds = Math.ceil(rateLimiterRes.msBeforeNext / 1000);
-  const resetEpoch = Math.floor(Date.now() / 1000) + resetSeconds;
-
-  res.setHeader('RateLimit-Limit', points);
-  res.setHeader('RateLimit-Remaining', Math.max(0, rateLimiterRes.remainingPoints));
-  res.setHeader('RateLimit-Reset', resetEpoch);
-};
-
-/**
- * Standardized HTTP 429 response handler.
- */
-const handleRateLimitExceeded = (
-  res: Response,
-  points: number,
-  rateLimiterRes: RateLimiterRes
-): void => {
-  const retryAfterSeconds = Math.ceil(rateLimiterRes.msBeforeNext / 1000) || 1;
-  const resetEpoch = Math.floor(Date.now() / 1000) + retryAfterSeconds;
-
-  res.setHeader('RateLimit-Limit', points);
-  res.setHeader('RateLimit-Remaining', 0);
-  res.setHeader('RateLimit-Reset', resetEpoch);
-  res.setHeader('Retry-After', retryAfterSeconds);
-
-  res.status(HTTP_STATUS.TOO_MANY_REQUESTS).json({
-    success: false,
-    status: HTTP_STATUS.TOO_MANY_REQUESTS,
-    message: 'Too many requests. Please try again later.',
-    errorSources: [
-      {
-        path: 'rate_limit',
-        message: `Rate limit exceeded. Please wait ${retryAfterSeconds} second(s) before retrying.`,
-      },
-    ],
-    retryAfter: retryAfterSeconds,
-  });
 };
 
 /* ==========================================================================
