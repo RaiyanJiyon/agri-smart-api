@@ -6,6 +6,4 @@ export const emailSchema = z
   })
   .trim()
   .toLowerCase()
-  .email({
-    error: 'Invalid email address.',
-  });
+  .pipe(z.email({ error: 'Invalid email address.' }));
