@@ -14,9 +14,6 @@ export interface RateLimiterOptions {
   skip?: (req: Request) => boolean;
 }
 
-/**
- * Sets IETF / RFC compliant rate limit tracking headers on responses.
- */
 const setRateLimitHeaders = (
   res: Response,
   points: number,
@@ -30,9 +27,6 @@ const setRateLimitHeaders = (
   res.setHeader('RateLimit-Reset', resetEpoch);
 };
 
-/**
- * Standardized HTTP 429 response handler.
- */
 const handleRateLimitExceeded = (
   res: Response,
   points: number,
@@ -60,10 +54,6 @@ const handleRateLimitExceeded = (
   });
 };
 
-/**
- * Creates a rate limiting Express middleware powered by Redis
- * with a process-local memory fallback for high resilience.
- */
 export const createRateLimiter = (options: RateLimiterOptions) => {
   const {
     keyPrefix,
