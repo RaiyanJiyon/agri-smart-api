@@ -1,14 +1,11 @@
 import z from 'zod';
 import { emailSchema, passwordSchema } from '../../shared/validators/index.js';
+import { nameSchema } from '../../shared/validators/name.validator.js';
 
 export const registerValidationSchema = z.object({
   body: z
     .object({
-      name: z
-        .string()
-        .trim()
-        .min(2, 'Name must be at least 2 characters.')
-        .max(100, 'Name cannot exceed 100 characters.'),
+      name: nameSchema,
 
       email: emailSchema,
 

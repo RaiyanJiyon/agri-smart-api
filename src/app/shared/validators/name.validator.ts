@@ -1,0 +1,8 @@
+import z from 'zod';
+
+export const nameSchema = z
+  .string({
+    error: 'Name is required.',
+  })
+  .min(1, 'Name is required.')
+  .max(100, 'Name cannot exceed 100 characters.');
