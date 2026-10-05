@@ -1,10 +1,6 @@
 import mongoose, { type HydratedDocument } from 'mongoose';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import {
-  consumeVerification,
-  createVerificationAndSendEmail,
-  getActiveVerification,
-} from '../../../../src/app/modules/verification/verification.utils.js';
+import { createVerificationAndSendEmail } from '../../../../src/app/modules/verification/verification.utils.js';
 import { AuthRepository } from '../../../../src/app/modules/auth/auth.repository.js';
 import { VerificationRepository } from '../../../../src/app/modules/verification/verification.repository.js';
 import { EmailService } from '../../../../src/app/shared/email/index.js';
@@ -20,8 +16,6 @@ vi.mock('../../../../src/app/modules/auth/auth.repository.js', () => ({
 vi.mock('../../../../src/app/modules/verification/verification.repository.js', () => ({
   VerificationRepository: {
     createOrReplace: vi.fn(),
-    findActiveVerificationByHash: vi.fn(),
-    markAsUsed: vi.fn(),
   },
 }));
 
@@ -80,21 +74,4 @@ describe('verification.utils', () => {
     });
   });
 
-  describe('getActiveVerification', () => {
-    it('should throw ApiError 400 when token verification record is missing', async () => {
-      vi.mocked(VerificationRepository.findActiveVerificationByHash).mockResolvedValueOnce(null);
-
-      await expect(
-        getActiveVerification('invalid-token', VERIFICATION_TYPE.EMAIL_VERIFICATION)
-      ).rejects.toThrow('Invalid or expired verification token.');
-    });
-  });
-
-  describe('consumeVerification', () => {
-    it('should call VerificationRepository.markAsUsed', async () => {
-      const id = new mongoose.Types.ObjectId();
-      await consumeVerification(id);
-      expect(VerificationRepository.markAsUsed).toHaveBeenCalledWith(id);
-    });
-  });
 });

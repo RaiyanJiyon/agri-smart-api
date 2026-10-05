@@ -1,16 +1,9 @@
 import ms, { type StringValue } from 'ms';
 import { AuthRepository } from '../auth/index.js';
-import type {
-  SendVerificationEmailOptions,
-  Verification,
-  VerificationType,
-} from './verification.interface.js';
+import type { SendVerificationEmailOptions } from './verification.interface.js';
 import { VerificationRepository } from './verification.repository.js';
 import { EmailService } from '../../shared/email/index.js';
-import type { Types } from 'mongoose';
-import { ApiError } from '../../shared/errors/ApiError.js';
-import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
-import { generateVerificationToken, hashToken } from '../../shared/utils/crypto.js';
+import { generateVerificationToken } from '../../shared/utils/crypto.js';
 import { escapeHtml } from '../../shared/utils/escape.js';
 
 /**
@@ -56,30 +49,4 @@ export const createVerificationAndSendEmail = async ({
       name: escapeHtml(existingUser.name),
     }),
   });
-};
-
-/**
- * * HELPER: Finds and returns an active, unexpired, and unused verification record
- * * matching the provided token and verification type.
- */
-export const getActiveVerification = async (
-  token: string,
-  type: VerificationType
-): Promise<Verification> => {
-  const tokenHash = hashToken(token);
-
-  const verification = await VerificationRepository.findActiveVerificationByHash(tokenHash, type);
-
-  if (!verification) {
-    throw new ApiError(HTTP_STATUS.BAD_REQUEST, 'Invalid or expired verification token.');
-  }
-
-  return verification;
-};
-
-/**
- * * HELPER: Marks a specific verification record as used to prevent token reuse.
- */
-export const consumeVerification = async (verificationId: Types.ObjectId): Promise<void> => {
-  await VerificationRepository.markAsUsed(verificationId);
 };
