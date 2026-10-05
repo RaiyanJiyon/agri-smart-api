@@ -33,8 +33,7 @@ const findAllByUserId = async (userId: Types.ObjectId): Promise<HydratedDocument
 
 /**
  * * FUTURE: Retrieve only active, non-revoked sessions for a user.
- * * Will be used for the "Active Devices" dashboard where users
- * * can view and manage all currently logged-in browsers or devices.
+ * * Will be used for the "Active Devices" dashboard where users can view and manage all currently logged-in browsers or devices.
  */
 const findActiveByUserId = async (userId: Types.ObjectId): Promise<HydratedDocument<Session>[]> => {
   return SessionModel.find({
