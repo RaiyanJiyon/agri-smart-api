@@ -20,7 +20,11 @@ const sendVerificationEmail = async (email: string): Promise<void> => {
     expiresIn: config.MAIL.EMAIL_VERIFICATION_EXPIRES_IN,
     subject: EMAIL_SUBJECT.EMAIL_VERIFICATION,
     buildUrl: (token) => `${config.CLIENT_URL[0]}/verify-email?token=${token}`,
-    buildTemplate: verificationEmailTemplate,
+    buildTemplate: (url, user) =>
+      verificationEmailTemplate({
+        verificationUrl: url,
+        user,
+      }),
     requireUnverifiedEmail: true,
   });
 };
