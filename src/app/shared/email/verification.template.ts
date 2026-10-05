@@ -1,7 +1,15 @@
 import type { User } from '../../modules/auth/index.js';
 import { escapeHtml } from '../utils/index.js';
 
-export const verificationEmailTemplate = (verificationUrl: string, user: User): string => {
+interface verificationTemplatePayload {
+  verificationUrl: string;
+  user: User;
+}
+
+export const verificationEmailTemplate = ({
+  verificationUrl,
+  user,
+}: verificationTemplatePayload): string => {
   const safeName = escapeHtml(user.name);
 
   return `
