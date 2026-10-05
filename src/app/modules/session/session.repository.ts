@@ -14,20 +14,6 @@ const create = async (payload: Omit<Session, 'revokedAt'>): Promise<HydratedDocu
   return SessionModel.create(payload);
 };
 
-/**
- * * FUTURE / UTILITY: Find a single session document by its refresh token hash.
- * * Unlike active-only queries, this retrieves the session regardless of its
- * * expiration or revocation status. Reserved for specialized security checks,
- * * auditing, or debugging flows.
- */
-const findByRefreshTokenHash = async (
-  refreshTokenHash: string
-): Promise<HydratedDocument<Session> | null> => {
-  return SessionModel.findOne({
-    refreshTokenHash,
-  });
-};
-
 const findActiveByRefreshTokenHash = async (
   refreshTokenHash: string
 ): Promise<HydratedDocument<Session> | null> => {
@@ -139,7 +125,6 @@ const rotateRefreshToken = async (
 
 export const SessionRepository = {
   create,
-  findByRefreshTokenHash,
   findActiveByRefreshTokenHash,
   findAllByUserId,
   findActiveByUserId,

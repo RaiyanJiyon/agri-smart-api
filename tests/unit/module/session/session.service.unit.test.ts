@@ -8,7 +8,6 @@ import { SessionRepository } from '../../../../src/app/modules/session/session.r
 vi.mock('../../../../src/app/modules/session/session.repository.js', () => ({
   SessionRepository: {
     create: vi.fn(),
-    findByRefreshTokenHash: vi.fn(),
     findActiveByRefreshTokenHash: vi.fn(),
     findAllByUserId: vi.fn(),
     findActiveByUserId: vi.fn(),

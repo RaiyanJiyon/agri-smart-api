@@ -39,30 +39,6 @@ describe('SessionRepository integration', () => {
     expect(session.expiresAt).toEqual(expiresAt);
   });
 
-  it('should find a session by refresh token hash', async () => {
-    const userId = new mongoose.Types.ObjectId();
-
-    const session = await SessionRepository.create({
-      userId,
-      refreshTokenHash: 'hashed-refresh-token',
-      ipAddress: '127.0.0.1',
-      userAgent: 'Vitest',
-      expiresAt: new Date(Date.now() + 60 * 60 * 1000),
-    });
-
-    const result = await SessionRepository.findByRefreshTokenHash('hashed-refresh-token');
-
-    expect(result).not.toBeNull();
-    expect(result?._id).toEqual(session._id);
-    expect(result?.userId).toEqual(userId);
-  });
-
-  it('should return null when the refresh token hash does not exist', async () => {
-    const result = await SessionRepository.findByRefreshTokenHash('non-existent-token');
-
-    expect(result).toBeNull();
-  });
-
   it('should find an active session by refresh token hash', async () => {
     const userId = new mongoose.Types.ObjectId();
 
