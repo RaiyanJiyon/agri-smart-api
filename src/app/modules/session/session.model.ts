@@ -53,14 +53,6 @@ const sessionSchema = new Schema<Session>(
   }
 );
 
-/**
- * Automatically remove expired sessions.
- *
- * NOTE:
- * MongoDB's TTL monitor runs approximately every 60 seconds,
- * so deletion is not immediate.
- */
-
 sessionSchema.index(
   { expiresAt: 1 },
   {
@@ -68,12 +60,10 @@ sessionSchema.index(
   }
 );
 
-// Quickly find all sessions for a user.
 sessionSchema.index({
   userId: 1,
 });
 
-// Quickly find a session by refresh token hash.
 sessionSchema.index(
   {
     refreshTokenHash: 1,
