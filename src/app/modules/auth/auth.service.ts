@@ -126,6 +126,7 @@ const changePassword = async (payload: ChangePasswordPayload) => {
   }
 
   const matched = await comparePassword(payload.currentPassword, user.password);
+  
   if (!matched) {
     throw new ApiError(HTTP_STATUS.BAD_REQUEST, 'Current password is incorrect.');
   }

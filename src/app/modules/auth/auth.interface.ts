@@ -32,8 +32,6 @@ export interface AuthTokens {
 
 export interface ChangePasswordPayload {
   userId: Types.ObjectId;
-
   currentPassword: string;
-
   newPassword: string;
 }
