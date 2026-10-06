@@ -10,7 +10,7 @@ import { ApiError } from '../../shared/errors/ApiError.js';
 import { HTTP_STATUS } from '../../shared/constants/httpStatus.js';
 import { USER_STATUS } from './auth.constant.js';
 
-interface IActiveRefreshSession {
+interface ActiveRefreshSession {
   payload: JwtPayload;
   session: HydratedDocument<Session>;
 }
@@ -22,7 +22,7 @@ interface IActiveRefreshSession {
  */
 const getActiveSessionFromRefreshToken = async (
   refreshToken: string
-): Promise<IActiveRefreshSession> => {
+): Promise<ActiveRefreshSession> => {
   const payload = JwtUtil.verifyRefreshToken(refreshToken);
 
   const session = await SessionService.findActiveSession(refreshToken);
