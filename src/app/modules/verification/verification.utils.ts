@@ -6,10 +6,6 @@ import { EmailService } from '../../shared/email/index.js';
 import { generateVerificationToken } from '../../shared/utils/crypto.js';
 import { escapeHtml } from '../../shared/utils/escape.js';
 
-/**
- * * HELPER: Creates a verification token, saves its hash to the database,
- * * and sends an email containing the verification link to the user.
- */
 export const createVerificationAndSendEmail = async ({
   email,
   type,
@@ -21,9 +17,8 @@ export const createVerificationAndSendEmail = async ({
 }: SendVerificationEmailOptions): Promise<void> => {
   const existingUser = await AuthRepository.findUserByEmail(email);
 
-  // Prevent email enumeration
   if (!existingUser) {
-    return;
+    return; // Prevent email enumeration
   }
 
   if (requireUnverifiedEmail && existingUser.isEmailVerified) {
