@@ -16,9 +16,7 @@ interface ActiveRefreshSession {
 }
 
 /**
- * * HELPER: Validates a refresh token's cryptographic signature,
- * * checks database session activity, and ensures identity consistency
- * * before returning the payload and session data.
+ * * HELPER: Validates a refresh token's cryptographic signature, checks database session activity, and ensures identity consistency before returning the payload and session data.
  */
 const getActiveSessionFromRefreshToken = async (
   refreshToken: string
@@ -79,7 +77,6 @@ const refreshTokens = async (refreshToken: string): Promise<AuthTokens> => {
 
 const logout = async (refreshToken: string): Promise<void> => {
   try {
-    // Leverage the helper function cleanly in logout too
     const { session } = await getActiveSessionFromRefreshToken(refreshToken);
 
     await SessionService.revokeSession(session._id);
