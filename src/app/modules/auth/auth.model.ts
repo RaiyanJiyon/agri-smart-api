@@ -20,7 +20,7 @@ const userSchema = new Schema<User>(
     password: {
       type: String,
       required: true,
-      select: false, // Exclude password from query results by default
+      select: false,
     },
     role: {
       type: String,

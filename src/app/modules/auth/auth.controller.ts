@@ -23,10 +23,9 @@ const register = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// Explicitly type req with generic Request<Params, ResBody, ReqBody>
 const verifyEmail = catchAsync(
   async (req: Request<unknown, unknown, { token: string }>, res: Response) => {
-    const { token } = req.body; // Now strongly typed as string
+    const { token } = req.body;
 
     await VerificationService.verifyEmail(token);
 
