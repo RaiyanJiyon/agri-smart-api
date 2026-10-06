@@ -2,13 +2,13 @@ import type { User } from '../../modules/auth/index.js';
 import { escapeHtml } from '../utils/index.js';
 
 interface verificationTemplatePayload {
-  verificationUrl: string;
   user: User;
+  verificationUrl: string;
 }
 
 export const verificationEmailTemplate = ({
-  verificationUrl,
   user,
+  verificationUrl,
 }: verificationTemplatePayload): string => {
   const safeName = escapeHtml(user.name);
 
