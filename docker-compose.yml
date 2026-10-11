@@ -20,7 +20,6 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       CLIENT_URL: http://localhost:5173,http://localhost:3000
-      # Reference system environment variables or a local .env file instead of hardcoding
       JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-dev-jwt-access-secret-key-change-me}
       JWT_ACCESS_EXPIRES_IN: 15m
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-dev-jwt-refresh-secret-key-change-me}
@@ -43,7 +42,6 @@ services:
     volumes:
       - mongodb_data:/data/db
     healthcheck:
-      # Swapped to CMD-SHELL to correctly evaluate the script across different modern Alpine/Ubuntu variations
       test: ['CMD-SHELL', "echo 'db.runCommand({ping:1})' | mongosh localhost:27017/test --quiet"]
       interval: 10s
       timeout: 5s
@@ -53,7 +51,6 @@ services:
     image: redis:7-alpine
     container_name: agri-smart-redis
     restart: unless-stopped
-    # No host port binding — API reaches Redis via internal Docker network (redis:6379)
     volumes:
       - redis_data:/data
     healthcheck:
