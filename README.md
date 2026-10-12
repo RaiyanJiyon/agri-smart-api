@@ -81,11 +81,20 @@ cd agri-smart-api
 # 2. Setup Environment Variables
 cp .env.example .env
 
-# 3. Start full stack with Docker Compose
-pnpm docker:up
+# 3. Start MongoDB and Redis
+docker compose up -d mongodb redis
+
+# 4. Initialize MongoDB's single-node replica set (required once per volume)
+docker compose exec mongodb mongosh --eval \
+  'rs.initiate({_id:"rs0",members:[{_id:0,host:"mongodb:27017"}]})'
+
+# 5. Start the API
+docker compose up -d --build api
 ```
 
 Access the API at `http://localhost:5000` and Swagger UI at `http://localhost:5000/api/v1/docs`.
+
+The MongoDB replica set is required because the API uses transactions during user registration. The initialization command only needs to be run once for a new MongoDB volume. If MongoDB has already been initialized, running it again returns an already-initialized error; continue without rerunning it.
 
 ---
 
