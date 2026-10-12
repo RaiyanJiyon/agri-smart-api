@@ -35,6 +35,7 @@ services:
 
   mongodb:
     image: mongo:7-jammy
+    command: ['mongod', '--replSet', 'rs0', '--bind_ip_all']
     container_name: agri-smart-mongodb
     restart: unless-stopped
     ports:
