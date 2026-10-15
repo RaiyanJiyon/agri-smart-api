@@ -4,7 +4,6 @@ import type { SendVerificationEmailOptions } from './verification.interface.js';
 import { VerificationRepository } from './verification.repository.js';
 import { EmailService } from '../../shared/email/index.js';
 import { generateVerificationToken } from '../../shared/utils/crypto.js';
-import { escapeHtml } from '../../shared/utils/escape.js';
 
 export const createVerificationAndSendEmail = async ({
   email,
@@ -39,9 +38,6 @@ export const createVerificationAndSendEmail = async ({
   await EmailService.send({
     to: existingUser.email,
     subject,
-    html: buildTemplate(buildUrl(token), {
-      ...existingUser,
-      name: escapeHtml(existingUser.name),
-    }),
+    html: buildTemplate(buildUrl(token), existingUser),
   });
 };
