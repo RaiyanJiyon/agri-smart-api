@@ -7,6 +7,7 @@ import { auth } from '../../shared/middleware/index.js';
 const router = Router();
 
 router.get('/me', auth(), ProfileController.getMyProfile);
+
 router.patch(
   '/me',
   auth(),
