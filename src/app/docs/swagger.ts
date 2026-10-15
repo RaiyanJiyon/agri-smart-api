@@ -1,71 +1,102 @@
+/** OpenAPI contract for the routes mounted under /api/v1 (src/app/routes/index.ts). */
 export const swaggerSpec = {
   openapi: '3.0.3',
   info: {
-    title: 'Agri-Smart API Specification',
+    title: 'Agri-Smart API',
     version: '1.0.0',
     description:
-      'Comprehensive RESTful API contract for the Agri-Smart platform, supporting AI-driven Crop Recommendation, Plant Disease Detection, Farm Management, AI Assistant, and Administrative Control.',
-    contact: {
-      name: 'Agri-Smart Development Team',
-      email: 'support@agrismart.com',
-    },
+      'API contract for Agri-Smart. All paths are relative to the selected server URL. Successful API responses use the standard envelope; validation and application errors use the error envelope.',
+    contact: { name: 'Agri-Smart Development Team', email: 'support@agrismart.com' },
   },
   servers: [
-    {
-      url: 'http://localhost:5000/api/v1',
-      description: 'Local Development Server',
-    },
-    {
-      url: 'https://agri-smart-api-meud.onrender.com/api/v1',
-      description: 'Production API Gateway',
-    },
+    { url: 'http://localhost:5000/api/v1', description: 'Local development' },
+    { url: 'https://agri-smart-api-meud.onrender.com/api/v1', description: 'Production' },
+  ],
+  tags: [
+    { name: 'Health' },
+    { name: 'Auth' },
+    { name: 'Profile' },
+    { name: 'Farms' },
+    { name: 'Dashboard' },
+    { name: 'Crop Recommendations' },
+    { name: 'Disease Detection' },
+    { name: 'AI Assistant' },
+    { name: 'Notifications' },
+    { name: 'Admin' },
   ],
   components: {
     securitySchemes: {
-      bearerAuth: {
-        type: 'http',
-        scheme: 'bearer',
-        bearerFormat: 'JWT',
-        description: 'Provide your JWT Access Token in the format: `Bearer <token>`',
-      },
+      bearerAuth: { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
       cookieAuth: {
         type: 'apiKey',
         in: 'cookie',
         name: 'refreshToken',
-        description: 'Session Refresh Token cookie set automatically during login.',
+        description:
+          'Refresh-token cookie set by login and refresh-token; sent automatically by cookie-enabled clients.',
+      },
+    },
+    parameters: {
+      page: {
+        name: 'page',
+        in: 'query',
+        required: false,
+        schema: { type: 'integer', minimum: 1 },
+        description: 'One-based page number.',
+      },
+      limit: {
+        name: 'limit',
+        in: 'query',
+        required: false,
+        schema: { type: 'integer', minimum: 1, maximum: 100 },
       },
     },
     schemas: {
-      ApiSuccessResponse: {
+      SuccessEnvelope: {
         type: 'object',
+        required: ['statusCode', 'success', 'message', 'data'],
         properties: {
-          success: { type: 'boolean', example: true },
-          message: { type: 'string', example: 'Operation completed successfully.' },
-          data: { type: 'object', nullable: true },
-          meta: { type: 'object', nullable: true },
+          statusCode: { type: 'integer', example: 200 },
+          success: { type: 'boolean', enum: [true] },
+          message: { type: 'string' },
+          data: { description: 'Endpoint-specific result; may be null.' },
+          meta: {
+            type: 'object',
+            description: 'Present only when the handler supplies pagination metadata.',
+          },
         },
       },
-      ApiErrorResponse: {
+      ErrorEnvelope: {
         type: 'object',
+        required: ['success', 'status', 'message'],
         properties: {
-          success: { type: 'boolean', example: false },
-          message: { type: 'string', example: 'Validation or execution error message.' },
-          errors: {
-            type: 'array',
-            items: { type: 'object' },
-            nullable: true,
-          },
-          traceId: { type: 'string', example: 'req-12345' },
+          success: { type: 'boolean', enum: [false] },
+          status: { type: 'integer' },
+          message: { type: 'string' },
+          errorSources: { type: 'array', items: { $ref: '#/components/schemas/ErrorSource' } },
+          retryAfter: { type: 'integer', description: 'Retry delay in seconds, when supplied.' },
+          stack: { type: 'string', description: 'Included only in development.' },
+        },
+      },
+      ErrorSource: {
+        type: 'object',
+        required: ['path', 'message'],
+        properties: {
+          path: { oneOf: [{ type: 'string' }, { type: 'integer' }] },
+          message: { type: 'string' },
         },
       },
       User: {
         type: 'object',
         properties: {
           _id: { type: 'string', example: '66c9f0b123456789abcdef01' },
-          email: { type: 'string', example: 'farmer@example.com' },
-          isEmailVerified: { type: 'boolean', example: true },
-          role: { type: 'string', enum: ['FARMER', 'EXPERT', 'ADMIN'], example: 'FARMER' },
-          status: { type: 'string', enum: ['ACTIVE', 'SUSPENDED', 'BANNED'], example: 'ACTIVE' },
+          name: { type: 'string' },
+          email: { type: 'string', format: 'email' },
+          role: { type: 'string', enum: ['farmer', 'admin', 'super_admin'] },
+          isEmailVerified: { type: 'boolean' },
+          status: { type: 'string', enum: ['active', 'inactive', 'blocked', 'suspended'] },
+          profileImage: { type: 'string', nullable: true },
+          lastLoginAt: { type: 'string', format: 'date-time', nullable: true },
+          passwordChangedAt: { type: 'string', format: 'date-time', nullable: true },
           createdAt: { type: 'string', format: 'date-time' },
           updatedAt: { type: 'string', format: 'date-time' },
         },
@@ -73,128 +104,217 @@ export const swaggerSpec = {
       Profile: {
         type: 'object',
         properties: {
-          _id: { type: 'string', example: '66c9f0b123456789abcdef02' },
-          user: { type: 'string', example: '66c9f0b123456789abcdef01' },
-          fullName: { type: 'string', example: 'Raiyan Jiyon' },
-          phoneNumber: { type: 'string', example: '+8801700000000' },
-          avatarUrl: {
-            type: 'string',
-            example: 'https://res.cloudinary.com/demo/image/upload/avatar.jpg',
-          },
-          bio: { type: 'string', example: 'Organic crop farmer from Bogura.' },
-          location: {
-            type: 'object',
-            properties: {
-              division: { type: 'string', example: 'Rajshahi' },
-              district: { type: 'string', example: 'Bogura' },
-              upazila: { type: 'string', example: 'Sadar' },
-            },
-          },
+          _id: { type: 'string' },
+          userId: { type: 'string' },
+          firstName: { type: 'string' },
+          lastName: { type: 'string' },
+          phone: { type: 'string', pattern: '^01[0-9]{9}$' },
+          avatar: { type: 'string', format: 'uri' },
+          address: { type: 'string' },
+          createdAt: { type: 'string', format: 'date-time' },
+          updatedAt: { type: 'string', format: 'date-time' },
         },
       },
       Farm: {
         type: 'object',
         properties: {
-          _id: { type: 'string', example: '66c9f0b123456789abcdef03' },
-          userId: { type: 'string', example: '66c9f0b123456789abcdef01' },
-          farmName: { type: 'string', example: 'Green Valley Paddy Farm' },
-          sizeInAcres: { type: 'number', example: 5.5 },
-          soilType: { type: 'string', example: 'Clay Loam' },
-          cropTypes: { type: 'array', items: { type: 'string' }, example: ['Rice', 'Potato'] },
+          _id: { type: 'string' },
+          userId: { type: 'string' },
+          name: { type: 'string' },
+          location: { type: 'string' },
+          area: { type: 'number', exclusiveMinimum: 0 },
+          areaUnit: { type: 'string', enum: ['acre', 'hectare', 'bigha', 'katha'] },
+          createdAt: { type: 'string', format: 'date-time' },
+          updatedAt: { type: 'string', format: 'date-time' },
+        },
+      },
+      CropRecommendationInput: {
+        type: 'object',
+        additionalProperties: false,
+        required: [
+          'location',
+          'fieldArea',
+          'soilType',
+          'soilPh',
+          'nitrogen',
+          'phosphorus',
+          'potassium',
+          'averageTemperature',
+          'annualRainfall',
+        ],
+        properties: {
+          location: { type: 'string', minLength: 1 },
+          fieldArea: { type: 'number', exclusiveMinimum: 0 },
+          soilType: { type: 'string', minLength: 1 },
+          soilPh: { type: 'number', minimum: 0, maximum: 14 },
+          nitrogen: { type: 'number', minimum: 0 },
+          phosphorus: { type: 'number', minimum: 0 },
+          potassium: { type: 'number', minimum: 0 },
+          averageTemperature: { type: 'number' },
+          annualRainfall: { type: 'number', minimum: 0 },
         },
       },
       CropRecommendation: {
         type: 'object',
         properties: {
-          _id: { type: 'string', example: '66c9f0b123456789abcdef04' },
-          userId: { type: 'string', example: '66c9f0b123456789abcdef01' },
-          inputParameters: {
+          _id: { type: 'string' },
+          userId: { type: 'string' },
+          profileId: { type: 'string' },
+          inputParameters: { $ref: '#/components/schemas/CropRecommendationInput' },
+          recommendationResult: {
             type: 'object',
+            nullable: true,
             properties: {
-              nitrogen: { type: 'number', example: 90 },
-              phosphorus: { type: 'number', example: 42 },
-              potassium: { type: 'number', example: 43 },
-              temperature: { type: 'number', example: 25.5 },
-              humidity: { type: 'number', example: 82.0 },
-              ph: { type: 'number', example: 6.5 },
-              rainfall: { type: 'number', example: 202.9 },
+              recommendedCrops: { type: 'array', items: { type: 'string' } },
+              explanation: { type: 'string' },
+              confidence: { type: 'number', minimum: 0, maximum: 1, nullable: true },
             },
           },
           processingStatus: {
             type: 'string',
-            enum: ['PENDING', 'PROCESSING', 'COMPLETED', 'FAILED'],
-            example: 'COMPLETED',
+            enum: ['pending', 'processing', 'completed', 'failed'],
           },
-          recommendationResult: {
-            type: 'object',
-            properties: {
-              recommendedCrop: { type: 'string', example: 'Rice' },
-              confidence: { type: 'number', example: 0.95 },
-              rationale: { type: 'string', example: 'Optimal humidity and nitrogen content.' },
-            },
-          },
+          requestedAt: { type: 'string', format: 'date-time' },
+          completedAt: { type: 'string', format: 'date-time', nullable: true },
+          createdAt: { type: 'string', format: 'date-time' },
+          updatedAt: { type: 'string', format: 'date-time' },
         },
       },
       DiseaseReport: {
         type: 'object',
+        description: 'Disease report document returned by the disease-detection module.',
         properties: {
-          _id: { type: 'string', example: '66c9f0b123456789abcdef05' },
-          userId: { type: 'string', example: '66c9f0b123456789abcdef01' },
-          imageUrl: {
-            type: 'string',
-            example: 'https://res.cloudinary.com/cloud/image/upload/leaf.jpg',
+          _id: { type: 'string' },
+          userId: { type: 'string' },
+          profileId: { type: 'string' },
+          image: {
+            type: 'object',
+            properties: { url: { type: 'string', format: 'uri' }, publicId: { type: 'string' } },
           },
           processingStatus: {
             type: 'string',
-            enum: ['PENDING', 'PROCESSING', 'COMPLETED', 'FAILED'],
-            example: 'COMPLETED',
+            enum: ['pending', 'processing', 'completed', 'failed'],
           },
           diagnosisResult: {
             type: 'object',
+            nullable: true,
             properties: {
-              diseaseName: { type: 'string', example: 'Early Blight' },
-              confidence: { type: 'number', example: 0.92 },
-              remedies: {
-                type: 'array',
-                items: { type: 'string' },
-                example: ['Apply copper-based fungicide.'],
-              },
+              disease: { type: 'string' },
+              explanation: { type: 'string' },
+              recommendedActions: { type: 'array', items: { type: 'string' } },
+              confidence: { type: 'number', minimum: 0, maximum: 1, nullable: true },
             },
           },
+          requestedAt: { type: 'string', format: 'date-time' },
+          completedAt: { type: 'string', format: 'date-time', nullable: true },
         },
       },
       Conversation: {
         type: 'object',
         properties: {
-          _id: { type: 'string', example: '66c9f0b123456789abcdef06' },
-          userId: { type: 'string', example: '66c9f0b123456789abcdef01' },
-          title: { type: 'string', example: 'Pesticide Selection Advice' },
+          _id: { type: 'string' },
+          userId: { type: 'string' },
+          profileId: { type: 'string', nullable: true },
+          title: { type: 'string' },
+          status: { type: 'string', enum: ['active', 'completed'] },
+          lastActivityAt: { type: 'string', format: 'date-time' },
           createdAt: { type: 'string', format: 'date-time' },
+          updatedAt: { type: 'string', format: 'date-time' },
         },
       },
       Message: {
         type: 'object',
         properties: {
-          _id: { type: 'string', example: '66c9f0b123456789abcdef07' },
-          conversationId: { type: 'string', example: '66c9f0b123456789abcdef06' },
-          sender: { type: 'string', enum: ['USER', 'ASSISTANT'], example: 'USER' },
-          content: { type: 'string', example: 'What fertilizer is best for tomatoes?' },
+          _id: { type: 'string' },
+          conversationId: { type: 'string' },
+          role: { type: 'string', enum: ['user', 'assistant'] },
+          content: { type: 'string' },
+          status: { type: 'string', enum: ['completed', 'failed'] },
           createdAt: { type: 'string', format: 'date-time' },
+          updatedAt: { type: 'string', format: 'date-time' },
         },
+      },
+      Notification: {
+        type: 'object',
+        properties: {
+          _id: { type: 'string' },
+          userId: { type: 'string' },
+          type: {
+            type: 'string',
+            enum: ['system', 'account', 'ai', 'disease_detection', 'crop_recommendation'],
+          },
+          status: { type: 'string', enum: ['unread', 'read'] },
+          title: { type: 'string' },
+          message: { type: 'string' },
+          metadata: { nullable: true },
+          createdAt: { type: 'string', format: 'date-time' },
+          updatedAt: { type: 'string', format: 'date-time' },
+        },
+      },
+      Id: { type: 'string', pattern: '^[0-9a-fA-F]{24}$', example: '66c9f0b123456789abcdef01' },
+    },
+    responses: {
+      BadRequest: {
+        description: 'Invalid request, validation failure, or malformed identifier.',
+        content: { 'application/json': { schema: { $ref: '#/components/schemas/ErrorEnvelope' } } },
+      },
+      Unauthorized: {
+        description: 'Authentication is missing or invalid.',
+        content: { 'application/json': { schema: { $ref: '#/components/schemas/ErrorEnvelope' } } },
+      },
+      Forbidden: {
+        description: 'The authenticated user is not allowed to perform this operation.',
+        content: { 'application/json': { schema: { $ref: '#/components/schemas/ErrorEnvelope' } } },
+      },
+      NotFound: {
+        description: 'Requested resource was not found.',
+        content: { 'application/json': { schema: { $ref: '#/components/schemas/ErrorEnvelope' } } },
+      },
+      TooManyRequests: {
+        description: 'Rate limit exceeded. A Retry-After header may be supplied.',
+        headers: { 'Retry-After': { schema: { type: 'integer' } } },
+        content: { 'application/json': { schema: { $ref: '#/components/schemas/ErrorEnvelope' } } },
+      },
+      ServerError: {
+        description: 'Unexpected server error.',
+        content: { 'application/json': { schema: { $ref: '#/components/schemas/ErrorEnvelope' } } },
       },
     },
   },
   paths: {
     '/health': {
       get: {
-        summary: 'Check API Server Health Status',
         tags: ['Health'],
+        summary: 'Check server and database health',
         responses: {
           200: {
-            description: 'Server is healthy',
+            description: 'Database connection is healthy.',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/ApiSuccessResponse' },
+                schema: {
+                  type: 'object',
+                  required: ['status', 'timeStamp', 'database'],
+                  properties: {
+                    status: { type: 'string', enum: ['UP'] },
+                    timeStamp: { type: 'string', format: 'date-time' },
+                    database: { type: 'string', enum: ['connected'] },
+                  },
+                },
+              },
+            },
+          },
+          500: {
+            description: 'Database is disconnected.',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: { type: 'string', enum: ['DOWN'] },
+                    timeStamp: { type: 'string', format: 'date-time' },
+                    database: { type: 'string', enum: ['disconnected'] },
+                  },
+                },
               },
             },
           },
@@ -203,103 +323,171 @@ export const swaggerSpec = {
     },
     '/auth/register': {
       post: {
-        summary: 'Register a new user account',
         tags: ['Auth'],
+        summary: 'Register an account',
         requestBody: {
           required: true,
           content: {
             'application/json': {
               schema: {
                 type: 'object',
-                required: ['email', 'password', 'fullName'],
+                additionalProperties: false,
+                required: ['name', 'email', 'password'],
                 properties: {
-                  email: { type: 'string', format: 'email', example: 'farmer@example.com' },
-                  password: { type: 'string', minLength: 8, example: 'StrongP@ss123' },
-                  fullName: { type: 'string', example: 'Raiyan Jiyon' },
-                  role: { type: 'string', enum: ['FARMER', 'EXPERT'], example: 'FARMER' },
+                  name: { type: 'string', minLength: 1, maxLength: 100 },
+                  email: { type: 'string', format: 'email' },
+                  password: {
+                    type: 'string',
+                    minLength: 8,
+                    maxLength: 100,
+                    description:
+                      'Must include an uppercase letter, a number, and a special character.',
+                  },
                 },
               },
             },
           },
         },
         responses: {
-          201: { description: 'User registered successfully' },
-          400: { description: 'Validation error' },
-          409: { description: 'Email already exists' },
+          201: {
+            description: 'Registration accepted; verification email is sent.',
+            content: {
+              'application/json': { schema: { $ref: '#/components/schemas/SuccessEnvelope' } },
+            },
+          },
+          400: { $ref: '#/components/responses/BadRequest' },
+          409: { description: 'Email already exists.' },
+          429: { $ref: '#/components/responses/TooManyRequests' },
+          500: { $ref: '#/components/responses/ServerError' },
+        },
+      },
+    },
+    '/auth/verify-email': {
+      post: {
+        tags: ['Auth'],
+        summary: 'Verify email address',
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                additionalProperties: false,
+                required: ['token'],
+                properties: { token: { type: 'string', minLength: 1 } },
+              },
+            },
+          },
+        },
+        responses: {
+          200: { description: 'Email verified.' },
+          400: { $ref: '#/components/responses/BadRequest' },
+          429: { $ref: '#/components/responses/TooManyRequests' },
+        },
+      },
+    },
+    '/auth/resend-verification-email': {
+      post: {
+        tags: ['Auth'],
+        summary: 'Resend email verification message',
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                additionalProperties: false,
+                required: ['email'],
+                properties: { email: { type: 'string', format: 'email' } },
+              },
+            },
+          },
+        },
+        responses: {
+          200: {
+            description:
+              'Generic success response, regardless of account existence or verification state.',
+          },
+          400: { $ref: '#/components/responses/BadRequest' },
+          429: { $ref: '#/components/responses/TooManyRequests' },
         },
       },
     },
     '/auth/login': {
       post: {
-        summary: 'Authenticate user and obtain JWT tokens',
         tags: ['Auth'],
+        summary: 'Authenticate and create a session',
         requestBody: {
           required: true,
           content: {
             'application/json': {
               schema: {
                 type: 'object',
+                additionalProperties: false,
                 required: ['email', 'password'],
                 properties: {
-                  email: { type: 'string', format: 'email', example: 'farmer@example.com' },
-                  password: { type: 'string', example: 'StrongP@ss123' },
+                  email: { type: 'string', format: 'email' },
+                  password: { type: 'string', minLength: 1 },
                 },
               },
             },
           },
         },
         responses: {
-          200: { description: 'Authenticated successfully' },
-          401: { description: 'Invalid email or password' },
-        },
-      },
-    },
-    '/auth/logout': {
-      post: {
-        summary: 'Log out current session',
-        tags: ['Auth'],
-        security: [{ bearerAuth: [] }],
-        responses: {
-          200: { description: 'Logged out successfully' },
-          401: { description: 'Unauthorized' },
+          200: {
+            description: 'Returns an access token and user; sets the refreshToken cookie.',
+            headers: {
+              'Set-Cookie': {
+                schema: { type: 'string' },
+                description: 'HttpOnly refreshToken cookie.',
+              },
+            },
+          },
+          400: { $ref: '#/components/responses/BadRequest' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+          429: { $ref: '#/components/responses/TooManyRequests' },
         },
       },
     },
     '/auth/refresh-token': {
       post: {
-        summary: 'Refresh JWT Access Token using refresh cookie',
         tags: ['Auth'],
+        summary: 'Rotate refresh token and issue access token',
         security: [{ cookieAuth: [] }],
         responses: {
-          200: { description: 'Access token refreshed successfully' },
-          401: { description: 'Invalid or expired refresh token' },
+          200: { description: 'Returns an access token and rotates the refreshToken cookie.' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+          429: { $ref: '#/components/responses/TooManyRequests' },
         },
       },
     },
-    '/auth/me': {
-      get: {
-        summary: 'Retrieve authenticated user identity',
+    '/auth/logout': {
+      post: {
         tags: ['Auth'],
-        security: [{ bearerAuth: [] }],
+        summary: 'End the current refresh-token session',
+        security: [{ cookieAuth: [] }],
         responses: {
-          200: { description: 'User profile retrieved successfully' },
-          401: { description: 'Unauthorized' },
+          200: { description: 'Session ended and refresh cookie cleared.' },
+          429: { $ref: '#/components/responses/TooManyRequests' },
         },
       },
     },
-    '/profile': {
-      get: {
-        summary: 'Retrieve current user profile details',
-        tags: ['Profile'],
+    '/auth/logout-all': {
+      post: {
+        tags: ['Auth'],
+        summary: 'End all sessions for current user',
         security: [{ bearerAuth: [] }],
         responses: {
-          200: { description: 'Profile retrieved successfully' },
-          401: { description: 'Unauthorized' },
+          200: { description: 'All sessions ended and refresh cookie cleared.' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+          429: { $ref: '#/components/responses/TooManyRequests' },
         },
       },
-      patch: {
-        summary: 'Update current user profile information',
-        tags: ['Profile'],
+    },
+    '/auth/change-password': {
+      post: {
+        tags: ['Auth'],
+        summary: 'Change password for authenticated user',
         security: [{ bearerAuth: [] }],
         requestBody: {
           required: true,
@@ -307,33 +495,140 @@ export const swaggerSpec = {
             'application/json': {
               schema: {
                 type: 'object',
+                additionalProperties: false,
+                required: ['currentPassword', 'newPassword'],
                 properties: {
-                  fullName: { type: 'string', example: 'Raiyan Jiyon' },
-                  phoneNumber: { type: 'string', example: '+8801700000000' },
-                  bio: { type: 'string', example: 'Updated farmer profile' },
+                  currentPassword: { type: 'string', minLength: 1 },
+                  newPassword: {
+                    type: 'string',
+                    minLength: 8,
+                    maxLength: 100,
+                    description:
+                      'Must include an uppercase letter, a number, and a special character.',
+                  },
                 },
               },
             },
           },
         },
         responses: {
-          200: { description: 'Profile updated successfully' },
-          401: { description: 'Unauthorized' },
+          200: { description: 'Password changed; refresh cookie cleared.' },
+          400: { $ref: '#/components/responses/BadRequest' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+        },
+      },
+    },
+    '/auth/forgot-password': {
+      post: {
+        tags: ['Auth'],
+        summary: 'Request a password reset email',
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                additionalProperties: false,
+                required: ['email'],
+                properties: { email: { type: 'string', format: 'email' } },
+              },
+            },
+          },
+        },
+        responses: {
+          200: { description: 'Generic success response to avoid disclosing account existence.' },
+          400: { $ref: '#/components/responses/BadRequest' },
+          429: { $ref: '#/components/responses/TooManyRequests' },
+        },
+      },
+    },
+    '/auth/reset-password': {
+      post: {
+        tags: ['Auth'],
+        summary: 'Reset password with emailed token',
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                additionalProperties: false,
+                required: ['token', 'newPassword'],
+                properties: {
+                  token: { type: 'string', minLength: 1 },
+                  newPassword: {
+                    type: 'string',
+                    minLength: 8,
+                    maxLength: 100,
+                    description:
+                      'Must include an uppercase letter, a number, and a special character.',
+                  },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          200: { description: 'Password reset; refresh cookie cleared.' },
+          400: { $ref: '#/components/responses/BadRequest' },
+          429: { $ref: '#/components/responses/TooManyRequests' },
+        },
+      },
+    },
+    '/profile/me': {
+      get: {
+        tags: ['Profile'],
+        summary: 'Get current user profile',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          200: { description: 'Profile returned.' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+          404: { $ref: '#/components/responses/NotFound' },
+        },
+      },
+      patch: {
+        tags: ['Profile'],
+        summary: 'Update current user profile',
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                additionalProperties: false,
+                minProperties: 1,
+                properties: {
+                  firstName: { type: 'string', minLength: 2, maxLength: 50 },
+                  lastName: { type: 'string', minLength: 2, maxLength: 50 },
+                  phone: { type: 'string', pattern: '^01[0-9]{9}$' },
+                  avatar: { type: 'string', format: 'uri' },
+                  address: { type: 'string', minLength: 5, maxLength: 300 },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          200: { description: 'Profile updated.' },
+          400: { $ref: '#/components/responses/BadRequest' },
+          401: { $ref: '#/components/responses/Unauthorized' },
         },
       },
     },
     '/farms': {
       get: {
-        summary: 'List user farm records',
-        tags: ['Farm'],
+        tags: ['Farms'],
+        summary: 'List current user farms',
         security: [{ bearerAuth: [] }],
         responses: {
-          200: { description: 'Farms retrieved successfully' },
+          200: { description: 'Farm array returned.' },
+          401: { $ref: '#/components/responses/Unauthorized' },
         },
       },
       post: {
-        summary: 'Create a new farm profile',
-        tags: ['Farm'],
+        tags: ['Farms'],
+        summary: 'Create a farm',
         security: [{ bearerAuth: [] }],
         requestBody: {
           required: true,
@@ -341,39 +636,98 @@ export const swaggerSpec = {
             'application/json': {
               schema: {
                 type: 'object',
-                required: ['farmName', 'sizeInAcres'],
+                additionalProperties: false,
+                required: ['name', 'location', 'area', 'areaUnit'],
                 properties: {
-                  farmName: { type: 'string', example: 'Green Meadow Farm' },
-                  sizeInAcres: { type: 'number', example: 10.5 },
-                  cropTypes: {
-                    type: 'array',
-                    items: { type: 'string' },
-                    example: ['Paddy', 'Wheat'],
-                  },
+                  name: { type: 'string', minLength: 2, maxLength: 100 },
+                  location: { type: 'string', minLength: 2, maxLength: 300 },
+                  area: { type: 'number', exclusiveMinimum: 0 },
+                  areaUnit: { type: 'string', enum: ['acre', 'hectare', 'bigha', 'katha'] },
                 },
               },
             },
           },
         },
         responses: {
-          201: { description: 'Farm created successfully' },
+          201: { description: 'Farm created.' },
+          400: { $ref: '#/components/responses/BadRequest' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+        },
+      },
+    },
+    '/farms/{farmId}': {
+      parameters: [
+        { name: 'farmId', in: 'path', required: true, schema: { $ref: '#/components/schemas/Id' } },
+      ],
+      get: {
+        tags: ['Farms'],
+        summary: 'Get one of the current user farms',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          200: { description: 'Farm returned.' },
+          400: { $ref: '#/components/responses/BadRequest' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+          404: { $ref: '#/components/responses/NotFound' },
+        },
+      },
+      patch: {
+        tags: ['Farms'],
+        summary: 'Update a farm',
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                additionalProperties: false,
+                minProperties: 1,
+                properties: {
+                  name: { type: 'string', minLength: 2, maxLength: 100 },
+                  location: { type: 'string', minLength: 2, maxLength: 300 },
+                  area: { type: 'number', exclusiveMinimum: 0 },
+                  areaUnit: { type: 'string', enum: ['acre', 'hectare', 'bigha', 'katha'] },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          200: { description: 'Farm updated.' },
+          400: { $ref: '#/components/responses/BadRequest' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+          404: { $ref: '#/components/responses/NotFound' },
+        },
+      },
+      delete: {
+        tags: ['Farms'],
+        summary: 'Delete a farm',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          200: { description: 'Farm deleted; data is null.' },
+          400: { $ref: '#/components/responses/BadRequest' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+          404: { $ref: '#/components/responses/NotFound' },
         },
       },
     },
     '/dashboard': {
       get: {
-        summary: 'Retrieve personalized dashboard overview metrics',
         tags: ['Dashboard'],
+        summary: 'Get current user dashboard',
         security: [{ bearerAuth: [] }],
         responses: {
-          200: { description: 'Dashboard metrics retrieved successfully' },
+          200: { description: 'Dashboard data returned.' },
+          401: { $ref: '#/components/responses/Unauthorized' },
         },
       },
     },
     '/crop-recommendations': {
       post: {
-        summary: 'Submit soil and climate parameters for crop recommendation',
-        tags: ['Crop Recommendation'],
+        tags: ['Crop Recommendations'],
+        summary: 'Generate a crop recommendation',
+        description:
+          'Creates the recommendation synchronously; the handler responds with HTTP 201.',
         security: [{ bearerAuth: [] }],
         requestBody: {
           required: true,
@@ -381,45 +735,145 @@ export const swaggerSpec = {
             'application/json': {
               schema: {
                 type: 'object',
-                required: [
-                  'nitrogen',
-                  'phosphorus',
-                  'potassium',
-                  'temperature',
-                  'humidity',
-                  'ph',
-                  'rainfall',
-                ],
+                additionalProperties: false,
+                required: ['profileId', 'inputParameters'],
                 properties: {
-                  nitrogen: { type: 'number', example: 90 },
-                  phosphorus: { type: 'number', example: 42 },
-                  potassium: { type: 'number', example: 43 },
-                  temperature: { type: 'number', example: 25.5 },
-                  humidity: { type: 'number', example: 82.0 },
-                  ph: { type: 'number', example: 6.5 },
-                  rainfall: { type: 'number', example: 202.9 },
+                  profileId: { type: 'string', minLength: 1 },
+                  inputParameters: { $ref: '#/components/schemas/CropRecommendationInput' },
                 },
               },
             },
           },
         },
         responses: {
-          202: { description: 'Recommendation request queued successfully' },
+          201: { description: 'Recommendation generated.' },
+          400: { $ref: '#/components/responses/BadRequest' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+          403: { $ref: '#/components/responses/Forbidden' },
+          404: { $ref: '#/components/responses/NotFound' },
+          429: { $ref: '#/components/responses/TooManyRequests' },
         },
       },
       get: {
-        summary: 'Get historical crop recommendations list',
-        tags: ['Crop Recommendation'],
+        tags: ['Crop Recommendations'],
+        summary: 'List current user recommendations',
         security: [{ bearerAuth: [] }],
         responses: {
-          200: { description: 'Recommendation history retrieved' },
+          200: { description: 'Recommendation array returned.' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+        },
+      },
+    },
+    '/crop-recommendations/{recommendationId}': {
+      parameters: [
+        {
+          name: 'recommendationId',
+          in: 'path',
+          required: true,
+          schema: { $ref: '#/components/schemas/Id' },
+        },
+      ],
+      get: {
+        tags: ['Crop Recommendations'],
+        summary: 'Get one recommendation',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          200: { description: 'Recommendation returned.' },
+          400: { $ref: '#/components/responses/BadRequest' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+          404: { $ref: '#/components/responses/NotFound' },
+        },
+      },
+      delete: {
+        tags: ['Crop Recommendations'],
+        summary: 'Delete one recommendation',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          200: { description: 'Recommendation deleted; data is null.' },
+          400: { $ref: '#/components/responses/BadRequest' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+          404: { $ref: '#/components/responses/NotFound' },
         },
       },
     },
     '/disease-detection': {
       post: {
-        summary: 'Submit crop image URL for automated disease diagnosis',
         tags: ['Disease Detection'],
+        summary: 'Upload an image for disease detection',
+        description:
+          'Send multipart form data. The image field is processed by Multer; profileId is required in the same form. Image upload limits and accepted formats are enforced by upload middleware.',
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            'multipart/form-data': {
+              schema: {
+                type: 'object',
+                required: ['image', 'profileId'],
+                properties: {
+                  image: { type: 'string', format: 'binary' },
+                  profileId: { type: 'string', minLength: 1 },
+                },
+              },
+              encoding: { image: { contentType: 'image/*' } },
+            },
+          },
+        },
+        responses: {
+          201: { description: 'Report created and analysis job queued.' },
+          400: { $ref: '#/components/responses/BadRequest' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+          403: { $ref: '#/components/responses/Forbidden' },
+          404: { $ref: '#/components/responses/NotFound' },
+          429: { $ref: '#/components/responses/TooManyRequests' },
+        },
+      },
+      get: {
+        tags: ['Disease Detection'],
+        summary: 'List current user disease reports',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          200: { description: 'Disease report array returned.' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+        },
+      },
+    },
+    '/disease-detection/{reportId}': {
+      parameters: [
+        {
+          name: 'reportId',
+          in: 'path',
+          required: true,
+          schema: { $ref: '#/components/schemas/Id' },
+        },
+      ],
+      get: {
+        tags: ['Disease Detection'],
+        summary: 'Get one disease report',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          200: { description: 'Report returned.' },
+          400: { $ref: '#/components/responses/BadRequest' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+          404: { $ref: '#/components/responses/NotFound' },
+        },
+      },
+      delete: {
+        tags: ['Disease Detection'],
+        summary: 'Delete one disease report',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          200: { description: 'Report deleted; data is null.' },
+          400: { $ref: '#/components/responses/BadRequest' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+          404: { $ref: '#/components/responses/NotFound' },
+        },
+      },
+    },
+    '/ai-assistant': {
+      post: {
+        tags: ['AI Assistant'],
+        summary: 'Create a conversation',
         security: [{ bearerAuth: [] }],
         requestBody: {
           required: true,
@@ -427,80 +881,374 @@ export const swaggerSpec = {
             'application/json': {
               schema: {
                 type: 'object',
-                required: ['imageUrl'],
+                additionalProperties: false,
+                required: ['title'],
                 properties: {
-                  imageUrl: {
-                    type: 'string',
-                    format: 'uri',
-                    example: 'https://res.cloudinary.com/cloud/image/upload/sample.jpg',
-                  },
+                  profileId: { type: 'string', minLength: 1 },
+                  title: { type: 'string', minLength: 1, maxLength: 200 },
                 },
               },
             },
           },
         },
         responses: {
-          202: { description: 'Disease analysis job queued' },
+          201: { description: 'Conversation created.' },
+          400: { $ref: '#/components/responses/BadRequest' },
+          401: { $ref: '#/components/responses/Unauthorized' },
         },
       },
       get: {
-        summary: 'Retrieve disease detection report history',
-        tags: ['Disease Detection'],
+        tags: ['AI Assistant'],
+        summary: 'List current user conversations',
         security: [{ bearerAuth: [] }],
         responses: {
-          200: { description: 'Disease reports list retrieved' },
+          200: { description: 'Conversation array returned.' },
+          401: { $ref: '#/components/responses/Unauthorized' },
         },
       },
     },
-    '/ai-assistant/conversations': {
-      post: {
-        summary: 'Start a new AI Assistant conversation session',
+    '/ai-assistant/{conversationId}': {
+      parameters: [
+        {
+          name: 'conversationId',
+          in: 'path',
+          required: true,
+          schema: { $ref: '#/components/schemas/Id' },
+        },
+      ],
+      get: {
         tags: ['AI Assistant'],
+        summary: 'Get one conversation',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          200: { description: 'Conversation returned.' },
+          400: { $ref: '#/components/responses/BadRequest' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+          404: { $ref: '#/components/responses/NotFound' },
+        },
+      },
+      patch: {
+        tags: ['AI Assistant'],
+        summary: 'Update conversation title or status',
         security: [{ bearerAuth: [] }],
         requestBody: {
+          required: true,
           content: {
             'application/json': {
               schema: {
                 type: 'object',
+                additionalProperties: false,
+                minProperties: 1,
                 properties: {
-                  title: { type: 'string', example: 'Irrigation Strategy' },
+                  title: { type: 'string', minLength: 1, maxLength: 200 },
+                  status: { type: 'string', enum: ['active', 'completed'] },
                 },
               },
             },
           },
         },
         responses: {
-          201: { description: 'Conversation started' },
+          200: { description: 'Conversation updated.' },
+          400: { $ref: '#/components/responses/BadRequest' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+          404: { $ref: '#/components/responses/NotFound' },
+        },
+      },
+      delete: {
+        tags: ['AI Assistant'],
+        summary: 'Delete a conversation',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          200: { description: 'Conversation deleted; data is null.' },
+          400: { $ref: '#/components/responses/BadRequest' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+          404: { $ref: '#/components/responses/NotFound' },
+        },
+      },
+    },
+    '/ai-assistant/{conversationId}/messages': {
+      parameters: [
+        {
+          name: 'conversationId',
+          in: 'path',
+          required: true,
+          schema: { $ref: '#/components/schemas/Id' },
+        },
+      ],
+      post: {
+        tags: ['AI Assistant'],
+        summary: 'Send a message to the assistant',
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                additionalProperties: false,
+                required: ['content'],
+                properties: { content: { type: 'string', minLength: 1, maxLength: 5000 } },
+              },
+            },
+          },
+        },
+        responses: {
+          200: { description: 'User and assistant message result returned.' },
+          400: { $ref: '#/components/responses/BadRequest' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+          404: { $ref: '#/components/responses/NotFound' },
+          429: { $ref: '#/components/responses/TooManyRequests' },
         },
       },
       get: {
-        summary: 'List user AI assistant conversations',
         tags: ['AI Assistant'],
+        summary: 'List messages in a conversation',
         security: [{ bearerAuth: [] }],
         responses: {
-          200: { description: 'Conversations retrieved' },
+          200: { description: 'Message array returned.' },
+          400: { $ref: '#/components/responses/BadRequest' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+          404: { $ref: '#/components/responses/NotFound' },
+        },
+      },
+    },
+    '/notification': {
+      get: {
+        tags: ['Notifications'],
+        summary: 'List current user notifications',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { $ref: '#/components/parameters/page' },
+          { $ref: '#/components/parameters/limit' },
+        ],
+        responses: {
+          200: { description: 'Notification list with pagination and unread count.' },
+          400: { $ref: '#/components/responses/BadRequest' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+        },
+      },
+    },
+    '/notification/read-all': {
+      patch: {
+        tags: ['Notifications'],
+        summary: 'Mark all current user notifications as read',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          200: { description: 'All notifications marked read; data is null.' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+        },
+      },
+    },
+    '/notification/{notificationId}': {
+      parameters: [
+        {
+          name: 'notificationId',
+          in: 'path',
+          required: true,
+          schema: { $ref: '#/components/schemas/Id' },
+        },
+      ],
+      get: {
+        tags: ['Notifications'],
+        summary: 'Get one notification',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          200: { description: 'Notification returned.' },
+          400: { $ref: '#/components/responses/BadRequest' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+          404: { $ref: '#/components/responses/NotFound' },
+        },
+      },
+      delete: {
+        tags: ['Notifications'],
+        summary: 'Delete one notification',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          200: { description: 'Notification deleted; data is null.' },
+          400: { $ref: '#/components/responses/BadRequest' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+          404: { $ref: '#/components/responses/NotFound' },
+        },
+      },
+    },
+    '/notification/{notificationId}/read': {
+      parameters: [
+        {
+          name: 'notificationId',
+          in: 'path',
+          required: true,
+          schema: { $ref: '#/components/schemas/Id' },
+        },
+      ],
+      patch: {
+        tags: ['Notifications'],
+        summary: 'Mark one notification as read',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          200: { description: 'Updated notification returned.' },
+          400: { $ref: '#/components/responses/BadRequest' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+          404: { $ref: '#/components/responses/NotFound' },
+        },
+      },
+    },
+    '/admin/dashboard/statistics': {
+      get: {
+        tags: ['Admin'],
+        summary: 'Get admin dashboard statistics',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          200: { description: 'Statistics returned.' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+          403: { $ref: '#/components/responses/Forbidden' },
+        },
+      },
+    },
+    '/admin/ai-usage/statistics': {
+      get: {
+        tags: ['Admin'],
+        summary: 'Get AI usage statistics',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          200: { description: 'AI usage statistics returned.' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+          403: { $ref: '#/components/responses/Forbidden' },
         },
       },
     },
     '/admin/users': {
       get: {
-        summary: 'List system users (Admin Access Required)',
         tags: ['Admin'],
+        summary: 'List users (admin only)',
         security: [{ bearerAuth: [] }],
+        parameters: [
+          { name: 'search', in: 'query', schema: { type: 'string', minLength: 1 } },
+          {
+            name: 'role',
+            in: 'query',
+            schema: { type: 'string', enum: ['farmer', 'admin', 'super_admin'] },
+          },
+          {
+            name: 'status',
+            in: 'query',
+            schema: { type: 'string', enum: ['active', 'inactive', 'blocked', 'suspended'] },
+          },
+          { $ref: '#/components/parameters/page' },
+          { $ref: '#/components/parameters/limit' },
+        ],
         responses: {
-          200: { description: 'User list retrieved' },
-          403: { description: 'Forbidden - Admin privileges required' },
+          200: { description: 'Users and pagination returned.' },
+          400: { $ref: '#/components/responses/BadRequest' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+          403: { $ref: '#/components/responses/Forbidden' },
         },
       },
     },
-    '/admin/activities': {
+    '/admin/users/{userId}': {
+      parameters: [
+        { name: 'userId', in: 'path', required: true, schema: { $ref: '#/components/schemas/Id' } },
+      ],
       get: {
-        summary: 'Retrieve administrative action audit log',
         tags: ['Admin'],
+        summary: 'Get a user (admin only)',
         security: [{ bearerAuth: [] }],
         responses: {
-          200: { description: 'Admin activity audit logs retrieved' },
-          403: { description: 'Forbidden' },
+          200: { description: 'User returned.' },
+          400: { $ref: '#/components/responses/BadRequest' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+          403: { $ref: '#/components/responses/Forbidden' },
+          404: { $ref: '#/components/responses/NotFound' },
+        },
+      },
+    },
+    '/admin/users/{userId}/status': {
+      parameters: [
+        { name: 'userId', in: 'path', required: true, schema: { $ref: '#/components/schemas/Id' } },
+      ],
+      patch: {
+        tags: ['Admin'],
+        summary: 'Update user status (admin only)',
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                additionalProperties: false,
+                required: ['status'],
+                properties: {
+                  status: { type: 'string', enum: ['active', 'inactive', 'blocked', 'suspended'] },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          200: { description: 'Updated user returned.' },
+          400: { $ref: '#/components/responses/BadRequest' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+          403: { $ref: '#/components/responses/Forbidden' },
+          404: { $ref: '#/components/responses/NotFound' },
+        },
+      },
+    },
+    '/admin/activity': {
+      get: {
+        tags: ['Admin'],
+        summary: 'List admin audit activities',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { name: 'adminId', in: 'query', schema: { $ref: '#/components/schemas/Id' } },
+          { name: 'targetUserId', in: 'query', schema: { $ref: '#/components/schemas/Id' } },
+          {
+            name: 'action',
+            in: 'query',
+            schema: {
+              type: 'string',
+              enum: [
+                'view_user',
+                'view_users',
+                'block_user',
+                'unblock_user',
+                'deactivate_user',
+                'activate_user',
+                'update_user_status',
+                'view_dashboard_statistics',
+                'view_ai_usage_statistics',
+              ],
+            },
+          },
+          { $ref: '#/components/parameters/page' },
+          { $ref: '#/components/parameters/limit' },
+        ],
+        responses: {
+          200: { description: 'Activity list and pagination returned.' },
+          400: { $ref: '#/components/responses/BadRequest' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+          403: { $ref: '#/components/responses/Forbidden' },
+        },
+      },
+    },
+    '/admin/activity/{activityId}': {
+      parameters: [
+        {
+          name: 'activityId',
+          in: 'path',
+          required: true,
+          schema: { $ref: '#/components/schemas/Id' },
+        },
+      ],
+      get: {
+        tags: ['Admin'],
+        summary: 'Get one admin audit activity',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          200: { description: 'Activity returned.' },
+          400: { $ref: '#/components/responses/BadRequest' },
+          401: { $ref: '#/components/responses/Unauthorized' },
+          403: { $ref: '#/components/responses/Forbidden' },
+          404: { $ref: '#/components/responses/NotFound' },
         },
       },
     },
