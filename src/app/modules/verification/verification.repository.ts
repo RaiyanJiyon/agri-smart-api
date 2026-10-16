@@ -21,7 +21,7 @@ const createOrReplace = async (
       userId: payload.userId,
       type: payload.type,
     },
-    payload,
+    { ...payload, usedAt: null },
     {
       upsert: true,
       returnDocument: 'after',
