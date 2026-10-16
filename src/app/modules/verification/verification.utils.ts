@@ -35,9 +35,12 @@ export const createVerificationAndSendEmail = async ({
     expiresAt,
   });
 
+  const url = buildUrl(token);                    
+  const html = buildTemplate(url, existingUser);
+
   await EmailService.send({
     to: existingUser.email,
     subject,
-    html: buildTemplate(buildUrl(token), existingUser),
+    html,
   });
 };
