@@ -69,36 +69,48 @@ The backend is designed around a modular, layered architecture using **Node.js, 
 
 ## 🚀 Quick Start & Installation
 
-### Option 1: Running with Docker Compose (Recommended)
+### Option 1: Docker Development with Live Reload (Recommended for Dev)
 
-Spin up MongoDB, Redis, and the Agri-Smart API service in containerized mode:
+Runs MongoDB, Redis, and the API container mounted with live source code reloading (`tsx watch`):
 
 ```bash
-# 1. Clone repository
+# 1. Clone repository & configure environment
 git clone https://github.com/RaiyanJiyon/agri-smart-api.git
 cd agri-smart-api
-
-# 2. Setup Environment Variables
 cp .env.example .env
 
-# 3. Start MongoDB and Redis
-docker compose up -d mongodb redis
+# 2. Start the development stack with live reloading
+pnpm docker:dev:up
+# Or directly with docker compose:
+# docker compose -f docker-compose.dev.yml up -d
 
-# 4. Initialize MongoDB's single-node replica set (required once per volume)
-docker compose exec mongodb mongosh --eval \
+# 3. Initialize MongoDB replica set (required once per volume)
+docker compose -f docker-compose.dev.yml exec mongodb mongosh --eval \
   'rs.initiate({_id:"rs0",members:[{_id:0,host:"mongodb:27017"}]})'
 
-# 5. Start the API
-docker compose up -d --build api
+# 4. View live logs
+pnpm docker:dev:logs
 ```
-
-Access the API at `http://localhost:5000` and Swagger UI at `http://localhost:5000/api/v1/docs`.
-
-The MongoDB replica set is required because the API uses transactions during user registration. The initialization command only needs to be run once for a new MongoDB volume. If MongoDB has already been initialized, running it again returns an already-initialized error; continue without rerunning it.
 
 ---
 
-### Option 2: Manual Local Setup
+### Option 2: Docker Production Container (Pre-built Image)
+
+Runs the fully compiled production image (`node dist/server.js`) without source mounts:
+
+```bash
+# Start production containers (builds dist)
+pnpm docker:up
+# Or: docker compose up -d --build
+
+# Initialize replica set if using a fresh volume
+docker compose exec mongodb mongosh --eval \
+  'rs.initiate({_id:"rs0",members:[{_id:0,host:"mongodb:27017"}]})'
+```
+
+---
+
+### Option 3: Manual Local Setup (Native Node.js)
 
 ```bash
 # 1. Install dependencies
@@ -107,7 +119,7 @@ pnpm install
 # 2. Configure Environment
 cp .env.example .env
 
-# 3. Start Local Development Server
+# 3. Start Local Development Server (tsx watch)
 pnpm dev
 ```
 
@@ -162,8 +174,9 @@ agri-smart-api/
 │   ├── unit/             # Isolated Unit Test Suites
 │   ├── integration/      # Repository & Database Integration Tests
 │   └── e2e/              # End-to-End Endpoint Specifications
-├── Dockerfile            # Multi-stage Container Build
-└── docker-compose.yml    # Development Stack Orchestration
+├── Dockerfile                  # Multi-stage Container Build
+├── docker-compose.yml          # Production Container Stack
+└── docker-compose.dev.yml      # Development Stack with Live Reload
 ```
 
 ---
