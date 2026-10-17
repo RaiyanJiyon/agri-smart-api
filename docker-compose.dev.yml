@@ -1,0 +1,77 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      # Use the deps stage — has all dev deps installed, no compiled dist needed
+      target: deps
+    image: agri-smart-api:dev
+    container_name: agri-smart-api-dev
+    restart: unless-stopped
+    ports:
+      - '5000:5000'
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: development
+      PORT: 5000
+      DB_URL: mongodb://mongodb:27017/agri-smart?replicaSet=rs0
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      CLIENT_URL: http://localhost:5173,http://localhost:3000
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-dev-jwt-access-secret-key-change-me}
+      JWT_ACCESS_EXPIRES_IN: 15m
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-dev-jwt-refresh-secret-key-change-me}
+      JWT_REFRESH_EXPIRES_IN: 7d
+      ARGON2_MEMORY: 65536
+      ARGON2_TIME: 1
+      ARGON2_PARALLELISM: 1
+    volumes:
+      # Mount source code — tsx watch picks up every change instantly
+      - ./src:/app/src
+      # Preserve node_modules from the image, never overwrite with host
+      - /app/node_modules
+    # Run tsx watch directly — no build step needed, hot-reload on every save
+    command: ['./node_modules/.bin/tsx', 'watch', 'src/server.ts']
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  mongodb:
+    image: mongo:7-jammy
+    command: ['mongod', '--replSet', 'rs0', '--bind_ip_all']
+    container_name: agri-smart-mongodb-dev
+    restart: unless-stopped
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongodb_data_dev:/data/db
+    healthcheck:
+      test: ['CMD-SHELL', "echo 'db.runCommand({ping:1})' | mongosh localhost:27017/test --quiet"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: agri-smart-redis-dev
+    restart: unless-stopped
+    volumes:
+      - redis_data_dev:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mongodb_data_dev:
+  redis_data_dev:
+
+networks:
+  default:
+    name: agri-smart-network-dev
+    driver: bridge
+
