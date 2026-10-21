@@ -71,7 +71,7 @@ The backend is designed around a modular, layered architecture using **Node.js, 
 
 ### Option 1: Docker Development with Live Reload (Recommended for Dev)
 
-Runs MongoDB, Redis, and the API container mounted with live source code reloading (`tsx watch`):
+Runs MongoDB, Redis, and the API container mounted with live source code reloading (`tsx watch`). The single-node MongoDB replica set is initialized automatically on startup:
 
 ```bash
 # 1. Clone repository & configure environment
@@ -84,11 +84,7 @@ pnpm docker:dev:up
 # Or directly with docker compose:
 # docker compose -f docker-compose.dev.yml up -d
 
-# 3. Initialize MongoDB replica set (required once per volume)
-docker compose -f docker-compose.dev.yml exec mongodb mongosh --eval \
-  'rs.initiate({_id:"rs0",members:[{_id:0,host:"mongodb:27017"}]})'
-
-# 4. View live logs
+# 3. View live logs
 pnpm docker:dev:logs
 ```
 
@@ -99,13 +95,9 @@ pnpm docker:dev:logs
 Runs the fully compiled production image (`node dist/server.js`) without source mounts:
 
 ```bash
-# Start production containers (builds dist)
+# Start production containers (builds dist & auto-initiates replica set)
 pnpm docker:up
 # Or: docker compose up -d --build
-
-# Initialize replica set if using a fresh volume
-docker compose exec mongodb mongosh --eval \
-  'rs.initiate({_id:"rs0",members:[{_id:0,host:"mongodb:27017"}]})'
 ```
 
 ---
