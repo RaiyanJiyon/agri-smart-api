@@ -53,13 +53,6 @@ const sessionSchema = new Schema<Session>(
   }
 );
 
-sessionSchema.index(
-  { expiresAt: 1 },
-  {
-    expireAfterSeconds: 0,
-  }
-);
-
 sessionSchema.index({
   userId: 1,
 });
@@ -72,6 +65,15 @@ sessionSchema.index(
   },
   {
     unique: true,
+  }
+);
+
+sessionSchema.index(
+  {
+    expiresAt: 1,
+  },
+  {
+    expireAfterSeconds: 0,
   }
 );
 
